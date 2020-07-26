@@ -1,0 +1,35 @@
+@import "../../../styles/colors";
+@import "../../../styles/sizes";
+
+.container {
+  display: inline-block;
+  color: $color_4;
+  padding: $size_1;
+  height: $size_6;
+  cursor: pointer;
+  user-select: none;
+  margin: 1px;
+  white-space: nowrap;
+  font-weight: 500;
+  //transition: border-radius 1s ease-out;
+  //border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+  //animation: morph 4s ease-in-out infinite both alternate;
+}
+
+.disabled {
+  opacity: 50%;
+  pointer-events: none;
+}
+
+@keyframes morph {
+  0% {border-radius: 40% 60% 60% 40% / 60% 30% 70% 40%;}
+  100% {border-radius: 40% 60%;}
+}
+
+.primary {
+  background-color: $color_1;
+}
+
+.secondary {
+  background-color: $color_4;
+}

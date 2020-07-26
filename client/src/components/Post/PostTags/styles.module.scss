@@ -1,0 +1,12 @@
+@import "../../../styles/colors";
+@import "../../../styles/sizes";
+
+.container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.deleteTag {
+  cursor: pointer;
+  display: flex;
+}

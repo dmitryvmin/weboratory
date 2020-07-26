@@ -1,0 +1,72 @@
+@import "../../styles/sizes";
+@import "../../styles/zIndex";
+
+.calendarContainer {
+  position: absolute;
+  bottom: 50px;
+  width: calc(100vw - 40px);
+  height: 200px;
+  margin: 20px;
+  border: 1px solid white;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.calendarMenuContainer {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  left: $size_2;
+  bottom: 1px;
+  z-index: $zi2;
+  height: 50px;
+
+  .period {
+    user-select: none;
+  }
+
+  .btn {
+    margin: $size_1 $size_1 $size_1 0;
+    cursor: pointer;
+  }
+
+  .btnDisabled {
+    cursor: none;
+  }
+}
+
+.sliderContainer {}
+
+.dragContainer {
+  height: 200px;
+}
+
+// Slide
+.slide {
+  position: absolute;
+  height: 200px;
+  opacity: 0.5;
+  display: grid;
+  column-gap: $size_1;
+
+  > div {
+    background-color: white;
+  }
+}
+
+.period-HOUR {
+  grid-template-columns: repeat(60, 1fr);
+}
+.period-DAY {
+  grid-template-columns: repeat(24, 1fr);
+}
+.period-WEEK {
+  grid-template-columns: repeat(7, 1fr);
+}
+.period-MONTH {
+  grid-template-columns: repeat(30, 1fr);
+}
+.period-YEAR {
+  grid-template-columns: repeat(360, 1fr);
+}
+.period-ALL {}

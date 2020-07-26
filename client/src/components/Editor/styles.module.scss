@@ -1,0 +1,80 @@
+@import "../../styles/sizes";
+@import "../../styles/colors";
+@import "../../styles/type";
+
+.editorContainer {
+
+}
+
+.editor {
+  outline: none;
+  overflow-wrap: break-word;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  margin: $size_2 $size_8;
+  font-family: "Muli";
+  font-weight: 400;
+  font-size: 18px;
+  color: $color_1;
+}
+
+.editorMenu {
+  margin: $size_2 $size_8;
+}
+
+.editMenu {
+  position: absolute;
+  background-color: $color_1;
+  z-index: 100;
+  color: #fff;
+  padding: $size_1;
+  width: 120px;
+  display: flex;
+}
+
+.editMenuButton {
+  user-select: none;
+  cursor: pointer;
+  margin: $size_1;
+}
+
+.editorStyleH1 {
+  font-weight: 400;
+  font-size: 26px;
+  line-height: 26px;
+  border-left: 5px solid $color_5;
+  margin: $size_4 0;
+  padding-left: $size_1;
+}
+
+.editMarker {
+  position: absolute;
+  z-index: 100;
+  top: 0;
+
+  > div {
+    width: 20px;
+    height: 20px;
+    border-radius: 50% 50% 50% 0;
+    background: #89849b;
+    position: absolute;
+    z-index: 200;
+    transform: rotate(-45deg);
+    left: 50%;
+    top: 50%;
+    margin: -10px 0 0 -15px;
+    //animation-name: bounce;
+    //animation-fill-mode: both;
+    //animation-duration: 1s;
+
+    //&:after {
+    //  content: '';
+    //  width: 14px;
+    //  height: 14px;
+    //  margin: 8px 0 0 8px;
+    //  background: #2F2F2F;
+    //  position: absolute;
+    //  border-radius: 50%;
+    //}
+  }
+}

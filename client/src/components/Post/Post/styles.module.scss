@@ -1,0 +1,90 @@
+@import "../../../styles/sizes";
+@import "../../../styles/colors";
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  margin: 40px;
+
+  h1 {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.post {
+  //margin: $size_8;
+  box-shadow: 0 0 1px 1px #eee;
+  background-color: white;
+  //position: absolute;
+  //top: 140px;
+
+
+  max-width: 600px;
+  width: 100%;
+  position: absolute;
+}
+
+//.post {
+//  width: 100%;
+//  position: relative;
+//  display: flex;
+//  flex-direction: column;
+//  background-color: white;
+//  box-shadow: 0 0 1px 1px #eee;
+//}
+
+.newPostSelected {
+
+}
+
+.newPostUnselected {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  //background-color: $color_1;
+}
+
+.postSelected {
+  z-index: 100; // bring the active post to the front
+  //width: calc(100vw - 80px);
+  //box-shadow: 0 0 1px 1px #eee;
+  //transform: translateX(10%) !important;
+}
+
+.postUnselected {
+  //position: absolute;
+  //border-radius: 50%;
+  //width: 100px;
+  //height: 100px;
+  //max-width: 40%;
+  //height: 460px;
+  //flex: 0 0 40%;
+
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.close {
+  font-size: 54px;
+  z-index: 1;
+
+  a {
+    display: flex;
+  }
+}
+
+.postMenu {
+  display: flex;
+  margin: $size_2 $size_8;
+}
+
+.title {
+  border: none;
+  font-size: 40px;
+
+  &:focus {
+    outline: none;
+  }
+}

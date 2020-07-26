@@ -1,0 +1,38 @@
+@import "../../styles/colors";
+
+.postList {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+
+  //position: absolute;
+  //left: 50%;
+  //bottom: 10px;
+  //transform: translateX(-50%);
+  //top: 0;
+
+  //overflow: hidden;
+  //position: relative;
+  //contain: strict;
+}
+
+.container {
+  margin: 0;
+  padding: 0;
+  min-width: 100vw;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.postsRow {
+  background-color: $color_1;
+  margin: 10px;
+  padding: 5px 10px;
+  height: 200px;
+
+  a {
+    color: $color_3;
+  }
+}

@@ -1,0 +1,12 @@
+@import "../../../styles/colors";
+@import "../../../styles/sizes";
+
+.container {
+  display: flex;
+}
+
+.deleteBtn {
+  border: none;
+  background-color: $color_6;
+  cursor: pointer;
+}

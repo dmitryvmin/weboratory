@@ -1,0 +1,31 @@
+# Dependencies
+/node_modules
+server/node_modules
+client/node_modules
+
+# Testing
+/coverage
+
+# Production
+client/build
+server/build
+server/dist
+
+# Logs
+*.log
+npm-debug.log*
+server/logs
+server/npm-debug.log*
+
+# Runtime data
+pids
+*.seed
+
+# dotenv environment variables file
+.env
+client/.env
+server/.env
+
+# misc
+.idea
+.DS_Store

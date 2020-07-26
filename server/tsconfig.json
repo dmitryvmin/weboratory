@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "lib": ["es5", "es6"],
+    "module": "commonjs",
+    "sourceMap": false,
+    "strict": false,
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "types": [
+      "koa-body"
+    ]
+  },
+  "include" : [
+    "./src/**/*"
+  ],
+  "exclude": [
+    "./node_modules",
+    "**/__tests__/*"
+  ]
+}

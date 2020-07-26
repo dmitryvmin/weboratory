@@ -1,0 +1,25 @@
+@import "../../../styles/colors";
+@import "../../../styles/sizes";
+
+.container {
+  position: relative;
+}
+
+.menuPanel {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  left: $size_0;
+  background-color: $color_4;
+  padding: $size_1;
+  box-shadow: 0 0 1px 1px #eee;
+  z-index: 100;
+}
+
+.newTagInput {
+  background-color: $color_5;
+
+  input {
+    border: none;
+  }
+}

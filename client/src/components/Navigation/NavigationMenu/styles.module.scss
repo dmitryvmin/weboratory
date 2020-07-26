@@ -1,0 +1,37 @@
+@import "../../../styles/zIndex";
+
+$ITEM_SIZE: 50px;
+
+.menuContainerBase {
+  position: absolute;
+  bottom: 60px;
+  right: 10px;
+}
+
+.menuButtonBase {
+  position: relative;
+  width: $ITEM_SIZE;
+  height: $ITEM_SIZE;
+  background-color: white;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 1px 1px 6px 0px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: box-shadow 0.15s ease-in-out, border 0.15s ease-in-out;
+  z-index: $zi1;
+}
+
+.menuItemBase {
+  position: absolute;
+  background-color: white;
+  padding: 5px 10px;
+  border-radius: 6px;
+  z-index: 100;
+
+  > a {
+    color: black;
+    font-size: 12px;
+  }
+}
