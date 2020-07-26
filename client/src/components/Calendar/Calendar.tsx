@@ -21,7 +21,7 @@ const mockData = createMockData();
 /**
  * Calendar
  */
-const Calendar: FC<TCalendarProps> = ({}) => {
+const Calendar: FC<TCalendarProps> = () => {
 
   const { isOpen } = useCalendar();
 

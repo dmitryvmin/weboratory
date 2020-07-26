@@ -1,14 +1,19 @@
+// Libs
 import { useCallback, useEffect, useRef, useState } from "react";
 import { debounce } from "lodash";
 
+declare var google;
+
+/**
+ * Return prediction for an input address
+ */
 function useAddressPredictions(input) {
   const [predictions, setPredictions] = useState<any[]>([]);
 
   const autocomplete = useRef<any>();
 
   if (!autocomplete.current) {
-    autocomplete.current =
-      new window.google.maps.places.AutocompleteService();
+    autocomplete.current = new window.google.maps.places.AutocompleteService();
   }
 
   function getPlacePredictions(input) {

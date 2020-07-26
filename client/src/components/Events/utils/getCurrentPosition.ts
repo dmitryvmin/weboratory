@@ -1,6 +1,10 @@
-import { TLngLat } from "../types";
+// Types
+import { TLngLat } from "@components/Events/types";
 
-const getCurrentPosition = async () => {
+/**
+ * Gets client geolocation
+ */
+async function getCurrentPosition() {
   return new Promise((resolve: (c: TLngLat) => void, reject) => {
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -22,4 +26,4 @@ const getCurrentPosition = async () => {
   });
 };
 
-export {getCurrentPosition};
+export { getCurrentPosition };

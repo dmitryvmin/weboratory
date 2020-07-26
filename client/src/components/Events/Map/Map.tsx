@@ -1,5 +1,5 @@
 // Libs
-import React, { FC, useRef, useEffect, useContext, useMemo } from "react";
+import React, { FC, useRef, useEffect, useMemo, useState } from "react";
 import ReactMapboxGl from "react-mapbox-gl";
 
 // Styles
@@ -7,20 +7,13 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import styles from "../styles.module.scss";
 
 // Map
-import { MapContext } from "@components/Events/Map/store/MapContext";
 import { TMapProps } from "@components/Events/Map/types";
-import { getLngLatArray } from "@components/Events/utils/getLngLatArray";
-import { SeattleCoordinates } from "@components/Events/Map/store/constants";
-
-// Constants
-const Mapbox = ReactMapboxGl({
-  accessToken: process.env.MAPBOX_ACCESS_TOKEN!,
-});
+import { useMap } from "@components/Events/Map/store";
 
 /**
  * Map
  */
-export const Map: FC<TMapProps> = ({
+const Map: FC<TMapProps> = ({
   children,
   center,
 }) => {
@@ -30,9 +23,12 @@ export const Map: FC<TMapProps> = ({
    */
   const mapRef = useRef<any>(null);
 
+  const Mapbox = useRef<any>(initMapbox()).current;
+
   const {
     setMapInstance,
     setMapRef,
+    clientLocation,
   } = useMap();
 
   /**
@@ -45,96 +41,40 @@ export const Map: FC<TMapProps> = ({
     setMapRef(mapRef.current);
   }, [mapRef.current]);
 
-  return useMemo(() => (
-    <Mapbox
-      ref={mapRef}
-      center={getLngLatArray(center) ?? SeattleCoordinates}
-      zoom={[17]}
-      pitch={[45]}
-      bearing={[-45]}
-      style="mapbox://styles/mapbox/streets-v11"
-      className={styles.map}
-      animationOptions={{
-        duration: 2000,
-      }}
-      onStyleLoad={setMapInstance}
-    >
-      {children}
-    </Mapbox>
-  ), [
+  /**
+   * Utils
+   */
+  function initMapbox() {
+    return ReactMapboxGl({
+      accessToken: process.env.REACT_APP_MAPBOX_ACCESS_TOKEN!,
+    });
+  }
+
+  /**
+   * Return JSX
+   */
+  return useMemo(() => {
+    return (
+      <Mapbox
+        ref={mapRef}
+        center={clientLocation}
+        zoom={[17]}
+        pitch={[45]}
+        bearing={[-45]}
+        style="mapbox://styles/mapbox/streets-v11"
+        className={styles.map}
+        animationOptions={{
+          duration: 2000,
+        }}
+        onStyleLoad={setMapInstance}
+      >
+        {children}
+      </Mapbox>
+    );
+  }, [
     center,
     children,
   ]);
 };
 
-const useMap = () => {
-
-  /**
-   * Hooks
-   */
-  const [state, setState] = useContext(MapContext);
-
-  /**
-   * Effects
-   */
-  // On component unmount, remove mapbox instance
-  // useEffect(() => {
-  //   return () => {
-  //     // if (mapInstance) {
-  //     //   mapInstance.remove();
-  //     // }
-  //   };
-  // }, []);
-
-  /**
-   * State Utils
-   */
-  function setClientLocation(location) {
-    setState((s) => ({
-      ...s,
-      clientLocation: location,
-    }));
-  }
-
-  function setMapInstance(instance) {
-    setState((s) => ({
-      ...s,
-      mapInstance: instance,
-    }));
-  }
-
-  function setMapRef(ref) {
-    setState((s) => ({
-      ...s,
-      mapRef: ref,
-    }));
-  }
-
-  function getMapInstance() {
-    return state.mapInstance;
-  }
-
-  function getClientLocation() {
-    return state.clientLocation;
-  }
-
-  function getMapRef() {
-    return state.mapRef;
-  }
-
-  /**
-   * Hook "methods"
-   */
-  return {
-    clientLocation: state.clientLocation,
-    // setClientLocation,
-    // getClientLocation,
-    mapInstance: state.mapInstance,
-    setMapInstance,
-    // getMapInstance,
-    setMapRef,
-    // getMapRef,
-  };
-};
-
-export { useMap };
+export { Map };

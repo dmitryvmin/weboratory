@@ -1,9 +1,9 @@
-import { TCoords } from "@components/Events/types";
+import { TCoords, TLngLat } from "@components/Events/types";
 
 /**
- * Formats latLng object into [lat, lng] tuple
+ * Formats latLng object into a [lat, lng] tuple
  */
-const getLngLatArray = (latLng: any): TCoords | undefined => {
+function getLngLatArray(latLng: TLngLat): TCoords | undefined {
 
   if (!latLng) {
     console.warn("Couldn't format latLng because the value is falsy.");

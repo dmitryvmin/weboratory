@@ -1,10 +1,13 @@
 // Libs
 import { geocodeByAddress, getLatLng } from "react-places-autocomplete";
 
-// App
-import { TLngLat } from "../types";
+// Types
+import { TLngLat } from "@components/Events/types";
 
-const geocodeQuery = (address) => {
+/**
+ * Geocodes an address string
+ */
+function geocodeQuery(address) {
   return new Promise((resolve: (c: TLngLat) => void, reject) => {
     geocodeByAddress(address)
       .then(results => getLatLng(results[0]))

@@ -3,7 +3,7 @@ import React, {
   FC,
   useRef,
   useState,
-  forwardRef,
+  memo,
   useEffect,
 } from "react";
 import {
@@ -91,7 +91,7 @@ export const DRAG_STATUS = {
 /**
  * Slider
  */
-const Slider = () => {
+const Slider = memo(() => {
 
   /**
    * Hooks
@@ -149,10 +149,13 @@ const Slider = () => {
 
   // On mount
   useEffect(() => {
-    if (dragContainerRef.current) {
-      setSides(renderSlides());
-    }
-  }, [dragContainerRef.current]);
+    // if (!dragContainerRef.current) {
+    //   return;
+    // }
+    setSides(renderSlides());
+  }, [
+    // dragContainerRef.current,
+  ]);
 
   useEffect(() => {
     if (dragContainerRef.current) {
@@ -271,6 +274,6 @@ const Slider = () => {
       </animated.div>
     </div>
   );
-};
+});
 
 export { Slider };

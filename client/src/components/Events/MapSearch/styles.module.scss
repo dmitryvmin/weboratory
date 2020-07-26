@@ -1,7 +1,9 @@
+@import "../../../styles/zIndex";
+
 .searchInput {
   background-color: white;
   position: absolute;
-  z-index: 100;
+  z-index: $zi1;
   display: flex;
   border-right: 2px;
 

@@ -8,9 +8,6 @@ import IosClose from "react-ionicons/lib/IosClose";
 // API
 import { editorService, postService, tagMapService } from "@api/services";
 
-// Utils
-import { checkIfSelected } from "./utils";
-
 // Components
 import { PostMenu } from "@components/Post/PostMenu";
 import { Editor } from "@components/Editor/Editor";
@@ -19,10 +16,10 @@ import { Editor } from "@components/Editor/Editor";
 import styles from "./styles.module.scss";
 
 // Types
-import { PostProps } from "./types";
-import { useWindowSize } from "@utils/hooks/useWindowSize";
 import { useWindowOffset } from "@utils/hooks/useWindowOffset";
 import { useObservable } from "@utils/hooks/useObservable";
+import { PostProps } from "@components/Post/Post/types";
+import { checkIfSelected } from "./utils";
 
 const transition = {
   duration: 0.5,
@@ -92,7 +89,7 @@ const Post: FC<PostProps> = ({
 
   const [postTitle, setPostTitle] = useState<string>(post ? "" : "New Post");
 
-  const {pageYOffset} = useWindowOffset();
+  const { pageYOffset } = useWindowOffset();
 
   const editor$ = useObservable(editorSingleton.current.onEditorContent());
 
@@ -101,7 +98,7 @@ const Post: FC<PostProps> = ({
    */
   const xPosition = post ? idx! % Math.floor(windowWidth / 300) * 300 : undefined;
 
-  const yPosition = post ? Math.floor(idx! / Math.floor(windowWidth / 300) + 1) * 320 - 200: undefined;
+  const yPosition = post ? Math.floor(idx! / Math.floor(windowWidth / 300) + 1) * 320 - 200 : undefined;
 
   /**
    * Handlers

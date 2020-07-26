@@ -18,19 +18,17 @@ import { IEvent } from "@common/types";
 import { TLngLat, TMapEvent } from "@components/Events/types";
 
 // Components
-import { useMap } from "@components/Events/Map/Map";
+
 import { SearchInput } from "@components/Events/MapSearch/SearchInput";
 import { PredictionsDropdown } from "@components/Events/PredictionsDropdown/PredictionsDropdown";
 import { EventModal } from "@components/Events/EventModal";
 import { Map } from "@components/Events/Map";
 
 // Event utils
-import { useAddressPredictions } from "@components/Events/utils/useAddressPredictions";
-import { getCurrentPosition } from "@components/Events/utils/getCurrentPosition";
+import { useAddressPredictions } from "@components/Events/hooks/useAddressPredictions";
 import { geocodeQuery } from "@components/Events/utils/geocodeQuery";
 import { getLngLatArray } from "@components/Events/utils/getLngLatArray";
-
-declare var google;
+import { useMap } from "@components/Events/Map/store/useMap";
 
 /**
  * Events App
@@ -65,26 +63,11 @@ const EventsApp: React.FC = () => {
 
   const events$ = useObservable<IEvent[]>(eventsInstance.current.onEvents());
 
-  // User business logic - TODO: move out
   const { user } = useContext(Auth0Context);
 
   /**
    * Effects
    */
-  // Start map loaded on client's location
-  useEffect(() => {
-    getCurrentPosition().then((position) => {
-      if (!position) {
-        return;
-      }
-      // const lngLat = getLngLatArray(position);
-      // if (!lngLat) {
-      //   return;
-      // }
-      setCoords(position);
-    });
-  }, []);
-
   // Get events
   useEffect(() => {
     // const events = user && user["https://weboratory.com/user_metadata"]?.events;
@@ -190,7 +173,7 @@ const EventsApp: React.FC = () => {
   useEffect(() => {
     // const mInstance = getMapInstance();
     const mInstance = mapInstance;
-    if (!mInstance) {
+    if (!mInstance || !activeEvent?.lngLat) {
       return;
     }
     if (!isEventOpen) {
@@ -287,28 +270,28 @@ const EventsApp: React.FC = () => {
         handleClick={handleAddressClick}
       />
 
-      <Map center={coords}>
-        <>
-          <AnimatePresence>
-            {(isEventOpen && activeEvent) &&
-            <EventModal
-              {...activeEvent}
-              setEventOpen={setEventOpen}
-              isEventOpen={isEventOpen}
-              mapInstance={mapInstance}
-            />}
-          </AnimatePresence>
-          {events$ && events$?.map((event, eventIdx) => {
-              return (
-                <Fragment key={`event-${eventIdx}`}>
-                  {renderMarker(event)}
-                </Fragment>
-              );
-            },
-          )}
-          {activeEvent && renderMarker(activeEvent)}
-        </>
-      </Map>
+      {/*<Map center={coords}>*/}
+      {/*  <>*/}
+      {/*    <AnimatePresence>*/}
+      {/*      {(isEventOpen && activeEvent) &&*/}
+      {/*      <EventModal*/}
+      {/*        {...activeEvent}*/}
+      {/*        setEventOpen={setEventOpen}*/}
+      {/*        isEventOpen={isEventOpen}*/}
+      {/*        mapInstance={mapInstance}*/}
+      {/*      />}*/}
+      {/*    </AnimatePresence>*/}
+      {/*    {events$ && events$?.map((event, eventIdx) => {*/}
+      {/*        return (*/}
+      {/*          <Fragment key={`event-${eventIdx}`}>*/}
+      {/*            {renderMarker(event)}*/}
+      {/*          </Fragment>*/}
+      {/*        );*/}
+      {/*      },*/}
+      {/*    )}*/}
+      {/*    {activeEvent && renderMarker(activeEvent)}*/}
+      {/*  </>*/}
+      {/*</Map>*/}
     </div>
   );
 };
