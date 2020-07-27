@@ -19,6 +19,7 @@ export async function up(knex: Knex): Promise<any> {
         .notNullable()
         .defaultTo("DRAFT");
       table.string("title", 256);
+      table.string("visibility", 256);
       table.string("location", 10000);
       table.jsonb("coordinates");
       table.string("time", 1000);

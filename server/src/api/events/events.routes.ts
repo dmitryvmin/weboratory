@@ -2,6 +2,7 @@
 
 import { getUserEvents } from "./controllers/getUserEvents";
 import { updateEvent } from "./controllers/updateEvent";
+import { getAllEventsByVisibility } from "./controllers/getAllEventsByVisibility";
 
 function createEventsRouter(Router, prefix) {
 
@@ -11,6 +12,7 @@ function createEventsRouter(Router, prefix) {
 
   router
     .get("/:userId", getUserEvents)
+    .get("/:visibility", getAllEventsByVisibility)
     .put("/:eventId", updateEvent);
 
   return router;

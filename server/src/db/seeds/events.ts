@@ -15,6 +15,7 @@ export async function seed(knex: Knex): Promise<any> {
           coordinates: '{"lat": "", "lng": ""}',
           time: "",
           content: "",
+          visibility: "private",
         },
       ]);
     });

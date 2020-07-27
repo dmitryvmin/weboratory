@@ -184,7 +184,7 @@ const EventModal: FC<TEventModal> = ({
 
       <div className={styles.titleInput}>
         <input
-          value={titleFromProps ?? (title ?? "")}
+          value={title ?? titleFromProps}
           onChange={handleTitle}
         />
       </div>
@@ -192,7 +192,7 @@ const EventModal: FC<TEventModal> = ({
       <div className={styles.locationInput}>
         <IosMapOutline/>
         <input
-          value={locationFromProps ?? (location ?? "")}
+          value={location ?? locationFromProps}
           onChange={handleLocation}
         />
       </div>
@@ -200,14 +200,14 @@ const EventModal: FC<TEventModal> = ({
       <div className={styles.dateInput}>
         <IosCalendarOutline/>
         <input
-          value={timeFromProps ?? (time ?? "")}
+          value={time ?? timeFromProps}
           onChange={handleDate}
         />
       </div>
 
       <div className={styles.contentInput}>
         <textarea
-          value={!!contentFromProps ? contentFromProps : (content ?? "")}
+          value={content ?? contentFromProps}
           onChange={handleContent}
         />
       </div>
