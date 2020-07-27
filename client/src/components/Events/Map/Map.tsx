@@ -36,6 +36,19 @@ const Map: FC<TMapProps> = ({ children }) => {
     mapCenter,
   } = useMap();
 
+  const coordsChanged = haveCoordsChanged(mapCenter, mapCenterRef);
+
+  const contentChanged = () => {
+    let haveChanged = false;
+    for (let i = 0; i < children.length; i++) {
+      if (typeof children[i] !== typeof mapContentRef[i]) {
+        haveChanged = true;
+        break;
+      }
+    }
+    return haveChanged;
+  }
+
   /**
    * Effects
    */
@@ -49,8 +62,7 @@ const Map: FC<TMapProps> = ({ children }) => {
   ]);
 
   useEffect(() => {
-    const haveChanged = haveCoordsChanged(mapCenter, mapCenterRef);
-    if (!haveChanged) {
+    if (!coordsChanged) {
       return;
     }
     setMapCenterRef(mapCenter);
@@ -63,14 +75,8 @@ const Map: FC<TMapProps> = ({ children }) => {
       setMapContentRef(children);
       return;
     }
-    let haveChanged = false;
-    for (let i = 0; i < children.length; i++) {
-      if (typeof children[i] !== typeof mapContentRef[i]) {
-        haveChanged = true;
-        break;
-      }
-    }
-    if (!haveChanged) {
+
+    if (!contentChanged()) {
       return;
     }
     setMapContentRef(children);

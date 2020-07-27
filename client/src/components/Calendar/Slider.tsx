@@ -66,18 +66,18 @@ const Slide: FC<any> = ({ idx }) => {
       style={{
         width: `${slideWidth}px`,
         left: `${idx * slideWidth}px`,
-        backgroundColor: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
+        // backgroundColor: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
       }}
       className={[styles.slide, styles[`period-${period}`]].join(" ")}
     >
-      {/*{[...Array(CalendarPeriodSegments[period].count).keys()].map(i => i + 1).map((s) => {*/}
-      {/*  return (*/}
-      {/*    <div key={s}>*/}
-      {/*      {`${CalendarPeriodSegments[period].segment}-${s}`}*/}
-      {/*    </div>*/}
-      {/*  );*/}
-      {/*})}*/}
-      {`${period}-${idx}`}
+      {[...Array(CalendarPeriodSegments[period].count).keys()].map(i => i + 1).map((s) => {
+        return (
+          <div key={s}>
+            {`${CalendarPeriodSegments[period].segment}-${s}`}
+          </div>
+        );
+      })}
+      {/*{`${period}-${idx}`}*/}
     </div>
   );
 };

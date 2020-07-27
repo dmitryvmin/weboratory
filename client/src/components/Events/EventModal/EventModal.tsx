@@ -5,6 +5,7 @@ import IosClose from "react-ionicons/lib/IosClose";
 import IosMapOutline from "react-ionicons/lib/IosMapOutline";
 import IosCalendarOutline from "react-ionicons/lib/IosCalendarOutline";
 import { useParams } from "react-router-dom";
+import { format } from "date-fns";
 
 // Styles
 import styles from "./styles.module.scss";
@@ -37,15 +38,23 @@ const EventModal: FC<TEventModal> = ({
 }) => {
 
   /**
+   * Vars
+   */
+  const today = format(
+    new Date(),
+    "mm-dd-yyyy",
+  );
+
+  /**
    * Hooks
    */
-  const [location, setLocation] = useState<string | null>(null);
+  const [location, setLocation] = useState<string>(locationFromProps ?? "");
 
-  const [title, setTitle] = useState<string | null>(null);
+  const [title, setTitle] = useState<string>(titleFromProps ?? "");
 
-  const [content, setContent] = useState<string | null>(null);
+  const [content, setContent] = useState<string>(titleFromProps ?? "");
 
-  const [time, setTime] = useState<string | null>(null);
+  const [time, setTime] = useState<string>(timeFromProps ?? today);
 
   const [initOpen, setInitOpen] = useState<boolean>(true);
 
@@ -101,7 +110,7 @@ const EventModal: FC<TEventModal> = ({
       },
     },
     open: {
-      borderRadius: "0%",
+      borderRadius: undefined,
       width: windowWidth > 620 ? 600 : "calc(100vw - 20px)",
       height: 300,
       x: windowWidth > 620 ? windowWidth / 2 - 300 : 10,
@@ -135,13 +144,14 @@ const EventModal: FC<TEventModal> = ({
     }
     if (eventId === "new") {
       const eventContent = {
-        content,
+        content: content ?? contentFromProps,
+        title: title ?? titleFromProps,
+        location: location ?? locationFromProps,
+        time: time ?? timeFromProps,
         status: "PUBLIC",
-        title,
-        location,
-        time,
         coordinates,
       };
+      debugger;
       eventInstance.current.createEvent(eventContent);
     }
     else {
@@ -149,7 +159,7 @@ const EventModal: FC<TEventModal> = ({
         content: content ?? contentFromProps,
         title: title ?? titleFromProps,
         location: location ?? locationFromProps,
-        time: time ?? titleFromProps,
+        time: time ?? timeFromProps,
       };
       eventInstance.current.updateEvent(eventId, eventContent);
     }
@@ -197,7 +207,7 @@ const EventModal: FC<TEventModal> = ({
 
       <div className={styles.titleInput}>
         <input
-          value={title ?? titleFromProps}
+          value={title}
           onChange={handleTitle}
         />
       </div>
@@ -205,7 +215,7 @@ const EventModal: FC<TEventModal> = ({
       <div className={styles.locationInput}>
         <IosMapOutline/>
         <input
-          value={location ?? locationFromProps}
+          value={location}
           onChange={handleLocation}
         />
       </div>
@@ -213,14 +223,14 @@ const EventModal: FC<TEventModal> = ({
       <div className={styles.dateInput}>
         <IosCalendarOutline/>
         <input
-          value={time ?? timeFromProps}
+          value={time}
           onChange={handleDate}
         />
       </div>
 
       <div className={styles.contentInput}>
         <textarea
-          value={content ?? contentFromProps}
+          value={content}
           onChange={handleContent}
         />
       </div>

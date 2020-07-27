@@ -47,6 +47,7 @@ class eventsService {
       "Content-Type": "application/json",
     };
     const payload = JSON.stringify(body);
+    debugger;
     new BaseRequestModel<any>(reqURI, "POST", headers, payload)
       .request()
       .subscribe(this.eventState$);
