@@ -3,7 +3,7 @@ import { TCoords, TLngLat } from "@components/Events/types";
 /**
  * Formats latLng object into a [lat, lng] tuple
  */
-function getLngLatArray(latLng: TLngLat): TCoords | undefined {
+function getLngLatTuple(latLng: TLngLat): TCoords | undefined {
 
   if (!latLng) {
     console.warn("Couldn't format latLng because the value is falsy.");
@@ -13,4 +13,4 @@ function getLngLatArray(latLng: TLngLat): TCoords | undefined {
   return [latLng.lng, latLng.lat];
 };
 
-export { getLngLatArray };
+export { getLngLatTuple };

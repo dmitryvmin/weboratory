@@ -1,7 +1,76 @@
+@import "../../../styles/zIndex";
+
 .event {
   background-color: white;
   box-shadow: 0 0 1px 1px #eee;
   position: absolute;
-  z-index: 100;
+  z-index: $zi1;
   overflow: hidden;
+  border-radius: 2px;
+}
+
+.closeBtn {
+  position: absolute;
+  top: 20px;
+  right: 20px
+}
+
+.saveBtn {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+}
+
+%inputContainer {
+  display: flex;
+}
+
+%input {
+  border: none;
+  width: 100%;
+}
+
+%textarea {
+  border: none;
+  width: 100%;
+  resize: none;
+}
+
+.titleInput {
+  @extend %inputContainer;
+  width: calc(100% - 90px);
+  margin: 25px 20px 10px;
+
+  input {
+    @extend %input;
+    font-size: 24px;
+  }
+}
+
+.locationInput {
+  @extend %inputContainer;
+  margin: 20px 20px 10px;
+
+  input {
+    @extend %input;
+  }
+}
+
+.contentInput {
+  @extend %inputContainer;
+  margin: 20px 20px 0px;
+  height: 60px;
+
+  textarea {
+    @extend %textarea;
+  }
+}
+
+.dateInput {
+  @extend %inputContainer;
+  margin: 20px 20px 10px;
+
+  input {
+    @extend %input;
+  }
 }

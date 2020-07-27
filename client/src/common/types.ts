@@ -21,11 +21,12 @@ export type TTagMap = {
 }
 
 export type IEvent = {
+  event_id?: string;
   location?: string;
   coords?: string;
-  lngLat?: TLngLat;
   created_at?: string;
   updated_at?: string;
   time?: string;
-  title: string;
+  title?: string;
+  content?: any;
 }

@@ -29,7 +29,7 @@ const CalendarMenu: FC<{}> = ({}) => {
    * Return JSX
    */
   return (
-    <div className={styles.calendarMenuContainer}>
+    <>
       <IosRemoveCircleOutline
         className={[styles.btn, isFirstPeriod() && styles.btnDisabled].join(" ")}
         fontSize="40px"
@@ -41,7 +41,7 @@ const CalendarMenu: FC<{}> = ({}) => {
         onClick={zoomIn}
       />
       <div className={styles.period}>{period}</div>
-    </div>
+    </>
   );
 };
 

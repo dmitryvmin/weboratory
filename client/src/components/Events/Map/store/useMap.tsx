@@ -1,5 +1,6 @@
 // Libs
 import { useContext, useEffect } from "react";
+import invariant from "invariant";
 
 // Map store
 import { IMapContext, IUseMap } from "@components/Events/Map/store/types";
@@ -7,6 +8,8 @@ import { MapContext } from "@components/Events/Map/store/MapContext";
 
 // Event utils
 import { getCurrentPosition } from "@components/Events/utils/getCurrentPosition";
+import { TCoords, TLngLat } from "@components/Events/types";
+import { getLngLatTuple } from "@components/Events/utils/getLngLatTuple";
 
 /**
  * Map context facade
@@ -22,35 +25,45 @@ const useMap = (): IUseMap => {
    * Effects
    */
   // On component unmount, remove mapbox instance
-  // useEffect(() => {
-  //   return () => {
-  //     // if (mapInstance) {
-  //     //   mapInstance.remove();
-  //     // }
-  //   };
-  // }, []);
+  useEffect(() => {
+    return () => {
+      if (state.mapInstance) {
+        state.mapInstance.remove();
+      }
+    };
+  }, []);
 
   // Start map loaded on client's location
   useEffect(() => {
-    getCurrentPosition().then((position) => {
-      if (!position) {
+    getCurrentPosition().then((coords) => {
+      if (!coords) {
+        invariant(coords, `Couldn't set mapCenter - client coordinates are falsy: ${coords}`);
         return;
       }
-      // const lngLat = getLngLatArray(position);
-      // if (!lngLat) {
-      //   return;
-      // }
-      setClientLocation(position);
+      setMapCenter(coords);
     });
   }, []);
 
   /**
    * State Utils
    */
-  function setClientLocation(location) {
+  function setMapCenter(coords?: TLngLat) {
+
+    if (!coords) {
+      invariant(coords, `Couldn't set mapCenter - coordinates value is falsy: ${coords}`);
+      return;
+    }
+
+    const mapCenter = getLngLatTuple(coords);
+
+    if (!mapCenter) {
+      invariant(mapCenter, `Couldn't set mapCenter - mapCenter value is falsy: ${mapCenter}`);
+      return;
+    }
+
     setState((s) => ({
       ...s,
-      clientLocation: location,
+      mapCenter,
     }));
   }
 
@@ -73,7 +86,7 @@ const useMap = (): IUseMap => {
   }
 
   function getClientLocation() {
-    return state.clientLocation;
+    return state.mapCenter;
   }
 
   function getMapRef() {
@@ -84,14 +97,11 @@ const useMap = (): IUseMap => {
    * Return map state and public utilities
    */
   return {
-    clientLocation: state.clientLocation,
-    // setClientLocation,
-    // getClientLocation,
+    mapCenter: state.mapCenter,
     mapInstance: state.mapInstance,
     setMapInstance,
-    // getMapInstance,
     setMapRef,
-    // getMapRef,
+    setMapCenter,
   };
 };
 

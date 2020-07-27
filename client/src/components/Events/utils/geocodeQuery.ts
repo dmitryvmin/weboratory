@@ -10,8 +10,12 @@ import { TLngLat } from "@components/Events/types";
 function geocodeQuery(address) {
   return new Promise((resolve: (c: TLngLat) => void, reject) => {
     geocodeByAddress(address)
-      .then(results => getLatLng(results[0]))
-      .then(({ lng, lat }) => resolve({ lng, lat }))
+      .then(results => {
+        return getLatLng(results[0]);
+      })
+      .then(({ lng, lat }) => {
+        return resolve({ lng, lat });
+      })
       .catch(error => {
         console.error("geocodeQuery Error", error);
         reject(error);
@@ -19,4 +23,4 @@ function geocodeQuery(address) {
   });
 };
 
-export {geocodeQuery};
+export { geocodeQuery };

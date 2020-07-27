@@ -17,7 +17,6 @@ export type TMapEvent = {
 export type TEventModal = {
   setEventOpen: any;
   isEventOpen: boolean;
-  mapInstance: any;
   startPosition: DOMRect;
   startFromSearch: boolean;
   location: string;

@@ -1,3 +1,4 @@
-export function log(content, type = "message") {
-  console.log(content);
+export function log(content, ...args) {
+  // type = "message"
+  console.log(content, args);
 }

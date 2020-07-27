@@ -2,7 +2,7 @@ import { ICalendarState } from "@components/Calendar/store/types";
 
 export const CalendarInitState: ICalendarState = {
   period: "WEEK",
-  isOpen: true,
+  isOpen: false,
   activeIndex: 1,
   xPosition: 0,
 };

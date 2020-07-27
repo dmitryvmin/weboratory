@@ -6,4 +6,5 @@ export type TButton = {
   color?: "primary" | "secondary";
   disabled?: boolean;
   confirm?: boolean;
+  className?: string;
 }

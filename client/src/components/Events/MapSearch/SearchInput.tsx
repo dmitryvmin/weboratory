@@ -18,7 +18,7 @@ import { TSearchInput } from "@components/Events/MapSearch/types";
  */
 const SearchInput: FC<TSearchInput> = ({
   address,
-  handleSearch,
+  handleAddressSearch,
   isOpen,
   setIsOpen,
 }) => {
@@ -101,7 +101,7 @@ const SearchInput: FC<TSearchInput> = ({
         animate={isOpen ? "open" : "closed"}
         variants={inputVariants}
         value={address}
-        onChange={handleSearch}
+        onChange={handleAddressSearch}
       />
       <motion.div
         animate={isOpen ? "open" : "closed"}

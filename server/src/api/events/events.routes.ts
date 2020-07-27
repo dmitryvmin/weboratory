@@ -1,6 +1,7 @@
 "use strict";
 
 import { getUserEvents } from "./controllers/getUserEvents";
+import { updateEvent } from "./controllers/updateEvent";
 
 function createEventsRouter(Router, prefix) {
 
@@ -9,7 +10,8 @@ function createEventsRouter(Router, prefix) {
   });
 
   router
-    .get("/:userId", getUserEvents);
+    .get("/:userId", getUserEvents)
+    .put("/:eventId", updateEvent);
 
   return router;
 };

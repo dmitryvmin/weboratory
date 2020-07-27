@@ -13,6 +13,7 @@ const Button: FC<TButton> = ({
   color = "primary",
   disabled = false,
   confirm = false,
+  className,
 }) => {
 
   const [isConfirmed, setIsConfirmed] = useState<boolean>(false);
@@ -32,6 +33,7 @@ const Button: FC<TButton> = ({
         disabled && styles.disabled,
         styles.container,
         styles[color],
+        className && className,
       ].join(" ")}
       onClick={handleOnClick}
     >

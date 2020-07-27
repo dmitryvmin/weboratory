@@ -25,4 +25,11 @@
   font-size: 12px;
   padding: 5px;
   border-radius: 2px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.addIcon {
+  flex-shrink: 0;
 }

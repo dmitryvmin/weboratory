@@ -1,9 +1,13 @@
 // Libs
 import React, { FC, useEffect, useState } from "react";
 import { motion, Variants } from "framer-motion";
+import MdAdd from "react-ionicons/lib/MdAdd";
 
 // Styles
 import styles from "./styles.module.scss";
+
+// Components
+import { TPredictionsDropdown } from "@components/Events/PredictionsDropdown/types";
 
 const container: Variants = {
   active: {
@@ -26,17 +30,30 @@ const box: Variants = {
   },
 };
 
-const PredictionsDropdown: FC<any> = ({ items, handleClick }) => {
+/**
+ * Address predictions dropdown
+ */
+const PredictionsDropdown: FC<TPredictionsDropdown> = ({
+  items,
+  handleClick,
+}) => {
+
+  /**
+   * Hooks
+   */
   const [isAnimated, setIsAnimated] = useState<boolean>(false);
 
+  /**
+   * Effects
+   */
   useEffect(() => {
     setIsAnimated(true);
   }, []);
 
-  if (!items || !items.length) {
-    return null;
-  }
 
+  /**
+   * Return JSX
+   */
   return (
     <div className={styles.predictionsContainer}>
       <motion.div
@@ -53,6 +70,7 @@ const PredictionsDropdown: FC<any> = ({ items, handleClick }) => {
             onClick={handleClick(value)}
           >
             {value}
+            <MdAdd className={styles.addIcon}/>
           </motion.div>
         ))}
       </motion.div>

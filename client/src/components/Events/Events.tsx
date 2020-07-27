@@ -3,6 +3,8 @@ import React, { useEffect, SyntheticEvent, useState, useRef, Fragment, useContex
 import { Marker } from "react-mapbox-gl";
 import { geocodeByAddress, getLatLng } from "react-places-autocomplete";
 import { AnimatePresence } from "framer-motion";
+import invariant from "invariant";
+import { history } from "../../router";
 
 // styles
 import styles from "./styles.module.scss";
@@ -27,8 +29,11 @@ import { Map } from "@components/Events/Map";
 // Event utils
 import { useAddressPredictions } from "@components/Events/hooks/useAddressPredictions";
 import { geocodeQuery } from "@components/Events/utils/geocodeQuery";
-import { getLngLatArray } from "@components/Events/utils/getLngLatArray";
+import { getLngLatTuple } from "@components/Events/utils/getLngLatTuple";
 import { useMap } from "@components/Events/Map/store/useMap";
+import { haveCoordsChanged } from "@components/Events/utils/haveCoordsChanged";
+import { log } from "@utils/Logger";
+import { useWindowSize } from "@utils/hooks/useWindowSize";
 
 /**
  * Events App
@@ -44,9 +49,7 @@ const EventsApp: React.FC = () => {
    */
   const [address, setAddress] = useState<string>("");
 
-  const [coords, setCoords] = useState<TLngLat>();
-
-  const [activeEvent, setActiveEvent] = useState<TMapEvent | undefined>();
+  const [activeEvent, setActiveEvent] = useState<TMapEvent | null>(null);
 
   const [isSearchOpen, setIsSearchOpen] = useState<boolean>(true);
 
@@ -57,13 +60,15 @@ const EventsApp: React.FC = () => {
    */
   const predictions = useAddressPredictions(address);
 
-  const { mapInstance } = useMap();
+  const { mapInstance, setMapCenter, mapCenter } = useMap();
 
   const eventsInstance = useRef(new eventsService());
 
   const events$ = useObservable<IEvent[]>(eventsInstance.current.onEvents());
 
   const { user } = useContext(Auth0Context);
+
+  const { windowHeight } = useWindowSize();
 
   /**
    * Effects
@@ -89,29 +94,32 @@ const EventsApp: React.FC = () => {
       return;
     }
     geocodeQuery(address).then((newCoords) => {
-      if (newCoords.lat === coords?.lat && newCoords.lng === coords?.lng) {
+
+      if (!haveCoordsChanged(newCoords, mapCenter)) {
         return;
       }
-      // setCoords(newCoords);
-      // const mInstance = getMapInstance();
-      const mInstance = mapInstance;
-      if (mInstance) {
-        mInstance.flyTo({
-          center: getLngLatArray(newCoords),
-          speed: 1,
-          curve: 1,
-        });
-      }
+
+      setMapCenter(newCoords);
+
+      // mapInstance.flyTo({
+      //   center: getLngLatTuple(newCoords),
+      //   speed: 1,
+      //   curve: 1,
+      // });
+
     });
-  }, [address]);
+  }, [
+    address,
+  ]);
 
   // when activeMarker is set
   useEffect(() => {
-    // const mInstance = getMapInstance();
-
     if (!activeEvent) {
       return;
     }
+
+    history.push(`/events?eventId=${activeEvent.event_id}`);
+
     // Hide PredictionsDropdown
     setAddress("");
 
@@ -127,75 +135,64 @@ const EventsApp: React.FC = () => {
     //   { padding: [0, 0, 400, 0] },
     // );
 
-    setCoords(activeEvent.lngLat);
+    // setMapCenter(activeEvent.coordinates);
 
-//     mapInstance.flyTo({
-//       // These options control the ending camera position: centered at
-// // the target, at zoom level 9, and north up.
-//       center: activeMarker.latLng,
-//       zoom: 9,
-//       bearing: 0,
-//
-// // These options control the flight curve, making it move
-// // slowly and zoom out almost completely before starting
-// // to pan.
-//       speed: 0.2, // make the flying slow
-//       curve: 1, // change the speed at which it zooms out
-//
-// // This can be any easing function: it takes a number between
-// // 0 and 1 and returns another number between 0 and 1.
-//       easing: function(t) {
-//         return t;
-//       },
-//
-// // this animation is considered essential with respect to prefers-reduced-motion
-//       essential: true,
-//     });
-
-    // if (mInstance) {
-    //   // mInstance.flyTo({
-    //   //   center: getLngLatArray(activeMarker.latLng),
-    //   //   speed: 0.2,
-    //   //   curve: 1,
-    //   // });
-    //   mInstance.easeTo({
-    //     center: getLngLatArray(activeMarker.latLng),
-    //     padding: {top: 0, bottom: 200, left: 0, right: 0}
-    //   });
+    //if (mapInstance) {
+    // mInstance.flyTo({
+    //   center: getLngLatArray(activeMarker.latLng),
+    //   speed: 0.2,
+    //   curve: 1,
+    // });
+    // mapInstance.easeTo({
+    //   center: getLngLatTuple(mapCenter),
+    //   padding: {top: 0, bottom: 200, left: 0, right: 0}
+    // });
     // }
 
     // Open Event modal
     setEventOpen(true);
 
-  }, [activeEvent]);
+  }, [
+    activeEvent,
+  ]);
 
   // https://docs.mapbox.com/mapbox-gl-js/example/offset-vanishing-point-with-padding/
   useEffect(() => {
-    // const mInstance = getMapInstance();
-    const mInstance = mapInstance;
-    if (!mInstance || !activeEvent?.lngLat) {
+    if (!activeEvent?.coordinates) {
       return;
     }
     if (!isEventOpen) {
-      mInstance.easeTo({
-        center: activeEvent ? getLngLatArray(activeEvent.lngLat) : undefined,
+      mapInstance.easeTo({
+        center: activeEvent ? getLngLatTuple(activeEvent.coordinates) : undefined,
         zoom: 18,
-        padding: { "bottom": 0 },
+        padding: {
+          "bottom": 0,
+        },
       });
     }
     else {
-      mInstance.easeTo({
-        center: activeEvent ? getLngLatArray(activeEvent.lngLat) : undefined,
+      log("@@ Event is open");
+      mapInstance.flyTo({
+        center: getLngLatTuple(activeEvent.coordinates),
+        speed: 0.2,
+        curve: 1,
+      });
+      mapInstance.easeTo({
+        center: activeEvent ? getLngLatTuple(activeEvent.coordinates) : undefined,
         zoom: 19,
-        padding: { "bottom": 300 },
+        padding: {
+          "bottom": windowHeight - 400
+        },
       });
     }
-  }, [isEventOpen]);
+  }, [
+    isEventOpen,
+  ]);
 
   /**
    * Handlers
    */
-  const handleSearch = (ev: SyntheticEvent<HTMLInputElement>) => {
+  const handleAddressSearch = (ev: SyntheticEvent<HTMLInputElement>) => {
     const address = ev.currentTarget.value;
     setAddress(address);
   };
@@ -229,10 +226,13 @@ const EventsApp: React.FC = () => {
    * Render fns
    */
   const renderMarker = (event) => {
-    const markerCoords = getLngLatArray(event.coordinates);
+    if (!event) {
+      return;
+    }
+    const markerCoords = getLngLatTuple(event.coordinates);
 
     if (!markerCoords) {
-      return null;
+      return;
     }
 
     return (
@@ -248,6 +248,8 @@ const EventsApp: React.FC = () => {
     );
   };
 
+  log(isEventOpen && !!activeEvent);
+
   /**
    * Return JSX
    */
@@ -260,38 +262,37 @@ const EventsApp: React.FC = () => {
 
       <SearchInput
         address={address}
-        handleSearch={handleSearch}
+        handleAddressSearch={handleAddressSearch}
         isOpen={isSearchOpen}
         setIsOpen={setIsSearchOpen}
       />
 
+      {!!predictions.length &&
       <PredictionsDropdown
         items={predictions}
         handleClick={handleAddressClick}
-      />
+      />}
 
-      {/*<Map center={coords}>*/}
-      {/*  <>*/}
-      {/*    <AnimatePresence>*/}
-      {/*      {(isEventOpen && activeEvent) &&*/}
-      {/*      <EventModal*/}
-      {/*        {...activeEvent}*/}
-      {/*        setEventOpen={setEventOpen}*/}
-      {/*        isEventOpen={isEventOpen}*/}
-      {/*        mapInstance={mapInstance}*/}
-      {/*      />}*/}
-      {/*    </AnimatePresence>*/}
-      {/*    {events$ && events$?.map((event, eventIdx) => {*/}
-      {/*        return (*/}
-      {/*          <Fragment key={`event-${eventIdx}`}>*/}
-      {/*            {renderMarker(event)}*/}
-      {/*          </Fragment>*/}
-      {/*        );*/}
-      {/*      },*/}
-      {/*    )}*/}
-      {/*    {activeEvent && renderMarker(activeEvent)}*/}
-      {/*  </>*/}
-      {/*</Map>*/}
+      <AnimatePresence>
+        {(isEventOpen && !!activeEvent) &&
+        <EventModal
+          {...activeEvent}
+          setEventOpen={setEventOpen}
+          isEventOpen={isEventOpen}
+        />}
+      </AnimatePresence>
+
+      <Map>
+        {events$?.map((event, eventIdx) => {
+            return (
+              <Fragment key={`event-${eventIdx}`}>
+                {renderMarker(event)}
+              </Fragment>
+            );
+          },
+        )}
+        {renderMarker(activeEvent)}
+      </Map>
     </div>
   );
 };

@@ -65,3 +65,9 @@
     opacity: 0;
   }
 }
+
+:global {
+  .mapboxgl-marker {
+    z-index: 0 !important;
+  }
+}

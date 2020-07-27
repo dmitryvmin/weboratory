@@ -1,13 +1,8 @@
-import { TCoords } from "@components/Events/types";
+import { TCoords, TLngLat } from "@components/Events/types";
 import { Dispatch, ReactNode, SetStateAction } from "react";
 
-export type TMap = {
-  center?: TCoords;
-  children: any;
-};
-
 export type IMapState = {
-  clientLocation: TCoords;
+  mapCenter: TCoords;
   mapInstance: undefined | any;
   mapRef: any;
 }
@@ -22,8 +17,9 @@ export type IMapProvider = {
 }
 
 export type IUseMap = {
-  clientLocation: TCoords;
+  mapCenter: TCoords;
   mapInstance: any;
   setMapInstance: any;
   setMapRef: any;
+  setMapCenter(coords: TLngLat | undefined): void;
 }

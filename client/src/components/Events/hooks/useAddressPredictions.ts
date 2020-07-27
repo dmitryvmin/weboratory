@@ -8,7 +8,7 @@ declare var google;
  * Return prediction for an input address
  */
 function useAddressPredictions(input) {
-  const [predictions, setPredictions] = useState<any[]>([]);
+  const [predictions, setPredictions] = useState<string[]>([]);
 
   const autocomplete = useRef<any>();
 
