@@ -83,7 +83,7 @@ const EventsApp: React.FC = () => {
     if (!user?.sub) {
       return;
     }
-    eventsInstance.current.getEvents(user.sub);
+    eventsInstance.current.getUserEvents(user.sub);
   }, [
     user,
   ]);

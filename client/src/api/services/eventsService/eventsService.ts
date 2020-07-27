@@ -37,7 +37,7 @@ class eventsService {
     this.eventState$.next(nextState);
   }
 
-  getEvents(userId: string) {
+  getUserEvents(userId: string) {
     const reqURI = getEventsByUserId(userId);
     new BaseRequestModel<any>(reqURI, "GET")
       .request()

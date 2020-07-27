@@ -29,4 +29,5 @@ export type IEvent = {
   time?: string;
   title?: string;
   content?: any;
+  visibility?: string;
 }

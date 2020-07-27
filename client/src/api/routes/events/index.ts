@@ -6,6 +6,10 @@ function updateEventContent(eventId: string) {
   return `api/v1/events/${eventId}`;
 }
 
+function updateEventsByVisibility(visibility: string) {
+  return `api/v1/events/vis/${visibility}`;
+}
+
 export {
   getEventsByUserId,
   updateEventContent,

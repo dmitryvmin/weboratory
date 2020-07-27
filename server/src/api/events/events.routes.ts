@@ -12,7 +12,7 @@ function createEventsRouter(Router, prefix) {
 
   router
     .get("/:userId", getUserEvents)
-    .get("/:visibility", getAllEventsByVisibility)
+    .get("/vis/:visibility", getAllEventsByVisibility)
     .put("/:eventId", updateEvent);
 
   return router;
