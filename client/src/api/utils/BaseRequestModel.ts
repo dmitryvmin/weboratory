@@ -39,6 +39,9 @@ class BaseRequestModel<T> implements Props<T> {
           if (r.status === 200) {
             return r.json();
           }
+          if (r.status === 500) {
+            return null;
+          }
           else {
             return r;
           }

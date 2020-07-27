@@ -51,7 +51,6 @@ class eventsService {
 
   getEventsByVis(visibility: string) {
     const reqURI = getEventsByVisibility(visibility);
-    debugger;
     new BaseRequestModel<any>(reqURI, "GET")
       .request()
       .subscribe((res) => {

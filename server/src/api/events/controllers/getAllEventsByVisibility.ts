@@ -6,7 +6,7 @@ import * as HttpStatus from "http-status";
 import { queryEventsByVisibility } from "../services/queryEventsByVisibility";
 
 /**
- * Fetch all events matching user_id
+ * Fetch all events matching visibility
  */
 async function getAllEventsByVisibility(ctx: Context, next: () => Promise<any>) {
 
