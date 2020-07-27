@@ -8,8 +8,7 @@ import "./index.scss";
 import App from "./App";
 import history from "./utils/history";
 import { Auth0Provider } from "@utils/hooks/useAuth0";
-import { getEnvs } from "@configs/env";
-const { AUTH_DOMAIN, AUTH_CLIENT_ID } = getEnvs();
+import { getEnv } from "@configs/env";
 
 const onRedirectCallback = (appState: any) => {
   history.push(
@@ -22,8 +21,8 @@ const onRedirectCallback = (appState: any) => {
 ReactDOM.render(
   <Router>
     <Auth0Provider
-      domain={AUTH_DOMAIN}
-      client_id={AUTH_CLIENT_ID}
+      domain={getEnv("AUTH_DOMAIN")}
+      client_id={process.env.AUTH_CLIENT_ID}
       redirect_uri={window.location.origin}
       onRedirectCallback={onRedirectCallback}
     >

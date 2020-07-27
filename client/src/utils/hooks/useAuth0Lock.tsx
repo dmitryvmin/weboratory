@@ -3,15 +3,13 @@ import React, { FC, useState, useEffect, useContext, createContext, ReactNode } 
 import { Auth0Lock } from "auth0-lock";
 
 // App
-import { getEnvs } from "@configs/env";
+import { getEnv } from "@configs/env";
 import { Auth0Context } from "@utils/hooks/useAuth0";
 
 type IAuth0LockContext = any;
 type IAuth0LockProvider = {
   children?: ReactNode;
 };
-
-const { AUTH_DOMAIN, AUTH_CLIENT_ID } = getEnvs();
 
 export const Auth0LockContext = createContext<IAuth0LockContext>({} as IAuth0LockContext);
 
@@ -63,7 +61,7 @@ const useAuth0Lock = () => {
     if (!isAuthenticated) {
       return;
     }
-    const lock = new Auth0Lock(AUTH_CLIENT_ID, AUTH_DOMAIN);
+    const lock = new Auth0Lock(process.env.AUTH_CLIENT_ID, getEnv("AUTH_DOMAIN"));
     if (lock) {
       setLock(lock);
     }

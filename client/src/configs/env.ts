@@ -1,6 +1,6 @@
 const rootUrl = `${window.location.protocol}//${window.location.host}`;
 
-type IEnv = "APP" | "API_SERVER";
+type IEnv = "APP" | "API_SERVER" | "AUTH_DOMAIN";
 
 // TODO move to BE
 const envs = {
@@ -9,7 +9,6 @@ const envs = {
     APP: "production",
     API_SERVER: "https://weboratory.herokuapp.com",
     AUTH_DOMAIN: "weboratory.auth0.com",
-    AUTH_CLIENT_ID: "N0g3dn6XP6yWN1XCSboRsO4nXhcPzrsB",
   },
 
   // Staging
@@ -21,18 +20,14 @@ const envs = {
   // Development
   "http://localhost:3001": {
     APP: "development",
-    API_SERVER: "https://weboratory.herokuapp.com",
+    API_SERVER: "http://localhost:3001",
+    // API_SERVER: "https://weboratory.herokuapp.com",
     AUTH_DOMAIN: "weboratory.auth0.com",
-    AUTH_CLIENT_ID: "N0g3dn6XP6yWN1XCSboRsO4nXhcPzrsB",
   },
 };
 
 function getEnv(env: IEnv) {
   return envs[rootUrl][env];
-}
-
-function getEnvs() {
-  return envs[rootUrl];
 }
 
 // if (envs[rootUrl]) {
@@ -45,5 +40,4 @@ function getEnvs() {
 
 export {
   getEnv,
-  getEnvs,
 };
