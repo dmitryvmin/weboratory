@@ -10,10 +10,12 @@ function createEventsRouter(Router, prefix) {
     prefix: `${prefix}/events`,
   });
 
+  let createEvent;
   router
     .get("/:userId", getUserEvents)
     .get("/vis/:visibility", getAllEventsByVisibility)
-    .put("/:eventId", updateEvent);
+    .put("/:eventId", updateEvent)
+    .post(createEvent);
 
   return router;
 };

@@ -119,7 +119,7 @@ const EventsApp: React.FC = () => {
       return;
     }
 
-    history.push(`/events?eventId=${activeEvent.event_id}`);
+    history.push(`/events?eventId=${activeEvent.event_id ?? "new"}`);
 
     // Hide PredictionsDropdown
     setAddress("");

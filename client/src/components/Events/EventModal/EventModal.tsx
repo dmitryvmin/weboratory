@@ -139,7 +139,12 @@ const EventModal: FC<TEventModal> = ({
     if (!eventId || !eventContent) {
       return;
     }
-    eventInstance.current.updateEvent(eventId, eventContent);
+    if (eventId === "new") {
+      eventInstance.current.updateEvent(eventId, eventContent);
+    }
+    else {
+      eventInstance.current.updateEvent(eventId, eventContent);
+    }
   }
 
   function handleTitle(ev: ChangeEvent<HTMLInputElement>) {
