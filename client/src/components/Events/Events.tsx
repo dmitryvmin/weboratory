@@ -51,7 +51,7 @@ const EventsApp: React.FC = () => {
 
   const [activeEvent, setActiveEvent] = useState<TMapEvent | null>(null);
 
-  const [isSearchOpen, setIsSearchOpen] = useState<boolean>(true);
+  const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
 
   const [isEventOpen, setEventOpen] = useState<boolean>(false);
 
