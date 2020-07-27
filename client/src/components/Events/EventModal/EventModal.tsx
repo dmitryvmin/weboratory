@@ -129,20 +129,28 @@ const EventModal: FC<TEventModal> = ({
    * Handlers
    */
   function handleSave() {
-    const eventContent = {
-      content: content ?? contentFromProps,
-      title: title ?? titleFromProps,
-      location: location ?? locationFromProps,
-      time: time ?? titleFromProps,
-    };
     const eventId = new URLSearchParams(window.location.search).get("eventId");
-    if (!eventId || !eventContent) {
+    if (!eventId) {
       return;
     }
     if (eventId === "new") {
-      eventInstance.current.updateEvent(eventId, eventContent);
+      const eventContent = {
+        content,
+        status: "PUBLIC",
+        title,
+        location,
+        time,
+        coordinates,
+      };
+      eventInstance.current.createEvent(eventContent);
     }
     else {
+      const eventContent = {
+        content: content ?? contentFromProps,
+        title: title ?? titleFromProps,
+        location: location ?? locationFromProps,
+        time: time ?? titleFromProps,
+      };
       eventInstance.current.updateEvent(eventId, eventContent);
     }
   }

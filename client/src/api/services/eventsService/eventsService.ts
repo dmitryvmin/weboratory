@@ -4,7 +4,7 @@ import { map } from "rxjs/operators";
 
 // API
 import { BaseRequestModel } from "@api/utils/BaseRequestModel";
-import { getEventsByUserId, getEventsByVisibility, updateEventContent } from "@api/routes/events";
+import { getCreateEventURI, getEventsByUserId, getEventsByVisibility, updateEventContent } from "@api/routes/events";
 
 // Utils
 import { parseJSON } from "@utils/parseJSON";
@@ -40,6 +40,18 @@ class eventsService {
     this.eventState$.next(nextState);
   }
 
+  createEvent(body: any) {
+    const reqURI = getCreateEventURI();
+    const headers = {
+      "Access-Control-Allow-Origin": "*",
+      "Content-Type": "application/json",
+    };
+    const payload = JSON.stringify(body);
+    new BaseRequestModel<any>(reqURI, "POST", headers, payload)
+      .request()
+      .subscribe(this.eventState$);
+  }
+
   getUserEvents(userId: string) {
     const reqURI = getEventsByUserId(userId);
     new BaseRequestModel<any>(reqURI, "GET")
@@ -51,7 +63,10 @@ class eventsService {
 
   getEventsByVis(visibility: string) {
     const reqURI = getEventsByVisibility(visibility);
-    new BaseRequestModel<any>(reqURI, "GET")
+    const headers = {
+      "Access-Control-Allow-Origin": "*",
+    };
+    new BaseRequestModel<any>(reqURI, "GET", headers)
       .request()
       .subscribe((res) => {
         this.eventsState$.next(res);

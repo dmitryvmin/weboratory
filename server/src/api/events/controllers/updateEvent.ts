@@ -22,15 +22,6 @@ async function updateEvent(ctx: Context, next: () => Promise<any>) {
     return;
   }
 
-  const {
-    content,
-    status,
-    title,
-    location,
-    time,
-    coordinates,
-  } = ctx.request.body;
-
   try {
     const event = await updateEventContent(eventId, ctx.request.body);
     ctx.status = HttpStatus.OK;
