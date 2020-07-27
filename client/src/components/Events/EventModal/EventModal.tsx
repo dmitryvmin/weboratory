@@ -110,7 +110,7 @@ const EventModal: FC<TEventModal> = ({
       },
     },
     open: {
-      borderRadius: undefined,
+      borderRadius: "0%",
       width: windowWidth > 620 ? 600 : "calc(100vw - 20px)",
       height: 300,
       x: windowWidth > 620 ? windowWidth / 2 - 300 : 10,
