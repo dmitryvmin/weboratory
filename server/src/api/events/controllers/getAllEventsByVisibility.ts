@@ -14,7 +14,7 @@ async function getAllEventsByVisibility(ctx: Context, next: () => Promise<any>) 
   const { visibility } = ctx.params;
 
   try {
-    const events = await queryEventsByVisibility ?? [];
+    const events = await queryEventsByVisibility(visibility) ?? [];
     ctx.status = HttpStatus.OK;
     ctx.body = events;
     await next();

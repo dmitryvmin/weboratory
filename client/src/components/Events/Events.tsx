@@ -83,7 +83,8 @@ const EventsApp: React.FC = () => {
     if (!user?.sub) {
       return;
     }
-    eventsInstance.current.getUserEvents(user.sub);
+    // eventsInstance.current.getUserEvents(user.sub);
+    eventsInstance.current.getEventsByVis("PUBLIC");
   }, [
     user,
   ]);

@@ -1,17 +1,20 @@
 // Libs
 import { Observable, pipe, Subject } from "rxjs";
+import { map } from "rxjs/operators";
 
 // API
 import { BaseRequestModel } from "@api/utils/BaseRequestModel";
-import { getEventsByUserId, updateEventContent } from "@api/routes/events";
+import { getEventsByUserId, getEventsByVisibility, updateEventContent } from "@api/routes/events";
 
 // Utils
 import { parseJSON } from "@utils/parseJSON";
 
 // Types
 import { IEvent } from "@common/types";
-import { map } from "rxjs/operators";
 
+/**
+ * Events Service Class
+ */
 class eventsService {
   public eventsState$: Subject<IEvent[]>;
   public eventState$: Subject<IEvent>;
@@ -46,13 +49,22 @@ class eventsService {
       });
   }
 
+  getEventsByVis(visibility: string) {
+    const reqURI = getEventsByVisibility(visibility);
+    debugger;
+    new BaseRequestModel<any>(reqURI, "GET")
+      .request()
+      .subscribe((res) => {
+        this.eventsState$.next(res);
+      });
+  }
+
   updateEvent(eventId: string, content: Partial<IEvent>) {
     const reqURI = updateEventContent(eventId);
     const headers = {
       "Content-Type": "application/json",
     };
     const body = JSON.stringify(content);
-
     new BaseRequestModel<any>(reqURI, "PUT", headers, body)
       .request()
       .subscribe(this.eventState$);
