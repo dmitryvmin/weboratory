@@ -8,7 +8,7 @@ import { queryCreateEvent } from "../services/queryCreateEvent";
 /**
  * Creates a new event
  */
-async function addOne(ctx: Context, next: () => Promise<any>) {
+async function createEvent(ctx: Context, next: () => Promise<any>) {
 
   if (!ctx.request.hasOwnProperty("body")) {
     ctx.status = HttpStatus.NOT_ACCEPTABLE;
@@ -29,4 +29,4 @@ async function addOne(ctx: Context, next: () => Promise<any>) {
   }
 }
 
-export {addOne};
+export { createEvent };

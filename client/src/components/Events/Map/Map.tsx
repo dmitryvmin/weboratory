@@ -85,7 +85,7 @@ const Map: FC<TMapProps> = ({ children }) => {
     <Mapbox
       ref={mapRef}
       center={mapCenter}
-      zoom={[17]}
+      zoom={[14]}
       pitch={[45]}
       bearing={[-45]}
       style="mapbox://styles/mapbox/streets-v11"
