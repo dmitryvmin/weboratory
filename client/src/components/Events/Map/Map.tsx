@@ -13,9 +13,12 @@ import { TCoords } from "@components/Events/types";
 import { haveCoordsChanged } from "@components/Events/utils/haveCoordsChanged";
 import { log } from "@utils/Logger";
 
+console.log("@@ ================", process, process.env);
+
 const Mapbox = ReactMapboxGl({
   accessToken: (process.env.REACT_APP_MAPBOX_ACCESS_TOKEN ?? process.env.MAPBOX_ACCESS_TOKEN) as string,
 });
+
 
 /**
  * Map
