@@ -25,13 +25,13 @@ const useMap = (): IUseMap => {
    * Effects
    */
   // On component unmount, remove mapbox instance
-  useEffect(() => {
-    return () => {
-      if (state.mapInstance) {
-        state.mapInstance.remove();
-      }
-    };
-  }, []);
+  // useEffect(() => {
+  //   return () => {
+  //     if (state.mapInstance) {
+  //       state.mapInstance.remove();
+  //     }
+  //   };
+  // }, []);
 
   // Start map loaded on client's location
   useEffect(() => {

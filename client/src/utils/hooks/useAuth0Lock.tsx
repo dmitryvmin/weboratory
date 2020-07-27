@@ -26,13 +26,10 @@ const useAuth0Lock = () => {
       return;
     }
 
-    debugger;
     lock.on("authenticated", function(authResult) {
 
-      debugger;
       lock.getUserInfo(authResult.accessToken, function(error, profileResult) {
 
-        debugger;
         if (error) {
           // Handle error
           return;

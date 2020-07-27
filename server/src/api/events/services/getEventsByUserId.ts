@@ -14,6 +14,7 @@ async function getAllEventsByUserId(userId: string) {
   }
   catch (err) {
     console.log("Events service errored retrieving events for userId:", userId);
+    throw err;
   }
 }
 

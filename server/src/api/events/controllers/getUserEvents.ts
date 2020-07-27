@@ -14,14 +14,14 @@ async function getUserEvents(ctx: Context, next: () => Promise<any>) {
   const { userId } = ctx.params;
 
   try {
-    const events = await getAllEventsByUserId(userId);
+    const events = await getAllEventsByUserId(userId) ?? [];
     ctx.status = HttpStatus.OK;
     ctx.body = events;
     await next();
   }
   catch (err) {
     ctx.status = HttpStatus.INTERNAL_SERVER_ERROR;
-    ctx.body = `Couldn't retrieve events for userId ${userId}`;
+    ctx.body = `Couldn't retrieve events for userId ${userId}. Error: ${err}`;
     await next();
   }
 }

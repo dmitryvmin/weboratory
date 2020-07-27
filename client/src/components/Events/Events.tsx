@@ -171,7 +171,6 @@ const EventsApp: React.FC = () => {
       });
     }
     else {
-      log("@@ Event is open");
       mapInstance.flyTo({
         center: getLngLatTuple(activeEvent.coordinates),
         speed: 0.2,
@@ -247,8 +246,6 @@ const EventsApp: React.FC = () => {
       </Marker>
     );
   };
-
-  log(isEventOpen && !!activeEvent);
 
   /**
    * Return JSX

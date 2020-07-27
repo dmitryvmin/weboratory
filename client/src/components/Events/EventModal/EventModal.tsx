@@ -87,13 +87,14 @@ const EventModal: FC<TEventModal> = ({
   /**
    * Framer variants
    */
-  const searchVariants = {
+  const eventVariant = {
     closed: {
       borderRadius: (startFromSearch && initOpen) ? "0%" : "50%",
       width: (startFromSearch && initOpen) ? 300 : 7,
       height: (startFromSearch && initOpen) ? 27 : 7,
       x: initOpen ? startPosition.x : endPosition.x - 8,
       y: initOpen ? startPosition.y : endPosition.y - 20,
+      opacity: 0,
       transition: {
         type: "tween",
         duration: 0.3,
@@ -105,6 +106,7 @@ const EventModal: FC<TEventModal> = ({
       height: 300,
       x: windowWidth > 620 ? windowWidth / 2 - 300 : 10,
       y: 300,
+      opacity: 1,
       transition: {
         type: "tween",
         duration: 0.5,
@@ -158,7 +160,7 @@ const EventModal: FC<TEventModal> = ({
 
   return (
     <motion.div
-      variants={searchVariants}
+      variants={eventVariant}
       initial="closed"
       animate={isOpen ? "open" : "closed"}
       className={styles.event}

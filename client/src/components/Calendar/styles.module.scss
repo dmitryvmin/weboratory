@@ -3,7 +3,8 @@
 
 .calendarContainer {
   position: absolute;
-  bottom: 50px;
+  z-index: $zi2;
+  bottom: 70px;
   width: calc(100vw - 40px);
   height: 200px;
   margin: 20px;

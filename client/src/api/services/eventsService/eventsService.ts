@@ -41,12 +41,19 @@ class eventsService {
     const reqURI = getEventsByUserId(userId);
     new BaseRequestModel<any>(reqURI, "GET")
       .request()
-      .subscribe(this.eventsState$);
+      .subscribe((res) => {
+        this.eventsState$.next(res);
+      });
   }
 
   updateEvent(eventId: string, content: Partial<IEvent>) {
     const reqURI = updateEventContent(eventId);
-    new BaseRequestModel<any>(reqURI, "PUT")
+    const headers = {
+      "Content-Type": "application/json",
+    };
+    const body = JSON.stringify(content);
+
+    new BaseRequestModel<any>(reqURI, "PUT", headers, body)
       .request()
       .subscribe(this.eventState$);
   }

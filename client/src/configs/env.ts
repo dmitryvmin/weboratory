@@ -21,7 +21,8 @@ const envs = {
   // Development
   "http://localhost:3001": {
     APP: "development",
-    API_SERVER: "https://weboratory.herokuapp.com",
+    // API_SERVER: "https://weboratory.herokuapp.com",
+    API_SERVER: "http://localhost:3001",
     AUTH_DOMAIN: "weboratory.auth0.com",
     AUTH_CLIENT_ID: "N0g3dn6XP6yWN1XCSboRsO4nXhcPzrsB",
   },
