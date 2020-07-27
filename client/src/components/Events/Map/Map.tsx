@@ -1,5 +1,5 @@
 // Libs
-import React, { FC, useRef, useState, useEffect, memo, useMemo } from "react";
+import React, { FC, useRef, useState, useEffect, useMemo } from "react";
 import ReactMapboxGl from "react-mapbox-gl";
 
 // Styles
@@ -18,7 +18,6 @@ console.log("@@ ================", process, process.env);
 const Mapbox = ReactMapboxGl({
   accessToken: (process.env.REACT_APP_MAPBOX_ACCESS_TOKEN ?? process.env.MAPBOX_ACCESS_TOKEN) as string,
 });
-
 
 /**
  * Map

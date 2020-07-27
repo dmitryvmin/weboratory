@@ -17,12 +17,11 @@ async function getAllEventsByVisibility(ctx: Context, next: () => Promise<any>) 
     const events = await queryEventsByVisibility(visibility) ?? [];
     ctx.status = HttpStatus.OK;
     ctx.body = events;
-    await next();
   }
   catch (err) {
     ctx.status = HttpStatus.INTERNAL_SERVER_ERROR;
-    ctx.body = `Couldn't retrieve events with visibility of ${visibility}. Error: ${err}`;
-    await next();
+    ctx.body = err.message;
+    ctx.app.emit("error", err, ctx);
   }
 }
 

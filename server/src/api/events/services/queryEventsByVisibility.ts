@@ -13,8 +13,7 @@ async function queryEventsByVisibility(visibility: string) {
     return events;
   }
   catch (err) {
-    console.log("Events service errored retrieving events with visibility of ", visibility);
-    throw err;
+    throw new Error(`Events service errored retrieving events with visibility of ${visibility}`);
   }
 }
 

@@ -2,7 +2,6 @@ const rootUrl = `${window.location.protocol}//${window.location.host}`;
 
 type IEnv = "APP" | "API_SERVER" | "AUTH_DOMAIN";
 
-// TODO move to BE
 const envs = {
   // Production
   "https://weboratory.herokuapp.com": {

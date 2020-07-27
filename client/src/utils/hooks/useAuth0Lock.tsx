@@ -61,7 +61,7 @@ const useAuth0Lock = () => {
     if (!isAuthenticated) {
       return;
     }
-    const lock = new Auth0Lock(process.env.AUTH_CLIENT_ID, getEnv("AUTH_DOMAIN"));
+    const lock = new Auth0Lock(process.env.REACT_APP_AUTH_CLIENT_ID, getEnv("AUTH_DOMAIN"));
     if (lock) {
       setLock(lock);
     }
