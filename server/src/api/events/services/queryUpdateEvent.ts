@@ -32,7 +32,7 @@ async function queryUpdateEvent(
       .update(eventContent)
       .where("event_id", eventId)
       .first();
-
+debugger;
     return event;
   }
   catch (err) {

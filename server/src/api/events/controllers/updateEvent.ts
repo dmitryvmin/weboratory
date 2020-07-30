@@ -25,6 +25,7 @@ async function updateEvent(ctx: Context, next: () => Promise<any>) {
   try {
     const event = await queryUpdateEvent(eventId, ctx.request.body);
     ctx.status = HttpStatus.OK;
+    debugger;
     ctx.body = event;
     await next();
   }
