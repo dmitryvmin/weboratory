@@ -3,10 +3,14 @@ import { Observable } from "rxjs";
 
 // App
 import { getEnv } from "@configs/env";
+import { log } from "@utils/Logger";
 
 // Types
 import { _Headers, Body, Method, Props } from "./types";
 
+/**
+ * REST Observable
+ */
 class BaseRequestModel<T> implements Props<T> {
   url: string;
   method: Method;
@@ -35,7 +39,7 @@ class BaseRequestModel<T> implements Props<T> {
           body: this.body,
         })
         .then((r: Response) => {
-          console.log(`Response completed with status code ${r.status}.`);
+          // log(`Response completed with status code ${r.status}.`);
           if (r.status === 200) {
             return r.json();
           }
@@ -47,7 +51,7 @@ class BaseRequestModel<T> implements Props<T> {
           }
         })
         .then((data) => {
-          console.log(`Passing response data to the observer. Data:`, data);
+          // log(`Passing response data to the observer. Data:`, data);
           observer.next(data);
           // observer.complete();
         })

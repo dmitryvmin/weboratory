@@ -1,26 +1,31 @@
 // Libs
-import { geocodeByAddress, getLatLng } from "react-places-autocomplete";
+import invariant from "invariant";
+import { log } from "@utils/Logger";
 
 // Types
-import { TLngLat } from "@components/Events/types";
+import { TLngLat } from "@common/types";
+import { getLngLat } from "@components/Events/utils/getLngLat";
+import { geocodeByAddress } from "@components/Events/utils/geocodeByAddress";
 
 /**
  * Geocodes an address string
  */
-function geocodeQuery(address) {
-  return new Promise((resolve: (c: TLngLat) => void, reject) => {
-    geocodeByAddress(address)
-      .then(results => {
-        return getLatLng(results[0]);
-      })
-      .then(({ lng, lat }) => {
-        return resolve({ lng, lat });
-      })
-      .catch(error => {
-        console.error("geocodeQuery Error", error);
-        reject(error);
-      });
-  });
+async function geocodeQuery(address) {
+  try {
+    const response = await geocodeByAddress(address);
+    if (!response.length) {
+      return;
+    }
+    const coords: TLngLat = await getLngLat(response[0]);
+    if (!coords) {
+      return;
+    }
+    return coords;
+  }
+  catch(err) {
+    log(`geocodeQuery error for address ${address}:`, err);
+    return;
+  }
 };
 
 export { geocodeQuery };

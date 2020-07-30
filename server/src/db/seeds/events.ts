@@ -11,7 +11,7 @@ export async function seed(knex: Knex): Promise<any> {
           event_id: uuidv4(),
           user_id: "",
           title: "Event Title",
-          location: "",
+          address: "",
           coordinates: '{"lat": "", "lng": ""}',
           time: "",
           content: "",

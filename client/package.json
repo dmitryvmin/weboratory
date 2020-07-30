@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
-    "@types/googlemaps": "^3.39.8",
+    "@types/googlemaps": "^3.39.11",
     "@types/styled-components": "^4.4.3"
   },
   "dependencies": {
@@ -15,7 +15,6 @@
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
     "@tippyjs/react": "^4.0.5",
-    "@types/google-maps": "^3.2.2",
     "@types/jest": "^24.9.1",
     "@types/markdown-it": "^10.0.0",
     "@types/node": "^12.12.30",
@@ -39,7 +38,6 @@
     "react-ionicons": "^3.1.4",
     "react-mapbox-gl": "^4.8.6",
     "react-markdown-editor-lite": "^1.0.2",
-    "react-places-autocomplete": "^7.2.1",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.0",
     "react-spring": "9.0.0-rc.3",

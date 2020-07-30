@@ -5,24 +5,22 @@ import { debounce } from "lodash";
 declare var google;
 
 /**
- * Return prediction for an input address
+ * Return predictions for an input address
  */
 function useAddressPredictions(input) {
   const [predictions, setPredictions] = useState<string[]>([]);
 
-  const autocomplete = useRef<any>();
-
-  if (!autocomplete.current) {
-    autocomplete.current = new window.google.maps.places.AutocompleteService();
-  }
+  const autocomplete = useRef<any>(new window.google.maps.places.AutocompleteService());
 
   function getPlacePredictions(input) {
     autocomplete.current.getPlacePredictions(
       { input },
       predictions => {
-        setPredictions(
-          predictions.map(prediction => prediction.description),
-        );
+        if (!predictions) {
+          return;
+        }
+        const newPredictions = predictions.map((p) => p.description);
+        setPredictions(newPredictions);
       },
     );
   }
@@ -39,7 +37,9 @@ function useAddressPredictions(input) {
     else {
       debouncedGetPlacePredictions(input);
     }
-  }, [input]);
+  }, [
+    input,
+  ]);
 
   return predictions;
 }

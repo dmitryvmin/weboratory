@@ -10,7 +10,6 @@ function useObservable<T>(observable?: Observable<T>): T | undefined {
       return;
     }
     const sub = observable.subscribe((state) => {
-      console.log("useObservable new state:", state);
       setState(state);
     });
     return () => {

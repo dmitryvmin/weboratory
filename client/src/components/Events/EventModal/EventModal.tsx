@@ -1,6 +1,6 @@
 // Libs
-import React, { ChangeEvent, FC, useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
+import React, { ChangeEvent, FC, useEffect, useMemo, useRef, useState } from "react";
+import { AnimatePresence, motion, useAnimation } from "framer-motion";
 import IosClose from "react-ionicons/lib/IosClose";
 import IosMapOutline from "react-ionicons/lib/IosMapOutline";
 import IosCalendarOutline from "react-ionicons/lib/IosCalendarOutline";
@@ -15,95 +15,115 @@ import { useWindowSize } from "@utils/hooks/useWindowSize";
 
 // Components
 import { Button } from "@components/UI/Button";
+import { getLngLatTuple } from "@components/Events/utils/getLngLatTuple";
+import { getPositionFromTarget } from "@components/Events/utils/getPositionFromTarget";
+
+// Services
+import { eventsService } from "@api/services/eventsService";
+
+// Utils
+import { useObservable } from "@utils/hooks/useObservable";
 
 // Types
-import { TEventModal } from "../types";
-import { eventsService } from "@api/services/eventsService";
-import { useObservable } from "@utils/hooks/useObservable";
 import { IEvent } from "@common/types";
-import { useMap } from "@components/Events/Map/store";
+import { TEventModalProps } from "./types";
+
+// Store
+import { useMap } from "@stores/MapStore";
+import { useEvents } from "@stores/EventStore";
+
+const today = format(
+  new Date(),
+  "mm-dd-yyyy",
+);
 
 /**
  * Event modal
  */
-const EventModal: FC<TEventModal> = ({
-  setEventOpen,
-  startPosition,
-  startFromSearch,
-  coordinates,
-  title: titleFromProps,
-  location: locationFromProps,
-  content: contentFromProps,
-  time: timeFromProps,
-}) => {
-
-  /**
-   * Vars
-   */
-  const today = format(
-    new Date(),
-    "mm-dd-yyyy",
-  );
+const EventModal: FC<TEventModalProps> = () => {
 
   /**
    * Hooks
    */
-  const [location, setLocation] = useState<string>(locationFromProps ?? "");
 
-  const [title, setTitle] = useState<string>(titleFromProps ?? "");
+  /**
+   * ========== Context hooks
+   */
+  const { mapInstance, setMapCenterCoords, mapCenterCoords } = useMap();
 
-  const [content, setContent] = useState<string>(titleFromProps ?? "");
+  const { isEventOpen, activeEvent, setIsEventOpen } = useEvents();
 
-  const [time, setTime] = useState<string>(timeFromProps ?? today);
+  const {
+    markerNode,
+    animateFromNode,
+    coordinates,
+    title: titleFromProps,
+    address: addressFromProps,
+    content: contentFromProps,
+    time: timeFromProps,
+  } = activeEvent || {};
 
-  const [initOpen, setInitOpen] = useState<boolean>(true);
+  /**
+   * ========== State hooks
+   */
+  const [title, setTitle] = useState<string>("");
 
-  const [isOpen, setIsOpen] = useState<boolean>(true);
+  const [address, setAddress] = useState<string>("");
+
+  const [time, setTime] = useState<string>("");
+
+  const [content, setContent] = useState<string>("");
+
 
   const eventInstance = useRef(new eventsService());
 
+  const containerRef = useRef(null);
+
+  /**
+   * ========== Util hooks
+   */
   const event$ = useObservable<IEvent>(eventInstance.current.onEvent());
 
-  const { mapInstance, setMapCenter, mapCenter } = useMap();
-
-  const containerRef = useRef(null);
+  const controls = useAnimation();
 
   const { windowWidth } = useWindowSize();
 
-  // const params = useParams();
+  // const endPosition = useMemo(() => {
+  //   if (!mapInstance || !coordinates) {
+  //     return;
+  //   }
+  //   return mapInstance?.project(coordinates);
+  // }, [
+  //   activeEvent,
+  // ]);
 
-  const endPosition = mapInstance.project(coordinates);
+  const bbox = activeEvent?.markerNode
+    ? activeEvent.markerNode.getBoundingClientRect()
+    : undefined;
+
+  // const endPosition = activeEvent?.coordinates
+  //   ? mapInstance?.project(getLngLatTuple(activeEvent.coordinates))
+  //   : undefined;
+
+  // const startPosition = startNode
+  //   ? getPositionFromTarget(startNode)
+  //   : undefined;
 
   /**
    * Effects
    */
-  useEffect(() => {
-    setInitOpen(false);
-  }, []);
 
-  useEffect(() => {
-    if (containerRef.current) {
-      setIsOpen(true);
-    }
-  }, [containerRef]);
-
-  useEffect(() => {
-    if (!isOpen) {
-      setTimeout(() => setEventOpen(false), 500);
-    }
-  }, [isOpen]);
 
   /**
    * Framer variants
    */
-  const eventVariant = {
+  const variants = {
     closed: {
-      borderRadius: (startFromSearch && initOpen) ? "0%" : "50%",
-      width: (startFromSearch && initOpen) ? 300 : 7,
-      height: (startFromSearch && initOpen) ? 27 : 7,
-      x: initOpen ? startPosition.x : endPosition.x - 8,
-      y: initOpen ? startPosition.y : endPosition.y - 20,
-      opacity: 0,
+      borderRadius: "50%",
+      width: 10,
+      height: 10,
+      x: bbox?.x,
+      y: bbox?.y,
       transition: {
         type: "tween",
         duration: 0.3,
@@ -115,24 +135,12 @@ const EventModal: FC<TEventModal> = ({
       height: 300,
       x: windowWidth > 620 ? windowWidth / 2 - 300 : 10,
       y: 300,
-      opacity: 1,
       transition: {
         type: "tween",
         duration: 0.5,
       },
     },
   };
-
-  // const buttonVariants = {
-  //   closed: {
-  //     transitionEnd: {
-  //       display: "none",
-  //     },
-  //   },
-  //   open: {
-  //     display: "block",
-  //   },
-  // };
 
   /**
    * Handlers
@@ -142,23 +150,23 @@ const EventModal: FC<TEventModal> = ({
     if (!eventId) {
       return;
     }
-    if (eventId === "new") {
+    if (eventId.startsWith("new")) {
       const eventContent = {
         content: content ?? contentFromProps,
         title: title ?? titleFromProps,
-        location: location ?? locationFromProps,
+        address: address ?? addressFromProps,
         time: time ?? timeFromProps,
         status: "PUBLIC",
         coordinates,
       };
-      debugger;
+
       eventInstance.current.createEvent(eventContent);
     }
     else {
       const eventContent = {
         content: content ?? contentFromProps,
         title: title ?? titleFromProps,
-        location: location ?? locationFromProps,
+        address: address ?? addressFromProps,
         time: time ?? timeFromProps,
       };
       eventInstance.current.updateEvent(eventId, eventContent);
@@ -170,7 +178,7 @@ const EventModal: FC<TEventModal> = ({
   }
 
   function handleLocation(ev: ChangeEvent<HTMLInputElement>) {
-    setLocation(ev.target.value);
+    setAddress(ev.target.value);
   }
 
   function handleContent(ev: ChangeEvent<HTMLTextAreaElement>) {
@@ -181,67 +189,78 @@ const EventModal: FC<TEventModal> = ({
     setTime(ev.target.value);
   }
 
+
+
   return (
+
     <motion.div
-      variants={eventVariant}
+      onClick={() => setIsEventOpen(false)}
+      variants={variants}
       initial="closed"
-      animate={isOpen ? "open" : "closed"}
+      animate={isEventOpen ? "open" : "closed"}
       className={styles.event}
       ref={containerRef}
       exit="closed"
     >
-      {/*<motion.button*/}
-      {/*  animate={isOpen ? "open" : "closed"}*/}
-      {/*  variants={buttonVariants}*/}
-      {/*  onClick={() => setIsOpen(false)}*/}
-      {/*>*/}
-      {/*  Close*/}
-      {/*</motion.button>*/}
-      {/*<EventTitle address={address}/>*/}
-
-      <IosClose
-        onClick={() => setIsOpen(false)}
-        className={styles.closeBtn}
-        fontSize="40"
-      />
-
-      <div className={styles.titleInput}>
-        <input
-          value={title}
-          onChange={handleTitle}
-        />
-      </div>
-
-      <div className={styles.locationInput}>
-        <IosMapOutline/>
-        <input
-          value={location}
-          onChange={handleLocation}
-        />
-      </div>
-
-      <div className={styles.dateInput}>
-        <IosCalendarOutline/>
-        <input
-          value={time}
-          onChange={handleDate}
-        />
-      </div>
-
-      <div className={styles.contentInput}>
-        <textarea
-          value={content}
-          onChange={handleContent}
-        />
-      </div>
-
-      <Button
-        className={styles.saveBtn}
-        onClick={handleSave}
-      >
-        Save
-      </Button>
+      test
     </motion.div>
+    // <AnimatePresence>
+    //   {isEventOpen &&
+    //   <motion.div
+    //     variants={getVariants()}
+    //     initial="closed"
+    //     animate={isEventOpen ? "open" : "closed"}
+    //     className={styles.event}
+    //     ref={containerRef}
+    //     exit="closed"
+    //   >
+    //     {/*<EventTitle address={address}/>*/}
+    //
+    //     <IosClose
+    //       onClick={() => setIsEventOpen(false)}
+    //       className={styles.closeBtn}
+    //       fontSize="40"
+    //     />
+    //
+    //     <div className={styles.titleInput}>
+    //       <input
+    //         value={!!title ? title : titleFromProps}
+    //         onChange={handleTitle}
+    //       />
+    //     </div>
+    //
+    //     <div className={styles.addressInput}>
+    //       <IosMapOutline/>
+    //       <input
+    //         value={!!address ? address : addressFromProps}
+    //         onChange={handleLocation}
+    //       />
+    //     </div>
+    //
+    //     <div className={styles.dateInput}>
+    //       <IosCalendarOutline/>
+    //       <input
+    //         value={!!time ? time : timeFromProps}
+    //         onChange={handleDate}
+    //       />
+    //     </div>
+    //
+    //     <div className={styles.contentInput}>
+    //     <textarea
+    //       value={!!content ? content : contentFromProps}
+    //       onChange={handleContent}
+    //     />
+    //     </div>
+    //
+    //     <Button
+    //       className={styles.saveBtn}
+    //       onClick={handleSave}
+    //     >
+    //       Save
+    //     </Button>
+    //   </motion.div>
+    //   }
+    // </AnimatePresence>
   );
 };
 

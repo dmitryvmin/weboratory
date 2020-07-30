@@ -1,4 +1,1 @@
-export type TPredictionsDropdown = {
-  items: string[];
-  handleClick: any;
-}
+export type TPredictionsDropdown = {}

@@ -12,7 +12,7 @@ class Events extends Model {
   content: string;
   status: string;
   title: string;
-  location: string;
+  address: string;
   coordinates: string;
   visibility: string;
   time: string;

@@ -1,5 +1,6 @@
 @import "../../styles/sizes";
 @import "../../styles/zIndex";
+@import "../../styles/radius";
 
 .calendarContainer {
   position: absolute;
@@ -9,7 +10,7 @@
   height: 200px;
   margin: 20px;
   border: 1px solid white;
-  border-radius: 2px;
+  border-radius: $bradius_1;
   overflow: hidden;
 }
 

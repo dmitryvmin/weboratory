@@ -3,8 +3,8 @@ import React, { FC } from "react";
 import IosAddCircleOutline from "react-ionicons/lib/IosAddCircleOutline";
 import IosRemoveCircleOutline from "react-ionicons/lib/IosRemoveCircleOutline";
 
-// Components
-import { useCalendar } from "@components/Calendar/store/useCalendar";
+// Store
+import { useCalendar } from "@stores/CalendarStore";
 
 // Styles
 import styles from "./styles.module.scss";

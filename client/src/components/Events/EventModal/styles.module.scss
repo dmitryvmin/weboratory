@@ -1,24 +1,27 @@
 @import "../../../styles/zIndex";
+@import "../../../styles/radius";
 
 .event {
   background-color: white;
   box-shadow: 0 0 1px 1px #eee;
   position: absolute;
   z-index: $zi1;
-  overflow: hidden;
-  border-radius: 2px;
+  //overflow: hidden;
+  border-radius: $bradius_1;
 }
 
 .closeBtn {
   position: absolute;
   top: 20px;
-  right: 20px
+  right: 20px;
+  cursor: pointer;
 }
 
 .saveBtn {
   position: absolute;
   right: 20px;
   bottom: 20px;
+  cursor: pointer;
 }
 
 %inputContainer {
@@ -47,7 +50,7 @@
   }
 }
 
-.locationInput {
+.addressInput {
   @extend %inputContainer;
   margin: 20px 20px 10px;
 

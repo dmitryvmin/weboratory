@@ -6,28 +6,33 @@ import ReactDependentScript from "react-dependent-script";
 import { PageContainer } from "@components/Page";
 import { Calendar } from "@components/Calendar";
 import { Timeline } from "@components/Timeline";
-import { CalendarProvider } from "@components/Calendar/store/CalendarProvider";
-import { MapProvider } from "@components/Events/Map/store/MapProvider";
 import { EventsApp } from "@components/Events";
 
+// Stores
+import { CalendarProvider } from "@stores/CalendarStore";
+import { MapProvider } from "@stores/MapStore";
+import { EventsProvider } from "@stores/EventStore";
+
 // Constants
-const googleAPIs = "https://maps.googleapis.com/maps/api/js?key=AIzaSyCY8bbleOprcyzoGw5K23eCm6_jZHUHcbA&libraries=places";
+import { GOOGLE_MAPS_API } from "../../constants";
 
 /**
- * Design Page
+ * Events Page
  */
 const Events = () => {
   return (
-    <ReactDependentScript scripts={[googleAPIs]}>
-      <MapProvider>
-        <PageContainer>
-          <EventsApp/>
-          <CalendarProvider>
-            <Calendar/>
-            <Timeline/>
-          </CalendarProvider>
-        </PageContainer>
-      </MapProvider>
+    <ReactDependentScript scripts={[GOOGLE_MAPS_API]}>
+      <EventsProvider>
+        <MapProvider>
+          <PageContainer>
+            <EventsApp/>
+            <CalendarProvider>
+              <Calendar/>
+              <Timeline/>
+            </CalendarProvider>
+          </PageContainer>
+        </MapProvider>
+      </EventsProvider>
     </ReactDependentScript>
   );
 };

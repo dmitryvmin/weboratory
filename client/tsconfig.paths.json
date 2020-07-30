@@ -7,7 +7,8 @@
       "@components/*": ["./src/components/*"],
       "@common/*": ["./src/common/*"],
       "@styles/*": ["./src/styles/*"],
-      "@configs/*": ["./src/configs/*"]
+      "@configs/*": ["./src/configs/*"],
+      "@stores/*": ["./src/stores/*"]
     }
   }
 }

@@ -25,8 +25,9 @@ import { useIntersectionObserver } from "@utils/hooks/useIntersectionObserver";
 
 // Styles
 import styles from "./styles.module.scss";
-import { useCalendar } from "@components/Calendar/store/useCalendar";
-import { CalendarPeriodSegments } from "@components/Calendar/store/constants";
+
+// Store
+import { useCalendar, CalendarPeriodSegments } from "@stores/CalendarStore";
 
 const SLIDER_MARGIN = 20;
 

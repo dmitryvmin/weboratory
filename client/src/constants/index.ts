@@ -1,0 +1,1 @@
+export const GOOGLE_MAPS_API = "https://maps.googleapis.com/maps/api/js?key=AIzaSyCY8bbleOprcyzoGw5K23eCm6_jZHUHcbA&libraries=places";

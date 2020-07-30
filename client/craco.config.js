@@ -9,6 +9,7 @@ module.exports = {
       '@common': path.resolve(__dirname, './src/common'),
       '@styles': path.resolve(__dirname, './src/styles'),
       '@configs': path.resolve(__dirname, './src/configs'),
+      '@stores': path.resolve(__dirname, './src/stores'),
     },
   },
 }

@@ -19,8 +19,7 @@ const envs = {
   // Development
   "http://localhost:3001": {
     APP: "development",
-    API_SERVER: "http://localhost:3001",
-    // API_SERVER: "https://weboratory.herokuapp.com",
+    API_SERVER: "https://weboratory.herokuapp.com",
     AUTH_DOMAIN: "weboratory.auth0.com",
   },
 };
@@ -28,14 +27,6 @@ const envs = {
 function getEnv(env: IEnv) {
   return envs[rootUrl][env];
 }
-
-// if (envs[rootUrl]) {
-//   window.env = envs[rootUrl];
-// }
-// else {
-//   // Redirect to production if the rootUrl is unknown
-//   window.location.replace(Object.keys(envs)[0]);
-// }
 
 export {
   getEnv,

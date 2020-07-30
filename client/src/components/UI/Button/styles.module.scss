@@ -1,5 +1,6 @@
 @import "../../../styles/colors";
 @import "../../../styles/sizes";
+@import "../../../styles/radius";
 
 .container {
   display: inline-block;
@@ -11,7 +12,7 @@
   margin: 1px;
   white-space: nowrap;
   font-weight: 500;
-  border-radius: 2px;
+  border-radius: $bradius_1;
   //transition: border-radius 1s ease-out;
   //border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
   //animation: morph 4s ease-in-out infinite both alternate;

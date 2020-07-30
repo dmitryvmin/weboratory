@@ -16,31 +16,6 @@ import { Button } from "@components/UI/Button";
 import { useWindowSize } from "@utils/hooks/useWindowSize";
 import { NavigationMenu } from "@components/Navigation/NavigationMenu";
 
-// Styles
-const Container = styled(motion.div)`
-  display: flex;
-  // flex-direction: ${({ animate }) =>
-  animate === "closed" ? "row" : "column"};
-  flex-direction: column;
-  position: absolute;
-  z-index: 100;
-  right: 40px;
-  top: 40px;
-  flex-direction: row;
-  justify-content: flex-end;
-  box-shadow: 0 0 1px 1px #eee;
-  background-color: white;
-  padding: 10px;
-  
-  a {
-    color: ${colors.$color_1};
-    margin: 0 10px;
-    display: flex;
-    align-items: center;
-    font-weight: 500;
-  }
-`;
-
 const transition = {
   duration: 1,
   ease: [0.43, 0.13, 0.23, 0.96],
@@ -75,8 +50,9 @@ const Nav = () => {
   const renderDesktop = () => {
     return (
       <div className={styles.container}>
-        <Container
-          animate={location.pathname.includes("/posts/") ? "closed" : "open"}
+        <motion.div
+          className={styles.desktopNav}
+          // animate={location.pathname.includes("/posts/") ? "closed" : "open"}
         >
           {/*{isAuthenticated &&*/}
           {/*<NavLink to="/admin">Admin</NavLink>*/}
@@ -93,7 +69,7 @@ const Nav = () => {
             <Button onClick={() => loginWithPopup({})}>Log in</Button>
           )}
           {isAuthenticated && <Button onClick={() => logout()}>Log out</Button>}
-        </Container>
+        </motion.div>
       </div>
     );
   };

@@ -1,10 +1,13 @@
+@import "../../../styles/radius";
+@import "../../../styles/shadows";
+
 .predictionsContainer {
   position: absolute;
   z-index: 100;
-  top: calc(50% + 73px);
+  top: 40px;
   left: calc(50% - 140px);
   width: 280px;
-  border-radius: 2px;
+  border-radius: $bradius_1;
 
   & > ul {
     list-style-type: none;
@@ -23,11 +26,12 @@
   cursor: pointer;
   margin-top: 4px;
   font-size: 12px;
-  padding: 5px;
-  border-radius: 2px;
+  padding: 10px;
+  border-radius: $bradius_1;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  box-shadow: $shadow_1;
 }
 
 .addIcon {

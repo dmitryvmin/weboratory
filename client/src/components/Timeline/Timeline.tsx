@@ -8,7 +8,9 @@ import styles from "./styles.module.scss";
 
 // Utils
 import { useWindowSize } from "@utils/hooks/useWindowSize";
-import { useCalendar } from "@components/Calendar/store/useCalendar";
+
+// Store
+import { useCalendar } from "@stores/CalendarStore";
 
 // Types
 export type ITimeline = any;

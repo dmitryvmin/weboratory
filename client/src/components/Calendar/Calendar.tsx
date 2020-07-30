@@ -10,7 +10,7 @@ import styles from "./styles.module.scss";
 
 // Components
 import { Slider } from "@components/Calendar/Slider";
-import { useCalendar } from "@components/Calendar/store/useCalendar";
+import { useCalendar } from "@stores/CalendarStore";
 
 // Types
 import { TCalendarProps } from "./types";
