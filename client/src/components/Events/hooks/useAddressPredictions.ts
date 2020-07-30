@@ -1,6 +1,7 @@
 // Libs
 import { useCallback, useEffect, useRef, useState } from "react";
 import { debounce } from "lodash";
+import { NUM_OF_PREDICTIONS } from "@components/Events/constants";
 
 declare var google;
 
@@ -8,6 +9,7 @@ declare var google;
  * Return predictions for an input address
  */
 function useAddressPredictions(input) {
+
   const [predictions, setPredictions] = useState<string[]>([]);
 
   const autocomplete = useRef<any>(new window.google.maps.places.AutocompleteService());
@@ -19,7 +21,10 @@ function useAddressPredictions(input) {
         if (!predictions) {
           return;
         }
-        const newPredictions = predictions.map((p) => p.description);
+        const newPredictions = predictions
+          .map((p) => p.description)
+          .slice(0, NUM_OF_PREDICTIONS);
+
         setPredictions(newPredictions);
       },
     );

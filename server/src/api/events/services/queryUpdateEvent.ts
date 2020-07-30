@@ -4,7 +4,7 @@ import { Events } from "../../../db/models/objection/Events";
  * Updates event content
  * @return event
  */
-async function updateEventContent(
+async function queryUpdateEvent(
   eventId: string,
   {
     content,
@@ -16,6 +16,7 @@ async function updateEventContent(
   },
 ) {
   try {
+
     const eventContent = {
       ...(content && { content }),
       ...(status && { status }),
@@ -29,7 +30,8 @@ async function updateEventContent(
     const event = await Events
       .query()
       .update(eventContent)
-      .where("event_id", eventId);
+      .where("event_id", eventId)
+      .first();
 
     return event;
   }
@@ -39,4 +41,4 @@ async function updateEventContent(
   }
 }
 
-export { updateEventContent };
+export { queryUpdateEvent };

@@ -60,7 +60,6 @@ const PredictionsDropdown: FC<TPredictionsDropdown> = () => {
   } = useEvents();
 
   const {
-    setMarker,
     setMapCenterCoords,
     easeTo,
   } = useMap();
@@ -75,10 +74,10 @@ const PredictionsDropdown: FC<TPredictionsDropdown> = () => {
   useEffect(() => {
 
     const firstPrediction = predictions[0];
-    const firstEl = predictionsRef?.current?.firstChild as HTMLDivElement;
+    // const firstEl = predictionsRef?.current?.firstChild as HTMLDivElement;
 
     if (
-      !firstEl ||
+      // !firstEl ||
       !firstPrediction ||
       !searchedAddress ||
       searchedAddress?.length < SEARCH_MIN
@@ -86,8 +85,9 @@ const PredictionsDropdown: FC<TPredictionsDropdown> = () => {
       return;
     }
 
-    setMarker({
+    setEvent({
       address: firstPrediction,
+      // animateFromNode: firstEl,
     });
 
   }, [
@@ -106,17 +106,20 @@ const PredictionsDropdown: FC<TPredictionsDropdown> = () => {
     // Persist event
     ev.persist();
 
-    // Set Marker
-    setMarker({ address });
+    // Set Active Event
+    setEvent({
+      address,
+      // animateFromNode: ev.target,
+    }, true);
 
     // Close the search
     // closeSearch();
 
     // Open Event
-    setEvent({
-      address,
-      markerNode: ev.target,
-    });
+    // setEvent({
+    //   address,
+    //   markerNode: ev.target,
+    // });
 
     // // Get address lngLat
     // const coordinates = await geocodeQuery(address);

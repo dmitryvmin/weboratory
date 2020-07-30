@@ -1,5 +1,6 @@
 @import "../../../styles/radius";
 @import "../../../styles/shadows";
+@import "../../../styles/sizes";
 
 .predictionsContainer {
   position: absolute;
@@ -16,7 +17,7 @@
 
     & > li {
       background-color: white;
-      margin-bottom: 4px;
+      margin-bottom: $size_1;
     }
   }
 }
@@ -24,9 +25,9 @@
 .predictionItem {
   background-color: white;
   cursor: pointer;
-  margin-top: 4px;
+  margin-top: $size_1;
   font-size: 12px;
-  padding: 10px;
+  padding: $size_2;
   border-radius: $bradius_1;
   display: flex;
   justify-content: space-between;

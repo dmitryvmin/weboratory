@@ -24,16 +24,16 @@ const MapMarker: FC<TMapMarkerProps> = ({ event }) => {
    */
   const {
     setIsSearchOpen,
-    setIsEventOpen,
+    // setIsEventOpen,
     setSearchedAddress,
     setEvent,
   } = useEvents();
 
-  const {
-    setMarker,
-    easeTo,
-    centerMapOnCoords,
-  } = useMap();
+  // const {
+  //   setMarker,
+  //   easeTo,
+  //   centerMapOnCoords,
+  // } = useMap();
 
   /**
    * Vars
@@ -51,20 +51,18 @@ const MapMarker: FC<TMapMarkerProps> = ({ event }) => {
     // Persist event
     ev.persist();
 
-    setEvent({
-        ...event,
-      markerNode: ev.target,
-    });
+    // Set clicked marker as the new Active Event
+    setEvent({ ...event, markerNode: ev.target }, true);
 
     // centerMapOnCoords(coordinates);
-    easeTo({
-      coords: coordinates,
-      padding: {
-        bottom: 400,
-      },
-    });
+    // easeTo({
+    //   coords: coordinates,
+    //   padding: {
+    //     bottom: 400,
+    //   },
+    // });
 
-    setIsEventOpen(true);
+    // setIsEventOpen(true);
     // Set Marker
     // setMarker(event);
 

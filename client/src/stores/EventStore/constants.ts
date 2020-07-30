@@ -10,7 +10,6 @@ export const EventsInitialState: IEventsState = {
 
 export const InitialEvent: TEventModal = {
   markerNode: null,
-  animateFromNode: null,
   event_id: undefined,
   created_at: undefined,
   updated_at: undefined,

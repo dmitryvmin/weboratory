@@ -21,6 +21,7 @@ import { log } from "@utils/Logger";
 // Constants
 import { Mapbox } from "@components/Map/constants";
 import { MapInitialState } from "@stores/MapStore";
+import { useEvents } from "@stores/EventStore";
 
 /**
  * Map
@@ -40,6 +41,8 @@ const Map: FC<TMapProps> = ({ children }) => {
     mapCenterCoords,
     mapZoom,
   } = useMap();
+
+  const {activeEvent} = useEvents();
 
   /**
    * ========== State hooks
@@ -68,72 +71,95 @@ const Map: FC<TMapProps> = ({ children }) => {
 
   // Mimicking shouldComponentUpdate behavior to determine
   // whether map component should re-render
-  useEffect(() => {
+  // useEffect(() => {
+  //
+  //   // Compare props
+  //   const mapCenterCoordsChanged = haveMapCenterCoordsChanged(mapCenterCoords, refState?.mapCenterCoords);
+  //   const mapZoomChanged = hasMapZoomChanged(mapZoom, refState?.mapZoom);
+  //   const mapChildrenChanged = haveMapChildrenChanged(children, refState?.children);
+  //
+  //   // If props haven't changed, skip render
+  //   if (
+  //     !mapCenterCoordsChanged &&
+  //     !mapZoomChanged &&
+  //     !mapChildrenChanged
+  //   ) {
+  //     // log("$$ MAP props have not changed: ", mapCenterCoordsChanged, mapZoomChanged, mapChildrenChanged);
+  //     return;
+  //   }
+  //
+  //   // If props have changes, create a new object filling in props that changed
+  //   const newRefState = {
+  //     ...refState,
+  //     ...(mapCenterCoordsChanged && { mapCenterCoords }),
+  //     ...(mapZoomChanged && { mapZoom }),
+  //     ...(mapChildrenChanged && { children }),
+  //   };
+  //
+  //   // log("$$ MAP props changed. new refState: ", mapCenterCoordsChanged, mapZoomChanged, mapChildrenChanged, newRefState);
+  //   setRefState(newRefState);
+  //
+  // }, [
+  //   mapCenterCoords,
+  //   mapZoom,
+  //   children,
+  //   mapRef,
+  // ]);
 
-    // Compare props
-    const mapCenterCoordsChanged = haveMapCenterCoordsChanged(mapCenterCoords, refState?.mapCenterCoords);
-    const mapZoomChanged = hasMapZoomChanged(mapZoom, refState?.mapZoom);
-    const mapChildrenChanged = haveMapChildrenChanged(children, refState?.children);
+  // const center = activeEvent?.coordinates
+  //   ? getLngLatTuple(activeEvent.coordinates)
+  //   : getLngLatTuple(mapCenterCoords);
 
-    // If props haven't changed, skip render
-    if (
-      !mapCenterCoordsChanged &&
-      !mapZoomChanged &&
-      !mapChildrenChanged
-    ) {
-      // log("$$ MAP props have not changed: ", mapCenterCoordsChanged, mapZoomChanged, mapChildrenChanged);
-      return;
-    }
+  const center = useMemo(() => getLngLatTuple(mapCenterCoords), []);
 
-    // If props have changes, create a new object filling in props that changed
-    const newRefState = {
-      ...refState,
-      ...(mapCenterCoordsChanged && { mapCenterCoords }),
-      ...(mapZoomChanged && { mapZoom }),
-      ...(mapChildrenChanged && { children }),
-    };
+  return (
+    <Mapbox
+      ref={mapRef}
+      center={center}
+      zoom={[mapZoom]}
+      pitch={[45]}
+      style="mapbox://styles/mapbox/streets-v11"
+      className={styles.map}
+      animationOptions={{
+        duration: 2000,
+      }}
+      onStyleLoad={setMapInstance}
+    >
+      {children}
+    </Mapbox>
+  )
 
-    // log("$$ MAP props changed. new refState: ", mapCenterCoordsChanged, mapZoomChanged, mapChildrenChanged, newRefState);
-    setRefState(newRefState);
-
-  }, [
-    mapCenterCoords,
-    mapZoom,
-    children,
-    mapRef,
-  ]);
-
-  /**
-   * Return memoized Mapbox component to avoid restarting flyTo
-   * animation when context changes
-   */
-  return useMemo(() => {
-
-    // log("refState", refState, Date.now());
-
-    return (
-      <Mapbox
-        ref={mapRef}
-        center={refState?.mapCenterCoords
-          ? getLngLatTuple(refState.mapCenterCoords)
-          : getLngLatTuple(MapInitialState.mapCenterCoords)
-        }
-        zoom={[refState?.mapZoom ?? MapInitialState.mapZoom]}
-        pitch={[45]}
-        style="mapbox://styles/mapbox/streets-v11"
-        className={styles.map}
-        animationOptions={{
-          duration: 3000,
-        }}
-        onStyleLoad={setMapInstance}
-      >
-        {refState?.children}
-      </Mapbox>
-    );
-  }, [
-    mapRef,
-    refState,
-  ]);
+  // /**
+  //  * Return memoized Mapbox component to avoid restarting flyTo
+  //  * animation when context changes
+  //  */
+  // return useMemo(() => {
+  //
+  //   // log("refState", refState, Date.now());
+  //
+  //   return (
+  //     <Mapbox
+  //       ref={mapRef}
+  //       center={refState?.mapCenterCoords
+  //         ? getLngLatTuple(refState.mapCenterCoords)
+  //         : getLngLatTuple(MapInitialState.mapCenterCoords)
+  //       }
+  //       zoom={[refState?.mapZoom ?? MapInitialState.mapZoom]}
+  //       pitch={[45]}
+  //       style="mapbox://styles/mapbox/streets-v11"
+  //       className={styles.map}
+  //       animationOptions={{
+  //         duration: 3000,
+  //       }}
+  //       onStyleLoad={setMapInstance}
+  //     >
+  //       {refState?.children}
+  //     </Mapbox>
+  //   );
+  // }, [
+  //   mapRef,
+  //   refState,
+  // ]);
 };
 
 export { Map };

@@ -3,7 +3,7 @@ import { Context } from "koa";
 import * as HttpStatus from "http-status";
 
 // App
-import { getAllEventsByUserId } from "../services/getEventsByUserId";
+import { getAllEventsByUserId } from "../services/queryGetEvents";
 
 /**
  * Fetch all events matching user_id

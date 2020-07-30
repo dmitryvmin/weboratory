@@ -1,5 +1,5 @@
 // Libs
-import React, { useEffect, useRef, useContext } from "react";
+import React, { useEffect, useRef, useContext, useMemo } from "react";
 import { history } from "../../router";
 
 // styles
@@ -22,11 +22,12 @@ import { MapSearch } from "@components/Map/components/MapSearch/MapSearch";
 // Utils
 import { log } from "@utils/Logger";
 
-// Constants
-import { getNewMarkerId } from "@components/Events/utils/getNewMarkerId";
-import { AnimatePresence } from "framer-motion";
-import { useMap } from "../../stores/MapStore";
+// Store
+import { useMap } from "@stores/MapStore";
 import { useEvents } from "@stores/EventStore";
+
+// Constants
+import { getNewEventKey } from "@components/Events/utils/getEventKey";
 
 /**
  * Events App
@@ -50,19 +51,20 @@ const EventsApp: React.FC = () => {
     mapCenterCoords,
     centerMapOnClient,
     centerMapOnAddress,
-    activeMarker,
+    // activeMarker,
   } = useMap();
 
-  const { isEventOpen } = useEvents();
+  const { activeEvent, isEventOpen } = useEvents();
 
   const { user } = useContext(Auth0Context);
 
   /**
    * ========== State hooks
    */
-  const eventsInstance = useRef(new eventsService());
+  const eventsInstance = useMemo(() => new eventsService(), []);
 
-  const events$ = useObservable<IEvent[]>(eventsInstance.current.onEvents());
+  const events$ = useObservable<IEvent[]>(eventsInstance.onEvents());
+  const event$ = useObservable<IEvent>(eventsInstance.onEvent());
 
   /**
    * Effects
@@ -77,11 +79,32 @@ const EventsApp: React.FC = () => {
     if (!user?.sub) {
       return;
     }
+    console.log("Fetching all events");
     // eventsInstance.current.getUserEvents(user.sub);
-    eventsInstance.current.getEventsByVis("PUBLIC");
+    eventsInstance.getEventsByVis("PUBLIC");
   }, [
     user,
+    event$,
   ]);
+
+  /**
+   * ========== Container Business Login
+   */
+
+  // Handle Active Event change
+  useEffect(() => {
+
+    // If Active Event is not set, return
+    if (!activeEvent) {
+      return;
+    }
+
+    // When an Active Event is set, set Map center on it
+
+  }, [
+    activeEvent,
+  ]);
+
 
   // // Center the map to the input address
   // useEffect(() => {
@@ -101,34 +124,38 @@ const EventsApp: React.FC = () => {
   //   searchedAddress,
   // ]);
 
+  console.log("@@ Saved event", events$);
+
   /**
    * Render fns
    */
   const renderSavedMarkers = () => {
-    return events$?.map((event) =>
-      <MapMarker
-        key={`marker-${event.event_id}`}
-        event={event}
-      />,
-    );
+    return events$
+      // ?.filter((event) => event.event_id !== activeEvent?.event_id)
+      ?.map((event) => {
+        return (
+          <MapMarker
+            key={`marker-${event.event_id}`}
+            event={event}
+          />
+        );
+      });
   };
 
-  const renderActiveMarker = () => {
-    if (!activeMarker) {
+  const renderNewEventMarker = () => {
+    if (
+      !activeEvent?.address ||
+      !activeEvent.coordinates ||
+      !activeEvent.event_id.startsWith("new")
+    ) {
       return;
     }
     return (
       <MapMarker
-        key={getNewMarkerId(activeMarker.address)}
-        event={activeMarker}
+        key={getNewEventKey(activeEvent.address)}
+        event={activeEvent}
       />
     );
-  };
-
-  const renderMarkers = () => {
-    const savedMarkers = renderSavedMarkers();
-    const activeMarker = renderActiveMarker();
-    return [savedMarkers, activeMarker].map((m) => m);
   };
 
   /**
@@ -137,12 +164,15 @@ const EventsApp: React.FC = () => {
   return (
     <div className={styles.container}>
       <MapSearch/>
-      <EventModal/>
+      {activeEvent &&
+      <EventModal
+        activeEvent={activeEvent}
+        eventsInstance={eventsInstance}
+      />
+      }
       <Map>
-        {renderActiveMarker()}
-        {/*{renderMarkers()}*/}
+        {renderNewEventMarker()}
         {renderSavedMarkers()}
-        {/*{renderActiveMarker()}*/}
       </Map>
     </div>
   );

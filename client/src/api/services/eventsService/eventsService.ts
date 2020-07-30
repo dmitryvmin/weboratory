@@ -47,7 +47,6 @@ class eventsService {
       "Content-Type": "application/json",
     };
     const payload = JSON.stringify(body);
-    debugger;
     new BaseRequestModel<any>(reqURI, "POST", headers, payload)
       .request()
       .subscribe(this.eventState$);
@@ -79,6 +78,8 @@ class eventsService {
     const headers = {
       "Content-Type": "application/json",
     };
+
+    console.log("eventsService updating event...");
     const body = JSON.stringify(content);
     new BaseRequestModel<any>(reqURI, "PUT", headers, body)
       .request()

@@ -12,5 +12,4 @@ export const MapInitialState: IMapState = {
   mapInstance: undefined,
   mapRef: undefined,
   mapZoom: 15,
-  activeMarker: undefined,
 };

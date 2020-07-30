@@ -1,5 +1,6 @@
-import { TEventMarker } from "@stores/MapStore/types";
+import { IEvent } from "@common/types";
+import { ActiveEvent } from "@stores/EventStore/types";
 
 export type TMapMarkerProps = {
-  event: TEventMarker;
+  event: IEvent | ActiveEvent;
 };

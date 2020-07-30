@@ -3,12 +3,14 @@ import { useContext, MouseEvent } from "react";
 import invariant from "invariant";
 
 // Store
-import { IEventsContext, IEventsState, IUseEvents } from "./types";
+import { ActiveEvent, IEventsContext, IEventsState, IUseEvents } from "./types";
 import { EventsContext } from "./EventsContext";
 import { log } from "@utils/Logger";
 import { history } from "../../router";
 import { TEventModal } from "@components/Events/EventModal/types";
 import { useMap } from "@stores/MapStore";
+import { getNewEventKey } from "@components/Events/utils/getEventKey";
+import { geocodeQuery } from "@components/Events/utils/geocodeQuery";
 
 /**
  * Events context facade
@@ -28,7 +30,7 @@ const useEvents = (): IUseEvents => {
     setState,
   ] = useContext<IEventsContext>(EventsContext);
 
-  const {easeTo} = useMap();
+  const { easeTo, flyTo } = useMap();
 
   /**
    * ==================== State setters ====================
@@ -37,7 +39,8 @@ const useEvents = (): IUseEvents => {
   /**
    *
    */
-  const setActiveEvent = (event: TEventModal) => {
+  const setActiveEvent = (event: ActiveEvent) => {
+    log("@@ setActiveEvent", event);
     setState((s): IEventsState => ({
       ...s,
       activeEvent: event,
@@ -73,19 +76,31 @@ const useEvents = (): IUseEvents => {
   /**
    * Creates an Event object
    */
-  function createEventObject({
+  async function createEventObject({
     markerNode,
-    animateFromNode, ...rest
-  }: TEventModal) {
+    // animateFromNode,
+    ...rest
+  }: ActiveEvent) {
+
+    // If no coordinates have been passed,
+    // query coordinates by address
+    let coordinates;
+    if (!rest.coordinates) {
+      coordinates = await geocodeQuery(rest.address);
+    }
+    else {
+      coordinates = rest.coordinates;
+    }
 
     // Create event object
-    const eventObject: TEventModal = {
+    const eventObject: ActiveEvent = {
       markerNode: markerNode ?? null,
-      animateFromNode: animateFromNode ?? null,
-      event_id: rest.event_id,
+      // animateFromNode: animateFromNode ?? null,
+      event_id: rest.event_id ?? getNewEventKey(rest.address),
+      coordinates,
       created_at: rest.created_at,
+      updated_at: rest.updated_at,
       address: rest.address,
-      coordinates: rest.coordinates,
       time: rest.time,
       title: rest.title,
       content: rest.content,
@@ -135,11 +150,19 @@ const useEvents = (): IUseEvents => {
    * ==================== Public functions ====================
    */
 
-  const setEvent = (props) => {
+  const setEvent = async (event, isOpen) => {
 
-    const event = createEventObject(props);
+    const newActiveEvent = await createEventObject(event);
 
-    setActiveEvent(event);
+    setActiveEvent(newActiveEvent);
+
+    easeTo({
+      coords: newActiveEvent.coordinates,
+    });
+
+    if (isOpen) {
+      openEvent(newActiveEvent);
+    }
   };
 
   // When the Event Modal is closed
@@ -153,30 +176,40 @@ const useEvents = (): IUseEvents => {
     history.push("/events");
 
     // // If Event address has been set...
-    // if (activeEvent.coordinates) {
-    //   // Center map on event, remove padding
-    //   setMapCenterCoordsPadded(activeEvent.coordinates);
-    // }
+    if (activeEvent?.coordinates) {
+
+      easeTo({
+        coords: activeEvent.coordinates,
+        padding: { top: 0, bottom: 0 },
+        zoom: 15,
+      });
+    }
   };
 
   // When the Event Modal is opened
-  const openEvent = () => {
-    log("Opening Event Modal...", activeEvent);
+  const openEvent = (event) => {
 
-    if (!activeEvent) {
+    const eventToOpen = event ?? activeEvent;
+
+    log("Opening Event Modal...", eventToOpen);
+
+    if (!eventToOpen) {
       return;
     }
 
     setIsEventOpen(true);
 
     // Update browser history
-    history.push(`/events?eventId=${activeEvent!.event_id}`);
+    history.push(`/events?eventId=${eventToOpen.event_id}`);
 
-    // If Event address has been set...
-    // if (activeEvent.coordinates) {
-    //   // Center map on event in the top of the screen
-    //   flyTo(activeEvent.coordinates, { bottom: 400 }, 17);
-    // }
+    // Center marker above the event
+    if (eventToOpen.coordinates) {
+      easeTo({
+        coords: eventToOpen.coordinates,
+        padding: { bottom: 400 },
+        zoom: 17,
+      });
+    }
   };
 
   const openSearch = () => {

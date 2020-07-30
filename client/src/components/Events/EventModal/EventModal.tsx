@@ -40,7 +40,10 @@ const today = format(
 /**
  * Event modal
  */
-const EventModal: FC<TEventModalProps> = () => {
+const EventModal: FC<TEventModalProps> = ({
+  activeEvent,
+  eventsInstance,
+}) => {
 
   /**
    * Hooks
@@ -49,13 +52,11 @@ const EventModal: FC<TEventModalProps> = () => {
   /**
    * ========== Context hooks
    */
-  const { mapInstance, setMapCenterCoords, mapCenterCoords } = useMap();
-
-  const { isEventOpen, activeEvent, setIsEventOpen } = useEvents();
+  const { isEventOpen, setIsEventOpen, closeEvent } = useEvents();
 
   const {
-    markerNode,
-    animateFromNode,
+    // markerNode,
+    // animateFromNode,
     coordinates,
     title: titleFromProps,
     address: addressFromProps,
@@ -75,18 +76,18 @@ const EventModal: FC<TEventModalProps> = () => {
   const [content, setContent] = useState<string>("");
 
 
-  const eventInstance = useRef(new eventsService());
+  // const eventInstance = useRef(new eventsService());
 
   const containerRef = useRef(null);
 
   /**
    * ========== Util hooks
    */
-  const event$ = useObservable<IEvent>(eventInstance.current.onEvent());
+  const event$ = useObservable<IEvent>(eventsInstance.onEvent());
 
   const controls = useAnimation();
 
-  const { windowWidth } = useWindowSize();
+  const { windowWidth, windowHeight } = useWindowSize();
 
   // const endPosition = useMemo(() => {
   //   if (!mapInstance || !coordinates) {
@@ -97,33 +98,43 @@ const EventModal: FC<TEventModalProps> = () => {
   //   activeEvent,
   // ]);
 
-  const bbox = activeEvent?.markerNode
+  // const animateFromBBox = activeEvent?.animateFromNode
+  //   ? activeEvent.animateFromNode.getBoundingClientRect()
+  //   : undefined;
+
+  console.log("################", event$);
+  
+  const animateFromBBox = activeEvent?.markerNode
     ? activeEvent.markerNode.getBoundingClientRect()
     : undefined;
 
-  // const endPosition = activeEvent?.coordinates
-  //   ? mapInstance?.project(getLngLatTuple(activeEvent.coordinates))
-  //   : undefined;
-
-  // const startPosition = startNode
-  //   ? getPositionFromTarget(startNode)
-  //   : undefined;
-
-  /**
-   * Effects
-   */
-
+  const animateToBBox = activeEvent?.markerNode
+    ? activeEvent.markerNode.getBoundingClientRect()
+    : undefined;
 
   /**
    * Framer variants
    */
   const variants = {
+    initial: {
+      borderRadius: "50%",
+      width: 0,
+      height: 0,
+      x: animateFromBBox?.x,
+      y: animateFromBBox?.y,
+      opacity: 0,
+      transition: {
+        type: "tween",
+        duration: 0.3,
+      },
+    },
     closed: {
       borderRadius: "50%",
-      width: 10,
-      height: 10,
-      x: bbox?.x,
-      y: bbox?.y,
+      width: 0,
+      height: 0,
+      x: animateToBBox?.x ?? windowWidth / 2,
+      y: animateToBBox?.y ?? windowHeight / 2,
+      opacity: 0,
       transition: {
         type: "tween",
         duration: 0.3,
@@ -135,6 +146,7 @@ const EventModal: FC<TEventModalProps> = () => {
       height: 300,
       x: windowWidth > 620 ? windowWidth / 2 - 300 : 10,
       y: 300,
+      opacity: 1,
       transition: {
         type: "tween",
         duration: 0.5,
@@ -160,7 +172,7 @@ const EventModal: FC<TEventModalProps> = () => {
         coordinates,
       };
 
-      eventInstance.current.createEvent(eventContent);
+      eventsInstance.createEvent(eventContent);
     }
     else {
       const eventContent = {
@@ -169,7 +181,8 @@ const EventModal: FC<TEventModalProps> = () => {
         address: address ?? addressFromProps,
         time: time ?? timeFromProps,
       };
-      eventInstance.current.updateEvent(eventId, eventContent);
+console.log("@@ Updating event");
+      eventsInstance.updateEvent(eventId, eventContent);
     }
   }
 
@@ -189,78 +202,64 @@ const EventModal: FC<TEventModalProps> = () => {
     setTime(ev.target.value);
   }
 
-
-
   return (
+    <AnimatePresence>
+      {isEventOpen &&
+      <motion.div
+        variants={variants}
+        initial="closed"
+        animate={isEventOpen ? "open" : "closed"}
+        className={styles.event}
+        ref={containerRef}
+        exit="closed"
+      >
+        {/*<EventTitle address={address}/>*/}
 
-    <motion.div
-      onClick={() => setIsEventOpen(false)}
-      variants={variants}
-      initial="closed"
-      animate={isEventOpen ? "open" : "closed"}
-      className={styles.event}
-      ref={containerRef}
-      exit="closed"
-    >
-      test
-    </motion.div>
-    // <AnimatePresence>
-    //   {isEventOpen &&
-    //   <motion.div
-    //     variants={getVariants()}
-    //     initial="closed"
-    //     animate={isEventOpen ? "open" : "closed"}
-    //     className={styles.event}
-    //     ref={containerRef}
-    //     exit="closed"
-    //   >
-    //     {/*<EventTitle address={address}/>*/}
-    //
-    //     <IosClose
-    //       onClick={() => setIsEventOpen(false)}
-    //       className={styles.closeBtn}
-    //       fontSize="40"
-    //     />
-    //
-    //     <div className={styles.titleInput}>
-    //       <input
-    //         value={!!title ? title : titleFromProps}
-    //         onChange={handleTitle}
-    //       />
-    //     </div>
-    //
-    //     <div className={styles.addressInput}>
-    //       <IosMapOutline/>
-    //       <input
-    //         value={!!address ? address : addressFromProps}
-    //         onChange={handleLocation}
-    //       />
-    //     </div>
-    //
-    //     <div className={styles.dateInput}>
-    //       <IosCalendarOutline/>
-    //       <input
-    //         value={!!time ? time : timeFromProps}
-    //         onChange={handleDate}
-    //       />
-    //     </div>
-    //
-    //     <div className={styles.contentInput}>
-    //     <textarea
-    //       value={!!content ? content : contentFromProps}
-    //       onChange={handleContent}
-    //     />
-    //     </div>
-    //
-    //     <Button
-    //       className={styles.saveBtn}
-    //       onClick={handleSave}
-    //     >
-    //       Save
-    //     </Button>
-    //   </motion.div>
-    //   }
-    // </AnimatePresence>
+        <IosClose
+          onClick={closeEvent}
+          className={styles.closeBtn}
+          fontSize="40"
+        />
+
+        <div className={styles.titleInput}>
+          <input
+            value={!!title ? title : titleFromProps}
+            onChange={handleTitle}
+          />
+        </div>
+
+        <div className={styles.addressInput}>
+          <IosMapOutline/>
+          <input
+            value={!!address ? address : addressFromProps}
+            onChange={handleLocation}
+          />
+        </div>
+
+        <div className={styles.dateInput}>
+          <IosCalendarOutline/>
+          <input
+            value={!!time ? time : timeFromProps}
+            onChange={handleDate}
+          />
+        </div>
+
+        <div className={styles.contentInput}>
+        <textarea
+          value={!!content ? content : contentFromProps}
+          onChange={handleContent}
+        />
+        </div>
+
+        <Button
+          className={styles.saveBtn}
+          onClick={handleSave}
+        >
+          Save
+        </Button>
+      </motion.div>
+      }
+    </AnimatePresence>
   );
 };
 

@@ -5,8 +5,13 @@ import { Dispatch, ReactNode, SetStateAction } from "react";
 import { IEvent, TLngLat } from "@common/types";
 import { TEventModal } from "@components/Events/EventModal/types";
 
+export type ActiveEvent = {
+  markerNode: HTMLDivElement | null;
+  // animateFromNode: HTMLDivElement | null;
+} & IEvent;
+
 export type IEventsState = {
-  activeEvent: TEventModal | undefined;
+  activeEvent: ActiveEvent | undefined;
   isSearchOpen: boolean;
   isEventOpen: boolean;
   searchedAddress: string | undefined;
@@ -23,17 +28,17 @@ export type IEventsProvider = {
 
 export type CreateEventArgs = {
   markerNode: TEventModal["markerNode"];
-  animateFromNode: TEventModal["animateFromNode"];
+  // animateFromNode: TEventModal["animateFromNode"];
 } & Partial<IEvent>;
 
 export type IUseEventsFunctions = {
   setIsSearchOpen(isOpen: boolean): void;
   setIsEventOpen(isOpen: boolean): void;
   setSearchedAddress(address: string): void;
-  setEvent(CreateEventArgs): void;
+  setEvent(CreateEventArgs, isOpen?: boolean): void;
   closeSearch(): void;
   openSearch(): void;
-  openEvent(): void;
+  openEvent(event?: ActiveEvent): void;
   closeEvent(): void;
 }
 

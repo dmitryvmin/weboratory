@@ -3,7 +3,7 @@ import { Context } from "koa";
 import * as HttpStatus from "http-status";
 
 // App
-import { updateEventContent } from "../services/updateEventContent";
+import { queryUpdateEvent } from "../services/queryUpdateEvent";
 
 /**
  * Updates an event by event_id
@@ -23,7 +23,7 @@ async function updateEvent(ctx: Context, next: () => Promise<any>) {
   }
 
   try {
-    const event = await updateEventContent(eventId, ctx.request.body);
+    const event = await queryUpdateEvent(eventId, ctx.request.body);
     ctx.status = HttpStatus.OK;
     ctx.body = event;
     await next();

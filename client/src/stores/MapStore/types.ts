@@ -1,5 +1,5 @@
 import { Dispatch, ReactNode, SetStateAction } from "react";
-import { IEvent, TLngLat } from "@common/types";
+import { TLngLat } from "@common/types";
 import { PaddingOptions } from "react-mapbox-gl/lib/map";
 
 export type IMapState = {
@@ -7,16 +7,7 @@ export type IMapState = {
   mapInstance: undefined | any;
   mapRef: any;
   mapZoom: number;
-  activeMarker: TEventMarker | undefined;
 }
-
-// Marker can have all the properties of an IEvent
-// but must contain coordinates and address
-export type TEventMarker = {
-  event_id: string;
-  address: string;
-  coordinates: TLngLat;
-} & Partial<IEvent>;
 
 export type IMapContext = [
   IMapState,
@@ -33,10 +24,6 @@ export type EaseToArgs = {
   zoom?: IMapState["mapZoom"];
 }
 
-export type CreateMarkerArgs = {
-  address: string;
-} & TEventMarker;
-
 export type IUseMapFns = {
   setMapInstance: any;
   setMapRef: any;
@@ -45,8 +32,8 @@ export type IUseMapFns = {
   centerMapOnAddress(address: string): Promise<any>;
   centerMapOnCoords(coords: TLngLat): void;
   setMapZoom(zoom: IMapState["mapZoom"]): void;
-  setMarker(CreateMarkerArgs): void;
   easeTo(EaseToArgs): void;
+  flyTo(args: any): void;
 }
 
 export type IUseMap = IUseMapFns & IMapState;
