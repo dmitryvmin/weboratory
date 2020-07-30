@@ -44,6 +44,10 @@ const MapMarker: FC<TMapMarkerProps> = ({ event }) => {
     title,
   } = event;
 
+  if (!coordinates) {
+    return null;
+  }
+
   const markerCoordsTuple = getLngLatTuple(coordinates);
 
   function handleMarker(ev: MouseEvent<HTMLDivElement>) {

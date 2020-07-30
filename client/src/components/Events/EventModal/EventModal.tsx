@@ -31,6 +31,8 @@ import { TEventModalProps } from "./types";
 // Store
 import { useMap } from "@stores/MapStore";
 import { useEvents } from "@stores/EventStore";
+import { ModalContent } from "@components/Events/EventModal/ModalContent";
+import { eventsInstance } from "@components/Events/eventsInstance";
 
 const today = format(
   new Date(),
@@ -40,43 +42,14 @@ const today = format(
 /**
  * Event modal
  */
-const EventModal: FC<TEventModalProps> = ({
-  activeEvent,
-  eventsInstance,
-}) => {
-
-  /**
-   * Hooks
-   */
+const EventModal: FC<TEventModalProps> = () => {
 
   /**
    * ========== Context hooks
    */
-  const { isEventOpen, setIsEventOpen, closeEvent } = useEvents();
+  const { activeEvent, isEventOpen, setIsEventOpen, closeEvent } = useEvents();
 
-  const {
-    // markerNode,
-    // animateFromNode,
-    coordinates,
-    title: titleFromProps,
-    address: addressFromProps,
-    content: contentFromProps,
-    time: timeFromProps,
-  } = activeEvent || {};
-
-  /**
-   * ========== State hooks
-   */
-  const [title, setTitle] = useState<string>("");
-
-  const [address, setAddress] = useState<string>("");
-
-  const [time, setTime] = useState<string>("");
-
-  const [content, setContent] = useState<string>("");
-
-
-  // const eventInstance = useRef(new eventsService());
+    // const eventInstance = useRef(new eventsService());
 
   const containerRef = useRef(null);
 
@@ -102,8 +75,6 @@ const EventModal: FC<TEventModalProps> = ({
   //   ? activeEvent.animateFromNode.getBoundingClientRect()
   //   : undefined;
 
-  console.log("################", event$);
-  
   const animateFromBBox = activeEvent?.markerNode
     ? activeEvent.markerNode.getBoundingClientRect()
     : undefined;
@@ -154,53 +125,7 @@ const EventModal: FC<TEventModalProps> = ({
     },
   };
 
-  /**
-   * Handlers
-   */
-  function handleSave() {
-    const eventId = new URLSearchParams(window.location.search).get("eventId");
-    if (!eventId) {
-      return;
-    }
-    if (eventId.startsWith("new")) {
-      const eventContent = {
-        content: content ?? contentFromProps,
-        title: title ?? titleFromProps,
-        address: address ?? addressFromProps,
-        time: time ?? timeFromProps,
-        status: "PUBLIC",
-        coordinates,
-      };
-
-      eventsInstance.createEvent(eventContent);
-    }
-    else {
-      const eventContent = {
-        content: content ?? contentFromProps,
-        title: title ?? titleFromProps,
-        address: address ?? addressFromProps,
-        time: time ?? timeFromProps,
-      };
-console.log("@@ Updating event");
-      eventsInstance.updateEvent(eventId, eventContent);
-    }
-  }
-
-  function handleTitle(ev: ChangeEvent<HTMLInputElement>) {
-    setTitle(ev.target.value);
-  }
-
-  function handleLocation(ev: ChangeEvent<HTMLInputElement>) {
-    setAddress(ev.target.value);
-  }
-
-  function handleContent(ev: ChangeEvent<HTMLTextAreaElement>) {
-    setContent(ev.target.value);
-  }
-
-  function handleDate(ev: ChangeEvent<HTMLInputElement>) {
-    setTime(ev.target.value);
-  }
+  console.log("@@@@@@@", "isEventOpen", isEventOpen, "activeEvent", activeEvent);
 
   return (
     <AnimatePresence>
@@ -214,49 +139,7 @@ console.log("@@ Updating event");
         exit="closed"
       >
         {/*<EventTitle address={address}/>*/}
-
-        <IosClose
-          onClick={closeEvent}
-          className={styles.closeBtn}
-          fontSize="40"
-        />
-
-        <div className={styles.titleInput}>
-          <input
-            value={!!title ? title : titleFromProps}
-            onChange={handleTitle}
-          />
-        </div>
-
-        <div className={styles.addressInput}>
-          <IosMapOutline/>
-          <input
-            value={!!address ? address : addressFromProps}
-            onChange={handleLocation}
-          />
-        </div>
-
-        <div className={styles.dateInput}>
-          <IosCalendarOutline/>
-          <input
-            value={!!time ? time : timeFromProps}
-            onChange={handleDate}
-          />
-        </div>
-
-        <div className={styles.contentInput}>
-        <textarea
-          value={!!content ? content : contentFromProps}
-          onChange={handleContent}
-        />
-        </div>
-
-        <Button
-          className={styles.saveBtn}
-          onClick={handleSave}
-        >
-          Save
-        </Button>
+        <ModalContent activeEvent={activeEvent} eventsInstance={eventsInstance}/>
       </motion.div>
       }
     </AnimatePresence>

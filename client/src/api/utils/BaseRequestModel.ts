@@ -40,7 +40,7 @@ class BaseRequestModel<T> implements Props<T> {
         })
         .then((r: Response) => {
           // log(`Response completed with status code ${r.status}.`);
-          debugger;
+          // debugger;
           if (r.status === 200) {
             return r.json();
           }
@@ -52,7 +52,7 @@ class BaseRequestModel<T> implements Props<T> {
           }
         })
         .then((data) => {
-          debugger;
+          // debugger;
           // log(`Passing response data to the observer. Data:`, data);
           observer.next(data);
           // observer.complete();

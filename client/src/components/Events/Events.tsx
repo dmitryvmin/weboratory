@@ -17,7 +17,7 @@ import { IEvent } from "@common/types";
 import { EventModal } from "@components/Events/EventModal";
 import { Map } from "@components/Map";
 import { MapMarker } from "@components/Map/components/MapMarker/MapMarker";
-import { MapSearch } from "@components/Map/components/MapSearch/MapSearch";
+import { MapSearch } from "@components/Events/Search/MapSearch";
 
 // Utils
 import { log } from "@utils/Logger";
@@ -28,6 +28,8 @@ import { useEvents } from "@stores/EventStore";
 
 // Constants
 import { getNewEventKey } from "@components/Events/utils/getEventKey";
+import { AddNewEvent } from "@components/Events/AddNewEvent/AddNewEvent";
+import { eventsInstance } from "@components/Events/eventsInstance";
 
 /**
  * Events App
@@ -61,7 +63,7 @@ const EventsApp: React.FC = () => {
   /**
    * ========== State hooks
    */
-  const eventsInstance = useMemo(() => new eventsService(), []);
+  // const eventsInstance = useMemo(() => new eventsService(), []);
 
   const events$ = useObservable<IEvent[]>(eventsInstance.onEvents());
   const event$ = useObservable<IEvent>(eventsInstance.onEvent());
@@ -145,8 +147,8 @@ const EventsApp: React.FC = () => {
   const renderNewEventMarker = () => {
     if (
       !activeEvent?.address ||
-      !activeEvent.coordinates ||
-      !activeEvent.event_id.startsWith("new")
+      !activeEvent?.coordinates ||
+      !(activeEvent.event_id && activeEvent.event_id.startsWith("new"))
     ) {
       return;
     }
@@ -163,13 +165,13 @@ const EventsApp: React.FC = () => {
    */
   return (
     <div className={styles.container}>
-      <MapSearch/>
-      {activeEvent &&
-      <EventModal
-        activeEvent={activeEvent}
-        eventsInstance={eventsInstance}
-      />
-      }
+      {/*<MapSearch/>*/}
+      <AddNewEvent />
+      {/*{activeEvent &&*/}
+      {/*<EventModal*/}
+      {/*  activeEvent={activeEvent}*/}
+      {/*/>*/}
+      {/*}*/}
       <Map>
         {renderNewEventMarker()}
         {renderSavedMarkers()}

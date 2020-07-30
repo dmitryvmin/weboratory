@@ -1,0 +1,23 @@
+@import "../../../styles/zIndex";
+@import "../../../styles/sizes";
+@import "../../../styles/shadows";
+
+.container {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  z-index: $zi1;
+  background-color: white;
+  box-shadow: $shadow_1;
+}
+
+.addBtn {
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  cursor: pointer;
+}
+
+.closeBtn {
+  cursor: pointer;
+}

@@ -96,7 +96,7 @@ const useEvents = (): IUseEvents => {
     const eventObject: ActiveEvent = {
       markerNode: markerNode ?? null,
       // animateFromNode: animateFromNode ?? null,
-      event_id: rest.event_id ?? getNewEventKey(rest.address),
+      event_id: rest.event_id ?? getNewEventKey(rest?.address),
       coordinates,
       created_at: rest.created_at,
       updated_at: rest.updated_at,
@@ -187,7 +187,7 @@ const useEvents = (): IUseEvents => {
   };
 
   // When the Event Modal is opened
-  const openEvent = (event) => {
+  const openEvent = (event: any) => {
 
     const eventToOpen = event ?? activeEvent;
 
@@ -225,6 +225,19 @@ const useEvents = (): IUseEvents => {
 
   };
 
+  const startNewEvent = () => {
+
+    const eventObject: ActiveEvent = {
+      markerNode: null,
+      event_id: getNewEventKey(),
+    };
+
+    setActiveEvent(eventObject);
+
+    setIsEventOpen(true);
+
+  }
+
   /**
    * Return memoized events state and public utilities
    */
@@ -241,6 +254,7 @@ const useEvents = (): IUseEvents => {
     openEvent,
     openSearch,
     closeSearch,
+    startNewEvent,
   });
 };
 

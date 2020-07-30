@@ -8,7 +8,7 @@ import { TEventModal } from "@components/Events/EventModal/types";
 export type ActiveEvent = {
   markerNode: HTMLDivElement | null;
   // animateFromNode: HTMLDivElement | null;
-} & IEvent;
+} & Partial<IEvent>;
 
 export type IEventsState = {
   activeEvent: ActiveEvent | undefined;
@@ -39,7 +39,9 @@ export type IUseEventsFunctions = {
   closeSearch(): void;
   openSearch(): void;
   openEvent(event?: ActiveEvent): void;
+  // openEvent(event: ActiveEvent): void;
   closeEvent(): void;
+  startNewEvent: any;
 }
 
 export type IUseEvents = IUseEventsFunctions & IEventsState;
