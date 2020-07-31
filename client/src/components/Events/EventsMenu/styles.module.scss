@@ -3,14 +3,10 @@
 @import "../../../styles/shadows";
 @import "../../../styles/sizes";
 
-.menuContainerBase {
+.eventsMenu {
   position: absolute;
   bottom: 60px;
   right: 10px;
-}
-
-.menuButtonBase {
-  position: relative;
   width: $size_BUTTON;
   height: $size_BUTTON;
   background-color: white;
@@ -21,17 +17,4 @@
   box-shadow: $shadow_1;
   cursor: pointer;
   z-index: $zi1;
-}
-
-.menuItemBase {
-  position: absolute;
-  background-color: white;
-  padding: 5px 10px;
-  border-radius: $bradius_1;
-  z-index: 100;
-
-  > a {
-    color: black;
-    font-size: 12px;
-  }
 }

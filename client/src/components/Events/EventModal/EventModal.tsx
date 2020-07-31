@@ -1,148 +1,130 @@
 // Libs
-import React, { ChangeEvent, FC, useEffect, useMemo, useRef, useState } from "react";
-import { AnimatePresence, motion, useAnimation } from "framer-motion";
+import React, { FC, useRef, ChangeEvent } from "react";
+import { motion } from "framer-motion";
 import IosClose from "react-ionicons/lib/IosClose";
-import IosMapOutline from "react-ionicons/lib/IosMapOutline";
-import IosCalendarOutline from "react-ionicons/lib/IosCalendarOutline";
-import { useParams } from "react-router-dom";
-import { format } from "date-fns";
-
-// Styles
-import styles from "./styles.module.scss";
+import MdAdd from "react-ionicons/lib/MdAdd";
 
 // Utils
 import { useWindowSize } from "@utils/hooks/useWindowSize";
 
-// Components
-import { Button } from "@components/UI/Button";
-import { getLngLatTuple } from "@components/Events/utils/getLngLatTuple";
-import { getPositionFromTarget } from "@components/Events/utils/getPositionFromTarget";
-
-// Services
-import { eventsService } from "@api/services/eventsService";
-
-// Utils
-import { useObservable } from "@utils/hooks/useObservable";
-
-// Types
-import { IEvent } from "@common/types";
-import { TEventModalProps } from "./types";
+// Styles
+import styles from "./styles.module.scss";
 
 // Store
 import { useMap } from "@stores/MapStore";
 import { useEvents } from "@stores/EventStore";
-import { ModalContent } from "@components/Events/EventModal/ModalContent";
-import { eventsInstance } from "@components/Events/eventsInstance";
 
-const today = format(
-  new Date(),
-  "mm-dd-yyyy",
-);
+// Components
+import { PredictionsDropdown } from "@components/Events/PredictionsDropdown/PredictionsDropdown";
+import { useMutationObserver } from "@utils/hooks/useMutationObserver";
+import { log } from "@utils/Logger";
+
+// Constants
+import {SEARCH_MIN} from "@stores/EventStore/constants";
+import { eventsInstance } from "@components/Events/eventsInstance";
+import { ModalContent } from "@components/Events/EventModal/ModalContent";
+import { getPositionFromTarget } from "@components/Events/utils/getPositionFromTarget";
 
 /**
- * Event modal
+ * Map address search
  */
-const EventModal: FC<TEventModalProps> = () => {
+const EventModal: FC<{}> = () => {
 
   /**
    * ========== Context hooks
    */
-  const { activeEvent, isEventOpen, setIsEventOpen, closeEvent } = useEvents();
+  const {
+    isEventOpen,
+    closeEvent,
+    openEvent,
+    startNewEvent,
+    activeEvent,
+  } = useEvents();
 
-    // const eventInstance = useRef(new eventsService());
+  /**
+   * ========== State hooks
+   */
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  const containerRef = useRef(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   /**
    * ========== Util hooks
    */
-  const event$ = useObservable<IEvent>(eventsInstance.onEvent());
-
-  const controls = useAnimation();
-
   const { windowWidth, windowHeight } = useWindowSize();
 
-  // const endPosition = useMemo(() => {
-  //   if (!mapInstance || !coordinates) {
-  //     return;
-  //   }
-  //   return mapInstance?.project(coordinates);
-  // }, [
-  //   activeEvent,
-  // ]);
-
-  // const animateFromBBox = activeEvent?.animateFromNode
-  //   ? activeEvent.animateFromNode.getBoundingClientRect()
-  //   : undefined;
-
-  const animateFromBBox = activeEvent?.markerNode
-    ? activeEvent.markerNode.getBoundingClientRect()
-    : undefined;
-
-  const animateToBBox = activeEvent?.markerNode
-    ? activeEvent.markerNode.getBoundingClientRect()
-    : undefined;
+  const animateFromBBox = getPositionFromTarget(activeEvent?.markerNode);
 
   /**
    * Framer variants
    */
-  const variants = {
-    initial: {
+  const containerVariant = {
+    closed : {
       borderRadius: "50%",
-      width: 0,
-      height: 0,
-      x: animateFromBBox?.x,
-      y: animateFromBBox?.y,
+      width: animateFromBBox ? 1 : 50,
+      height: animateFromBBox ? 1 : 50,
+      x: animateFromBBox ? animateFromBBox?.x : (windowWidth - 60),
+      y: animateFromBBox ? animateFromBBox?.y : (windowHeight - 120),
       opacity: 0,
       transition: {
         type: "tween",
-        duration: 0.3,
-      },
-    },
-    closed: {
-      borderRadius: "50%",
-      width: 0,
-      height: 0,
-      x: animateToBBox?.x ?? windowWidth / 2,
-      y: animateToBBox?.y ?? windowHeight / 2,
-      opacity: 0,
-      transition: {
-        type: "tween",
-        duration: 0.3,
       },
     },
     open: {
-      borderRadius: "0%",
-      width: windowWidth > 620 ? 600 : "calc(100vw - 20px)",
+      borderRadius: "2px",
+      width: 460,
       height: 300,
-      x: windowWidth > 620 ? windowWidth / 2 - 300 : 10,
-      y: 300,
+      x: "calc(50vw - 230px)",
+      y: "calc(50vh - 150px)",
       opacity: 1,
       transition: {
         type: "tween",
-        duration: 0.5,
       },
     },
   };
 
-  console.log("@@@@@@@", "isEventOpen", isEventOpen, "activeEvent", activeEvent);
 
+  const buttonVariants = {
+    closed: {
+      display: "flex",
+    },
+    open: {
+      transitionEnd: {
+        display: "none",
+      },
+    },
+  };
+
+  /**
+   * Return JSX
+   */
   return (
-    <AnimatePresence>
-      {isEventOpen &&
+    <motion.div
+      className={styles.container}
+      variants={containerVariant}
+      initial={true}
+      animate={isEventOpen ? "open" : "closed"}
+    >
+      {isEventOpen && <ModalContent activeEvent={activeEvent} eventsInstance={eventsInstance}/>}
       <motion.div
-        variants={variants}
-        initial="closed"
+        onClick={startNewEvent}
         animate={isEventOpen ? "open" : "closed"}
-        className={styles.event}
-        ref={containerRef}
-        exit="closed"
+        variants={buttonVariants}
+        className={styles.addBtn}
       >
-        {/*<EventTitle address={address}/>*/}
-        <ModalContent activeEvent={activeEvent} eventsInstance={eventsInstance}/>
+        <MdAdd/>
       </motion.div>
-      }
-    </AnimatePresence>
+      {/*<motion.div*/}
+      {/*  onClick={() => closeEvent}*/}
+      {/*  animate={isEventOpen ? "open" : "closed"}*/}
+      {/*  variants={buttonVariants}*/}
+      {/*>*/}
+      {/*  <IosClose*/}
+      {/*    fontSize="40"*/}
+      {/*    className={styles.closeBtn}*/}
+      {/*  />*/}
+      {/*</motion.div>*/}
+    </motion.div>
   );
 };
 

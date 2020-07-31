@@ -1,6 +1,7 @@
 // Libs
 import React, { FC, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { NavLink } from "react-router-dom";
 import IosMenu from "react-ionicons/lib/IosMenu";
 
 // App
@@ -8,10 +9,9 @@ import { INavItem } from "@components/Navigation/Nav/Nav";
 
 // Styles
 import styles from "../NavigationMenu/styles.module.scss";
-import { NavLink } from "react-router-dom";
 
-// Constants
-const MENU_SIZE = 50;
+// Common
+import { MENU_SIZE } from "@common/constants";
 
 // Gets x/y coordinates for displaying menu items in the second quadrant
 function getTransformValues(

@@ -1,13 +1,24 @@
 @import "../../../styles/zIndex";
 @import "../../../styles/radius";
+@import "../../../styles/shadows";
 
-.event {
-  //background-color: white;
-  //box-shadow: 0 0 1px 1px #eee;
-  //position: absolute;
-  //z-index: $zi1;
-  //overflow: hidden;
-  //border-radius: $bradius_1;
+.container {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  z-index: $zi1;
+  background-color: white;
+  box-shadow: $shadow_1;
+}
+
+.eventModal {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
 }
 
 .closeBtn {

@@ -14,7 +14,6 @@ import { eventsService } from "@api/services/eventsService";
 import { IEvent } from "@common/types";
 
 // Components
-import { EventModal } from "@components/Events/EventModal";
 import { Map } from "@components/Map";
 import { MapMarker } from "@components/Map/components/MapMarker/MapMarker";
 import { MapSearch } from "@components/Events/Search/MapSearch";
@@ -28,8 +27,10 @@ import { useEvents } from "@stores/EventStore";
 
 // Constants
 import { getNewEventKey } from "@components/Events/utils/getEventKey";
-import { AddNewEvent } from "@components/Events/AddNewEvent/AddNewEvent";
+
 import { eventsInstance } from "@components/Events/eventsInstance";
+import { EventModal } from "@components/Events/EventModal";
+import { EventsMenu } from "@components/Events/EventsMenu";
 
 /**
  * Events App
@@ -166,7 +167,8 @@ const EventsApp: React.FC = () => {
   return (
     <div className={styles.container}>
       {/*<MapSearch/>*/}
-      <AddNewEvent />
+      <EventsMenu />
+      <EventModal />
       {/*{activeEvent &&*/}
       {/*<EventModal*/}
       {/*  activeEvent={activeEvent}*/}

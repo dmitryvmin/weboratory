@@ -118,7 +118,7 @@ const ModalContent: any = ({
   }
 
   return (
-    <>
+    <div className={styles.eventModal}>
       <IosClose
         onClick={closeEvent}
         className={styles.closeBtn}
@@ -161,7 +161,7 @@ const ModalContent: any = ({
       >
         Save
       </Button>
-    </>
+    </div>
   );
 };
 
