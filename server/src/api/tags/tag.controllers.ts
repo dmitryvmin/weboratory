@@ -5,7 +5,7 @@ import {Context} from "koa";
 import * as HttpStatus from "http-status";
 
 // Schema
-import Tags from "../../db/models/objection/Tags";
+import Tags from "../../models/objection/Tags";
 import { deleteTagById, deleteTagByTitle, getAllTags } from "./tag.services";
 import { removeTagFromTagMaps } from "../tagmap/tagmap.services";
 

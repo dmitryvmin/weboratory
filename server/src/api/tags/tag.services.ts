@@ -1,5 +1,5 @@
 // Schema
-import Tags from "../../db/models/objection/Tags";
+import Tags from "../../models/objection/Tags";
 import * as HttpStatus from "http-status";
 
 /**

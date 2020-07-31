@@ -13,7 +13,7 @@ import {
   getTagByTagId,
   getTagByTagTitle,
 } from "../../tags/tag.services";
-import Tags from "../../../db/models/objection/Tags";
+import Tags from "../../../models/objection/Tags";
 
 /**
  * Updates Post tags in the TagMap tables

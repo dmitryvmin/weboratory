@@ -1,9 +1,9 @@
 // Schema
-import TagMap from "../../db/models/objection/TagMap";
+import TagMap from "../../models/objection/TagMap";
 import { Context } from "koa";
 import * as HttpStatus from "http-status";
 import { createNewTag, getTagByTagTitle } from "../tags/tag.services";
-import Tags from "../../db/models/objection/Tags";
+import Tags from "../../models/objection/Tags";
 
 /**
  * Removes associated row from the TagMap table

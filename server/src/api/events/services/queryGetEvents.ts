@@ -1,4 +1,4 @@
-import { Events } from "../../../db/models/objection/Events";
+import { Events } from "../../../models/objection/Events";
 
 /**
  * Retrieves all event rows for requested userId

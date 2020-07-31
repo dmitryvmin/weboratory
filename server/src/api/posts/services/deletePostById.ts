@@ -1,4 +1,4 @@
-import Posts from "../../../db/models/objection/Posts";
+import Posts from "../../../models/objection/Posts";
 
 /**
  * Removes row from the Posts table by post id

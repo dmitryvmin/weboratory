@@ -1,4 +1,4 @@
-import Posts from "../../../db/models/objection/Posts";
+import Posts from "../../../models/objection/Posts";
 
 /**
  * Retrieves all post rows

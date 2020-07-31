@@ -8,8 +8,8 @@ import { Context } from "koa";
 import { getTagsIdForPostId, removeTagFromTagMapById } from "./tagmap.services";
 
 // Schema
-import TagMap from "../../db/models/objection/TagMap";
-import Tags from "../../db/models/objection/Tags";
+import TagMap from "../../models/objection/TagMap";
+import Tags from "../../models/objection/Tags";
 import { deleteTagById, getAllTags, getTagsFromTagsIds } from "../tags/tag.services";
 
 /**

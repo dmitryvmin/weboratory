@@ -6,12 +6,13 @@ type GeocoderStatus = google.maps.GeocoderStatus;
  */
 const geocodeByAddress = (address: string): Promise<GeocoderResult[]> => {
   const geocoder = new google.maps.Geocoder();
+  const OK = google.maps.GeocoderStatus.OK;
 
   return new Promise((resolve, reject) => {
     geocoder.geocode(
       { address },
       (results: GeocoderResult[], status: GeocoderStatus) => {
-        if (status !== google.maps.GeocoderStatus.OK) {
+        if (status !== OK) {
           console.log(`Couldn't geocode address "${address}"`, status);
           reject(status);
         }

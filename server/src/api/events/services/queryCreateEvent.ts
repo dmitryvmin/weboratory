@@ -1,4 +1,4 @@
-import { Events } from "../../../db/models/objection/Events";
+import { Events } from "../../../models/objection/Events";
 
 /**
  * Creates a new Event

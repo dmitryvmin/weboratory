@@ -1,4 +1,4 @@
-import Posts from "../../../db/models/objection/Posts";
+import Posts from "../../../models/objection/Posts";
 
 /**
  * Creates a new Post with title and content

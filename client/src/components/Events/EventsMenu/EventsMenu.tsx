@@ -22,6 +22,8 @@ const EventsMenu: FC<{}> = () => {
    */
   const {
     isEventOpen,
+    openEvent,
+    closeEvent,
   } = useEvents();
 
   /**
@@ -31,6 +33,15 @@ const EventsMenu: FC<{}> = () => {
 
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const handleMenu = () => {
+    if (!isEventOpen) {
+      openEvent();
+    }
+    if (isEventOpen) {
+      closeEvent();
+    }
+  }
+
   /**
    * Framer variants
    */
@@ -39,7 +50,7 @@ const EventsMenu: FC<{}> = () => {
       // opacity: 1,
       display: "initial",
     },
-    evetIsOpen: {
+    eventIsOpen: {
       // opacity: 0,
       display: "none",
     },
@@ -47,7 +58,7 @@ const EventsMenu: FC<{}> = () => {
 
   const getAnimationState = () => {
     if (isEventOpen) {
-      return "evetIsOpen";
+      return "eventIsOpen";
     }
     return "default";
   };
@@ -65,6 +76,7 @@ const EventsMenu: FC<{}> = () => {
       variants={menuVariants}
       initial="default"
       animate={getAnimationState()}
+      onClick={handleMenu()}
     >
       {getMenuIcon()}
     </motion.div>

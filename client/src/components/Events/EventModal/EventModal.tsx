@@ -60,14 +60,16 @@ const EventModal: FC<{}> = () => {
    */
   const containerVariant = {
     closed : {
-      borderRadius: "50%",
+      borderRadius: "20%",
       width: animateFromBBox ? 1 : 50,
       height: animateFromBBox ? 1 : 50,
       x: animateFromBBox ? animateFromBBox?.x : (windowWidth - 60),
       y: animateFromBBox ? animateFromBBox?.y : (windowHeight - 120),
-      opacity: 0,
       transition: {
         type: "tween",
+      },
+      transitionEnd: {
+        display: "none",
       },
     },
     open: {
@@ -76,9 +78,9 @@ const EventModal: FC<{}> = () => {
       height: 300,
       x: "calc(50vw - 230px)",
       y: "calc(50vh - 150px)",
-      opacity: 1,
       transition: {
         type: "tween",
+        display: "default",
       },
     },
   };

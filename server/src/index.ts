@@ -4,7 +4,7 @@ import { AddressInfo } from "net";
 
 // App
 import { initKoa } from "./server/index";
-import { initDB } from "./db";
+import { initDB } from "./databases";
 import { config } from "./config";
 
 // Constants
