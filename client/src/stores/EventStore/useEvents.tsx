@@ -11,6 +11,7 @@ import { TEventModal } from "@components/Events/EventModal/types";
 import { useMap } from "@stores/MapStore";
 import { getNewEventKey } from "@components/Events/utils/getEventKey";
 import { geocodeQuery } from "@components/Events/utils/geocodeQuery";
+import { InitialEvent } from "@stores/EventStore/constants";
 
 /**
  * Events context facade
@@ -25,6 +26,7 @@ const useEvents = (): IUseEvents => {
       activeEvent,
       isSearchOpen,
       isEventOpen,
+      isMenuOpen,
       searchedAddress,
     },
     setState,
@@ -40,7 +42,6 @@ const useEvents = (): IUseEvents => {
    *
    */
   const setActiveEvent = (event: ActiveEvent) => {
-    log("@@ setActiveEvent", event);
     setState((s): IEventsState => ({
       ...s,
       activeEvent: event,
@@ -61,10 +62,20 @@ const useEvents = (): IUseEvents => {
     }));
   };
 
-  const setSearchedAddress = (searchedAddress: string) => {
+  const updateActiveEvent = (eventData: ActiveEvent) => {
     setState((s): IEventsState => ({
       ...s,
-      searchedAddress,
+      activeEvent: {
+        ...s.activeEvent,
+        ...eventData,
+      },
+    }));
+  };
+
+  const setIsMenuOpenTo = (isMenuOpen: boolean) => {
+    setState((s): IEventsState => ({
+      ...s,
+      isMenuOpen,
     }));
   };
 
@@ -72,84 +83,47 @@ const useEvents = (): IUseEvents => {
    * ==================== Utility functions ====================
    */
 
-
   /**
    * Creates an Event object
    */
   async function createEventObject({
-    markerNode,
-    // animateFromNode,
+    coordinates: coordinatesArg,
+    event_id: eventIdArg,
+    address,
     ...rest
   }: ActiveEvent) {
 
     // If no coordinates have been passed,
     // query coordinates by address
     let coordinates;
-    if (!rest.coordinates) {
-      coordinates = await geocodeQuery(rest.address);
+    if (!coordinatesArg && address) {
+      coordinates = await geocodeQuery(address);
     }
     else {
-      coordinates = rest.coordinates;
+      coordinates = coordinatesArg;
     }
+
+    // Generate a key if event_id doesn't exist
+    const event_id = eventIdArg ?? getNewEventKey(address);
 
     // Create event object
     const eventObject: ActiveEvent = {
-      markerNode: markerNode ?? null,
-      // animateFromNode: animateFromNode ?? null,
-      event_id: rest.event_id ?? getNewEventKey(rest?.address),
+      event_id,
       coordinates,
-      created_at: rest.created_at,
-      updated_at: rest.updated_at,
-      address: rest.address,
-      time: rest.time,
-      title: rest.title,
-      content: rest.content,
+      address,
+      ...rest,
     };
 
     return eventObject;
   }
 
   /**
-   * Creates and set an Event
-   */
-  // const setEvent = async ({
-  //
-  // }
-  //   markerNode,
-  //   searchNode,
-  //   address,
-  //   coordsArg,
-  // ) => {
-  //
-  //   // Get marker element position
-  //   // const startPosition = getPositionFromTarget(ev.target as HTMLDivElement);
-  //
-  //   // If no coordinates have been passed,
-  //   // query coordinates by address
-  //   let coordinates;
-  //   if (!coordsArg) {
-  //     coordinates = await geocodeQuery(address);
-  //   }
-  //   else {
-  //     coordinates = coordsArg;
-  //   }
-  //
-  //   // Create event object
-  //   const event = createEventObject({
-  //     markerNode,
-  //     searchNode,
-  //     address,
-  //     coordinates,
-  //   });
-  //
-  //   setActiveEvent(event);
-  // };
-
-
-  /**
    * ==================== Public functions ====================
    */
 
+  /**
+   * Sets the passed event as the activeEvent
+   */
   const setEvent = async (event, isOpen) => {
 
     const newActiveEvent = await createEventObject(event);
@@ -213,30 +187,32 @@ const useEvents = (): IUseEvents => {
   };
 
   const openSearch = () => {
+    log("Opening Search...");
   };
 
   const closeSearch = () => {
+    log("Closing Search...");
 
     // Hide search predictions
-    setSearchedAddress("");
+    updateActiveEvent({ address: "" });
 
     // Close Search Input
     setIsSearchOpen(false);
 
   };
 
-  const startNewEvent = () => {
+  const startNewEvent = async () => {
+    log("Starting new Event...");
 
-    const eventObject: ActiveEvent = {
-      markerNode: null,
-      event_id: getNewEventKey(),
-    };
+    const newEvent = await createEventObject({
+      ...InitialEvent,
+      title: "New Event",
+    });
 
-    setActiveEvent(eventObject);
+    setActiveEvent(newEvent);
 
     setIsEventOpen(true);
-
-  }
+  };
 
   /**
    * Return memoized events state and public utilities
@@ -245,16 +221,18 @@ const useEvents = (): IUseEvents => {
     activeEvent,
     isSearchOpen,
     isEventOpen,
+    isMenuOpen,
     searchedAddress,
     setIsSearchOpen,
     setIsEventOpen,
-    setSearchedAddress,
     setEvent,
     closeEvent,
     openEvent,
     openSearch,
     closeSearch,
     startNewEvent,
+    updateActiveEvent,
+    setIsMenuOpenTo,
   });
 };
 

@@ -134,12 +134,12 @@ const Post: FC<PostProps> = ({
   const postVariants = {
     inactive: {
       borderRadius: "50%",
-      width: post ? 300 : 60,
-      height: post ? 300 : 60,
+      width: post ? 300 : 50,
+      height: post ? 300 : 50,
       // left: xOffset,
       // top: yOffset,
-      x: post ? xPosition : windowWidth - 80,
-      y: post ? yPosition : windowHeight - 80,
+      x: post ? xPosition : windowWidth - 60,
+      y: post ? yPosition : windowHeight - 55,
       // scale: scale as any,
       transition: {
         type: "tween",

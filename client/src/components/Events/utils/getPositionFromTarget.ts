@@ -1,4 +1,4 @@
-function getPositionFromTarget(target: HTMLDivElement | undefined | null) {
+function getPositionFromTarget(target: HTMLDivElement | undefined | null): DOMRect | undefined {
   if (!target) {
     return undefined;
   }

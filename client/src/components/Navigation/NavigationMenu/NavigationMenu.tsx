@@ -13,30 +13,8 @@ import styles from "../NavigationMenu/styles.module.scss";
 // Common
 import { MENU_SIZE } from "@common/constants";
 
-// Gets x/y coordinates for displaying menu items in the second quadrant
-function getTransformValues(
-  count: number,
-  idx: number,
-) {
-  const itemHeight = 20;
-  // span of the arc
-  const arcSpan = 120;
-  // radius - hypotenuse
-  const arcRadius = 80;
-  // angle distance between items
-  const angleSeparation = arcSpan / (count - 1);
-  const idxAngle = angleSeparation * idx - ((arcSpan - 90) / 2) - 20;
-  const idxAngleRadians = (Math.PI / 180) * idxAngle;
-  // adjacent
-  const x = Math.cos(idxAngleRadians) * -arcRadius;
-  // opposite side
-  const y = Math.sin(idxAngleRadians) * -arcRadius;
-
-  return ({
-    x: x - 10,
-    y: y - 0,
-  });
-}
+import { NavigationMenuItem } from "@components/Navigation/NavigationMenu/types";
+import { getTransformValues } from "@components/Navigation/NavigationMenu/utils/getTransformValues";
 
 const menuVariants = {
   open: {
@@ -47,14 +25,7 @@ const menuVariants = {
   },
 };
 
-type IMenuItem = {
-  item: INavItem;
-  idx: number;
-  // isOpen: boolean;
-  count: number;
-};
-
-const MenuItem: FC<IMenuItem> = ({
+const MenuItem: FC<NavigationMenuItem> = ({
   item,
   idx,
   // isOpen,
@@ -65,8 +36,8 @@ const MenuItem: FC<IMenuItem> = ({
   const frames = Array.from({ length: idx + 1 }, (v, i) => i);
 
   // Get get transform arrays for x/y position
-  const xTransform = frames.map(frame => getTransformValues(count, frame).x);
-  const yTransform = frames.map(frame => getTransformValues(count, frame).y);
+  const xTransform = frames.map(frame => getTransformValues({count, idx: frame}).x);
+  const yTransform = frames.map(frame => getTransformValues({count, idx: frame}).y);
 
   return (
     <motion.div

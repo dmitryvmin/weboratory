@@ -3,6 +3,7 @@ import React, { ChangeEvent, FC, useEffect, useMemo, useRef, useState } from "re
 import { AnimatePresence, motion, useAnimation } from "framer-motion";
 import IosClose from "react-ionicons/lib/IosClose";
 import IosMapOutline from "react-ionicons/lib/IosMapOutline";
+import IosMap from "react-ionicons/lib/IosMap";
 import IosCalendarOutline from "react-ionicons/lib/IosCalendarOutline";
 import { useParams } from "react-router-dom";
 import { format } from "date-fns";
@@ -30,138 +31,163 @@ import { TEventModalProps } from "./types";
 
 // Store
 import { useMap } from "@stores/MapStore";
-import { useEvents } from "@stores/EventStore";
+import { SEARCH_MIN, useEvents } from "@stores/EventStore";
+import { eventsInstance } from "@components/Events/eventsInstance";
 
-const today = format(
-  new Date(),
-  "mm-dd-yyyy",
-);
-
-const ModalContent: any = ({
-  activeEvent,
-  eventsInstance,
-}) => {
+const ModalContent: any = ({ centerModalOn }) => {
 
   /**
    * ========== Context hooks
    */
-  const { isEventOpen, setIsEventOpen, closeEvent } = useEvents();
-
   const {
-    // markerNode,
-    // animateFromNode,
-    coordinates,
-    title: titleFromProps,
-    address: addressFromProps,
-    content: contentFromProps,
-    time: timeFromProps,
-  } = activeEvent || {};
+    isEventOpen,
+    closeEvent,
+    activeEvent,
+    updateActiveEvent,
+  } = useEvents();
+
+  const { centerMapOnAddress } = useMap();
 
   /**
    * ========== State hooks
    */
-  const [title, setTitle] = useState<string>("");
-
-  const [address, setAddress] = useState<string>("");
-
-  const [time, setTime] = useState<string>("");
-
-  const [content, setContent] = useState<string>("");
-
+  const [addressSearchOn, setAddressSearchTo] = useState<boolean>(true);
 
   /**
    * Handlers
    */
   function handleSave() {
     const eventId = new URLSearchParams(window.location.search).get("eventId");
-    if (!eventId) {
+    if (!eventId || !activeEvent) {
       return;
     }
     if (eventId.startsWith("new")) {
-      const eventContent = {
-        content: content ?? contentFromProps,
-        title: title ?? titleFromProps,
-        address: address ?? addressFromProps,
-        time: time ?? timeFromProps,
-        status: "PUBLIC",
-        coordinates,
-      };
-
-      eventsInstance.createEvent(eventContent);
+      eventsInstance.createEvent(activeEvent);
     }
     else {
-      const eventContent = {
-        content: content ?? contentFromProps,
-        title: title ?? titleFromProps,
-        address: address ?? addressFromProps,
-        time: time ?? timeFromProps,
-      };
-
-      eventsInstance.updateEvent(eventId, eventContent);
+      eventsInstance.updateEvent(eventId, activeEvent);
     }
   }
 
   function handleTitle(ev: ChangeEvent<HTMLInputElement>) {
-    setTitle(ev.target.value);
+    updateActiveEvent({ title: ev.target.value });
   }
 
   function handleLocation(ev: ChangeEvent<HTMLInputElement>) {
-    setAddress(ev.target.value);
+    const address = ev.target.value;
+    updateActiveEvent({ address });
+    if (addressSearchOn) {
+      centerMapOnAddress(address);
+      if (address.length < SEARCH_MIN) {
+        return;
+      }
+      centerModalOn("openOnMarker");
+    }
   }
 
   function handleContent(ev: ChangeEvent<HTMLTextAreaElement>) {
-    setContent(ev.target.value);
+    updateActiveEvent({ content: ev.target.value });
   }
 
-  function handleDate(ev: ChangeEvent<HTMLInputElement>) {
-    setTime(ev.target.value);
+  function handleTime(ev: ChangeEvent<HTMLInputElement>) {
+    updateActiveEvent({ time: ev.target.value });
   }
 
+  const toggleAddressSearchTo = (isOn: boolean) => () => {
+    setAddressSearchTo(isOn);
+    centerModalOn(isOn ? "openOnMarker" : "openOnCenter");
+  };
+
+  /**
+   * Variants
+   */
+  const contentVariants = {
+    closed: {
+      scale: 0,
+    },
+    open: {
+      scale: 1,
+    },
+  };
+
+  /**
+   * Render functions
+   */
+  const renderEventInputs = () => {
+    if (!isEventOpen) {
+      return;
+    }
+    return (
+      <>
+        <div className={styles.titleInput}>
+          <input
+            value={activeEvent?.title ?? ""}
+            onChange={handleTitle}
+          />
+        </div>
+
+        <div className={styles.addressInput}>
+          {addressSearchOn
+            ? (
+              <IosMap
+                className={styles.addressBtn}
+                onClick={toggleAddressSearchTo(false)}
+              />
+            )
+            : (
+              <IosMapOutline
+                className={styles.addressBtn}
+                onClick={toggleAddressSearchTo(true)}
+              />
+            )
+          }
+          <input
+            value={activeEvent?.address ?? ""}
+            onChange={handleLocation}
+          />
+        </div>
+
+        <div className={styles.timeInput}>
+          <IosCalendarOutline className={styles.timeBtn}/>
+          <input
+            value={activeEvent?.time ?? ""}
+            onChange={handleTime}
+          />
+        </div>
+
+        <div className={styles.contentInput}>
+        <textarea
+          value={activeEvent?.content ?? ""}
+          onChange={handleContent}
+        />
+        </div>
+      </>
+    );
+  };
+
+  /**
+   * Return JSX
+   */
   return (
-    <div className={styles.eventModal}>
+    <motion.div
+      initial="closed"
+      variants={contentVariants}
+      animate={isEventOpen ? "open" : "closed"}
+      className={styles.modalContent}
+    >
       <IosClose
         onClick={closeEvent}
         className={styles.closeBtn}
         fontSize="40"
       />
-
-      <div className={styles.titleInput}>
-        <input
-          value={!!title ? title : titleFromProps}
-          onChange={handleTitle}
-        />
-      </div>
-
-      <div className={styles.addressInput}>
-        <IosMapOutline/>
-        <input
-          value={!!address ? address : addressFromProps}
-          onChange={handleLocation}
-        />
-      </div>
-
-      <div className={styles.dateInput}>
-        <IosCalendarOutline/>
-        <input
-          value={!!time ? time : timeFromProps}
-          onChange={handleDate}
-        />
-      </div>
-
-      <div className={styles.contentInput}>
-        <textarea
-          value={!!content ? content : contentFromProps}
-          onChange={handleContent}
-        />
-      </div>
-
+      {renderEventInputs()}
       <Button
         className={styles.saveBtn}
         onClick={handleSave}
       >
         Save
       </Button>
-    </div>
+    </motion.div>
   );
 };
 

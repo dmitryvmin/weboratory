@@ -11,13 +11,12 @@ $cursor-size: 80px;
 
 .timelineContainer {
   position: absolute;
-  bottom: 0;
   left: 0;
   width: 100vw;
   height: 50px;
   background-color: white;
   filter: url('#goo');
-  z-index: $zi1;
+  z-index: $zi3;
 }
 
 .svgFilter {

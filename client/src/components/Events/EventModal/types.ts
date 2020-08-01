@@ -6,6 +6,5 @@ export type TEventModalProps = {
 };
 
 export type TEventModal = {
-  markerNode: HTMLDivElement | null;
-  // animateFromNode: HTMLDivElement | null;
+  markerNode: HTMLDivElement | undefined;
 } & Partial<IEvent>;

@@ -11,6 +11,8 @@ import { useWindowSize } from "@utils/hooks/useWindowSize";
 
 // Store
 import { useCalendar } from "@stores/CalendarStore";
+import { TIMELINE_HEIGHT } from "@common/constants";
+import { useEvents } from "@stores/EventStore";
 
 // Types
 export type ITimeline = any;
@@ -44,7 +46,6 @@ const SVGBlob = () => {
 const x = motionValue(0);
 const y = motionValue(0);
 
-
 /**
  * Timeline Controls
  *
@@ -62,6 +63,8 @@ const Timeline: FC<ITimeline> = () => {
   const { setCalendarIsOpen, moveLeft, moveRight } = useCalendar();
 
   const { windowHeight, windowWidth } = useWindowSize();
+
+  const {isMenuOpen, setIsMenuOpenTo} = useEvents();
 
   const dragYValue = useMotionValue(0);
   const scaleValue = useMotionValue(0);
@@ -87,7 +90,7 @@ const Timeline: FC<ITimeline> = () => {
 
       // If y dips below the container, set it to 0
       if (py > windowHeight - 20) {
-        // console.log("Cursor below too low", py);
+        console.log("Cursor below too low", py);
         // animate.set({
         //   y: 0,
         // });
@@ -125,7 +128,13 @@ const Timeline: FC<ITimeline> = () => {
    * Render JSX
    */
   return (
-    <div className={styles.timelineContainer} ref={constraintsRef}>
+    <motion.div
+      ref={constraintsRef}
+      className={styles.timelineContainer}
+      style={{
+        top: windowHeight - TIMELINE_HEIGHT,
+      }}
+    >
       <div className={styles.svgFilter}>
         <SVGBlob/>
       </div>
@@ -144,10 +153,11 @@ const Timeline: FC<ITimeline> = () => {
         // }}
         onDrag={handleDrag}
         // onDragEnd={handleDragEnd}
+        onClick={() => setIsMenuOpenTo(!isMenuOpen)}
       >
         <IosMove fontSize="40"/>
       </motion.div>
-    </div>
+    </motion.div>
   );
 };
 

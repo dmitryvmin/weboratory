@@ -1,9 +1,9 @@
 // Libs
-import React, { FC, useRef, useState, useEffect, useMemo, useCallback } from "react";
+import React, { FC, useRef, useState, useEffect, useMemo } from "react";
 
 // Styles
 import "mapbox-gl/dist/mapbox-gl.css";
-import styles from "../Events/styles.module.scss";
+import styles from "./styles.module.scss";
 
 // Types
 import { TMapProps, TMapRefState } from "@components/Map/types";
@@ -12,9 +12,6 @@ import { TMapProps, TMapRefState } from "@components/Map/types";
 import { useMap } from "@stores/MapStore";
 
 // Utils
-import { haveMapChildrenChanged } from "@components/Map/utils/haveMapChildrenChanged";
-import { haveMapCenterCoordsChanged } from "@components/Map/utils/haveMapCenterCoordsChanged";
-import { hasMapZoomChanged } from "@components/Map/utils/hasMapZoomChanged";
 import { getLngLatTuple } from "@components/Events/utils/getLngLatTuple";
 import { log } from "@utils/Logger";
 
@@ -110,7 +107,9 @@ const Map: FC<TMapProps> = ({ children }) => {
   //   ? getLngLatTuple(activeEvent.coordinates)
   //   : getLngLatTuple(mapCenterCoords);
 
-  const center = useMemo(() => getLngLatTuple(mapCenterCoords), []);
+  const center = useMemo(() => getLngLatTuple(mapCenterCoords), [
+    // mapCenterCoords,
+  ]);
 
   return (
     <Mapbox

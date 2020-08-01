@@ -20,7 +20,7 @@ import { useMutationObserver } from "@utils/hooks/useMutationObserver";
 import { log } from "@utils/Logger";
 
 // Constants
-import {SEARCH_MIN} from "@stores/EventStore/constants";
+import { SEARCH_MIN } from "@stores/EventStore/constants";
 
 /**
  * Map address search
@@ -38,7 +38,7 @@ const MapSearch: FC<{}> = () => {
     isSearchOpen,
     setIsSearchOpen,
     searchedAddress,
-    setSearchedAddress,
+    updateActiveEvent,
     closeSearch,
   } = useEvents();
 
@@ -74,13 +74,11 @@ const MapSearch: FC<{}> = () => {
     // Get input search value
     const address = (ev.currentTarget as HTMLInputElement).value;
 
-    setSearchedAddress(address);
+    updateActiveEvent({ address });
 
     const inputLength = address.length;
-    // Don't center until input is long enough to make a prediction
-    if (inputLength >= SEARCH_MIN) {
-      centerMapOnAddress(address);
-    }
+
+    centerMapOnAddress(address);
 
     // let newZoom = mapZoom;
     // // Zoom in when input gets longer
@@ -159,6 +157,10 @@ const MapSearch: FC<{}> = () => {
   /**
    * Return JSX
    */
+  if (!isSearchOpen) {
+    return null;
+  }
+
   return (
     <motion.div
       className={styles.searchContainer}

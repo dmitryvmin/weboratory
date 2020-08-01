@@ -2,11 +2,13 @@
 @import "../../../styles/radius";
 @import "../../../styles/shadows";
 @import "../../../styles/sizes";
+@import "../../../styles/zIndex";
 
 .menuContainerBase {
-  position: absolute;
+  position: fixed;
   bottom: 60px;
   right: 10px;
+  z-index: $zi2;
 }
 
 .menuButtonBase {

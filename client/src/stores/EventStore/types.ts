@@ -6,14 +6,14 @@ import { IEvent, TLngLat } from "@common/types";
 import { TEventModal } from "@components/Events/EventModal/types";
 
 export type ActiveEvent = {
-  markerNode: HTMLDivElement | null;
-  // animateFromNode: HTMLDivElement | null;
+  markerNode?: HTMLDivElement;
 } & Partial<IEvent>;
 
 export type IEventsState = {
   activeEvent: ActiveEvent | undefined;
   isSearchOpen: boolean;
   isEventOpen: boolean;
+  isMenuOpen: boolean;
   searchedAddress: string | undefined;
 }
 
@@ -34,14 +34,15 @@ export type CreateEventArgs = {
 export type IUseEventsFunctions = {
   setIsSearchOpen(isOpen: boolean): void;
   setIsEventOpen(isOpen: boolean): void;
-  setSearchedAddress(address: string): void;
   setEvent(CreateEventArgs, isOpen?: boolean): void;
   closeSearch(): void;
   openSearch(): void;
   openEvent(event?: ActiveEvent): void;
   // openEvent(event: ActiveEvent): void;
   closeEvent(): void;
-  startNewEvent: any;
+  startNewEvent(): Promise<any>;
+  updateActiveEvent(eventData: ActiveEvent): void;
+  setIsMenuOpenTo(isMenuOpen: boolean): void;
 }
 
 export type IUseEvents = IUseEventsFunctions & IEventsState;

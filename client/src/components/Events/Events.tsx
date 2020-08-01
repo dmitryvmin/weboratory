@@ -54,17 +54,19 @@ const EventsApp: React.FC = () => {
     mapCenterCoords,
     centerMapOnClient,
     centerMapOnAddress,
-    // activeMarker,
   } = useMap();
 
-  const { activeEvent, isEventOpen } = useEvents();
+  const {
+    activeEvent,
+    isEventOpen,
+  } = useEvents();
 
   const { user } = useContext(Auth0Context);
 
   /**
-   * ========== State hooks
+   * ========== Component hooks
    */
-  // const eventsInstance = useMemo(() => new eventsService(), []);
+    // const eventsInstance = useMemo(() => new eventsService(), []);
 
   const events$ = useObservable<IEvent[]>(eventsInstance.onEvents());
   const event$ = useObservable<IEvent>(eventsInstance.onEvent());
@@ -166,9 +168,10 @@ const EventsApp: React.FC = () => {
    */
   return (
     <div className={styles.container}>
-      {/*<MapSearch/>*/}
-      <EventsMenu />
-      <EventModal />
+      <MapSearch/>
+      <EventsMenu/>
+      <EventModal/>
+
       {/*{activeEvent &&*/}
       {/*<EventModal*/}
       {/*  activeEvent={activeEvent}*/}

@@ -55,7 +55,6 @@ const PredictionsDropdown: FC<TPredictionsDropdown> = () => {
     setEvent,
     setIsSearchOpen,
     searchedAddress,
-    setSearchedAddress,
     closeSearch,
   } = useEvents();
 

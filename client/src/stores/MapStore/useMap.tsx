@@ -14,6 +14,7 @@ import { TLngLat } from "@common/types";
 import { getLngLatTuple } from "@components/Events/utils/getLngLatTuple";
 import { getClientPosition } from "@components/Events/utils/getClientPosition";
 import { geocodeQuery } from "@components/Events/utils/geocodeQuery";
+import { SEARCH_MIN } from "@stores/EventStore";
 
 /**
  * Map context facade
@@ -117,19 +118,27 @@ const useMap = (): IUseMap => {
     setMapCenterCoords(coords);
   };
 
-  const centerMapOnAddress = async (address: string) => {
+  const centerMapOnAddress = async (
+    address: string,
+    minLength = SEARCH_MIN,
+  ) => {
+
+    // Don't center until input is long enough to make a prediction
+    if (address.length < minLength) {
+      return;
+    }
 
     const lngLat = await geocodeQuery(address);
     if (!lngLat) {
       return;
     }
 
-    setMapCenterCoords(lngLat);
-    // mapInstance.flyTo({
-    //   center: getLngLatTuple(lngLat),
-    //   speed: 1,
-    //   curve: 1,
-    // });
+    // setMapCenterCoords(lngLat);
+    mapInstance.flyTo({
+      center: getLngLatTuple(lngLat),
+      speed: 1,
+      curve: 1,
+    });
   };
 
   const centerMapOnCoords = (coords: TLngLat) => {

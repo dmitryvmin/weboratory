@@ -5,16 +5,27 @@
 
 .eventsMenu {
   position: absolute;
-  bottom: 60px;
-  right: 10px;
   width: $size_BUTTON;
   height: $size_BUTTON;
-  background-color: salmon;
+  //background-color: salmon;
   border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
-  box-shadow: $shadow_1;
+  //box-shadow: $shadow_1;
   cursor: pointer;
-  z-index: $zi1;
+  z-index: $zi3;
+  //pointer-events: none;
+}
+
+.menuItemBase {
+  position: absolute;
+  background-color: white;
+  width: $size_BUTTON;
+  height: $size_BUTTON;
+  border-radius: 50%;
+  z-index: $zi3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
