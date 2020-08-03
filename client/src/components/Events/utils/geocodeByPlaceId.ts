@@ -1,4 +1,3 @@
-import "googlemaps";
 type Geocoder = google.maps.Geocoder;
 
 /**
