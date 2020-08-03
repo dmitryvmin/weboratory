@@ -43,6 +43,7 @@ export type IUseEventsFunctions = {
   startNewEvent(): Promise<any>;
   updateActiveEvent(eventData: ActiveEvent): void;
   setIsMenuOpenTo(isMenuOpen: boolean): void;
+  setSearchedAddressTo(address: string): void;
 }
 
 export type IUseEvents = IUseEventsFunctions & IEventsState;

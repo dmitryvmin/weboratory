@@ -1,6 +1,7 @@
 // Libs
 import React, { MouseEvent, useRef, FC } from "react";
 import { Marker } from "react-mapbox-gl";
+import { motion } from "framer-motion";
 import invariant from "invariant";
 
 // Styles
@@ -12,6 +13,7 @@ import { TMapMarkerProps } from "@components/Map/components/MapMarker/types";
 
 // Store
 import { useEvents } from "@stores/EventStore";
+import { getPositionFromTarget } from "@components/Events/utils/getPositionFromTarget";
 
 /**
  * MapMarker
@@ -30,7 +32,7 @@ const MapMarker: FC<TMapMarkerProps> = ({ event }) => {
   /**
    * ========== Context hooks
    */
-  const { setEvent } = useEvents();
+  const { setEvent, closeSearch } = useEvents();
 
   /**
    * Vars
@@ -47,12 +49,16 @@ const MapMarker: FC<TMapMarkerProps> = ({ event }) => {
 
   const markerCoordsTuple = getLngLatTuple(coordinates);
 
+  const titleBBox = getPositionFromTarget(titleRef.current);
+
   /**
    * Handlers
    */
   function handleMarker(ev: MouseEvent<HTMLDivElement>) {
     // Persist event so the marker can be tied to its event
     ev.persist();
+
+    closeSearch();
 
     // Set clicked marker as the new Active Event
     setEvent({
@@ -71,12 +77,16 @@ const MapMarker: FC<TMapMarkerProps> = ({ event }) => {
     >
       <>
         {title &&
-        <div
+        <motion.div
           ref={titleRef}
           className={styles.title}
+          style={{
+            x: titleBBox?.width ? -titleBBox.width / 2 : 0,
+            y: -40,
+          }}
         >
           {title}
-        </div>
+        </motion.div>
         }
         <div
           className={styles.poi}

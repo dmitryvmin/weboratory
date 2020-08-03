@@ -8,9 +8,10 @@
   position: absolute;
   display: flex;
   align-items: center;
-  z-index: $zi1;
+  z-index: $zi3;
   background-color: white;
   box-shadow: $shadow_1;
+  border-radius: $bradius_1;
 }
 
 .modalContent {

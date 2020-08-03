@@ -12,6 +12,7 @@ import { useMap } from "@stores/MapStore";
 import { getNewEventKey } from "@components/Events/utils/getEventKey";
 import { geocodeQuery } from "@components/Events/utils/geocodeQuery";
 import { InitialEvent } from "@stores/EventStore/constants";
+import { useNodeRef } from "@utils/hooks/useNodeRef";
 
 /**
  * Events context facade
@@ -76,6 +77,13 @@ const useEvents = (): IUseEvents => {
     setState((s): IEventsState => ({
       ...s,
       isMenuOpen,
+    }));
+  };
+
+  const setSearchedAddressTo = (searchedAddress: string) => {
+    setState((s): IEventsState => ({
+      ...s,
+      searchedAddress,
     }));
   };
 
@@ -195,10 +203,10 @@ const useEvents = (): IUseEvents => {
 
     // Hide search predictions
     updateActiveEvent({ address: "" });
+    setSearchedAddressTo("");
 
     // Close Search Input
     setIsSearchOpen(false);
-
   };
 
   const startNewEvent = async () => {
@@ -233,6 +241,7 @@ const useEvents = (): IUseEvents => {
     startNewEvent,
     updateActiveEvent,
     setIsMenuOpenTo,
+    setSearchedAddressTo,
   });
 };
 

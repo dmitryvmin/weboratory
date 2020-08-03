@@ -17,6 +17,7 @@ import { MENU_SIZE, PADDING_1, PADDING_2, TIMELINE_HEIGHT } from "@common/consta
 import styles from "@components/Navigation/NavigationMenu/styles.module.scss";
 import { NavLink } from "react-router-dom";
 import { getTransformValues } from "@components/Navigation/NavigationMenu/utils/getTransformValues";
+import { useNodeRef } from "@utils/hooks/useNodeRef";
 
 const MenuItem: FC<any> = ({
   item,
@@ -25,6 +26,8 @@ const MenuItem: FC<any> = ({
 }) => {
   return (
     <motion.div
+      ref={item.ref}
+      onClick={item.onClick}
       initial={{
         x: MENU_SIZE / 2,
         y: MENU_SIZE / 2,
@@ -54,7 +57,7 @@ const MenuItem: FC<any> = ({
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.90 }}
     >
-      {item.icon()}
+      {item.icon}
     </motion.div>
   );
 };
@@ -62,7 +65,9 @@ const MenuItem: FC<any> = ({
 /**
  *
  */
-const EventsMenu: FC<{}> = () => {
+const EventsMenu: FC<any> = ({menuRefs}) => {
+
+  const {menuRef1, menuRef2} = menuRefs;
 
   /**
    * ========== Context hooks
@@ -91,22 +96,25 @@ const EventsMenu: FC<{}> = () => {
 
   const controls = useAnimation();
 
-
   const menuItems = [
     {
       label: "Create",
-      icon: () => <MdAdd onClick={() => startNewEvent()}/>,
-      position: {x: -70, y: -40},
+      icon: <MdAdd/>,
+      position: { x: -70, y: -40 },
+      onClick: () => startNewEvent(),
+      ref: menuRef1,
     },
     {
       label: "Explore",
-      icon: () => <IosSearchOutline onClick={() => setIsSearchOpen(true)}/>,
-      position: {x: 0, y: -80},
+      icon: <IosSearchOutline/>,
+      position: { x: 0, y: -80 },
+      onClick: () => setIsSearchOpen(true),
+      ref: menuRef2,
     },
     {
       label: "Manage",
-      icon: () => <MdPerson/>,
-      position: {x: 70, y: -40},
+      icon: <MdPerson/>,
+      position: { x: 70, y: -40 },
     },
   ];
 

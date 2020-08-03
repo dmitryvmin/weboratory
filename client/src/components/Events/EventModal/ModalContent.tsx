@@ -96,6 +96,9 @@ const ModalContent: any = ({ centerModalOn }) => {
   const toggleAddressSearchTo = (isOn: boolean) => () => {
     setAddressSearchTo(isOn);
     centerModalOn(isOn ? "openOnMarker" : "openOnCenter");
+    if (isOn) {
+
+    }
   };
 
   /**

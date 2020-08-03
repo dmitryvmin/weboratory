@@ -11,6 +11,17 @@ import { parseJSON } from "@utils/parseJSON";
 
 // Types
 import { IEvent } from "@common/types";
+import { log } from "@utils/Logger";
+
+function createEventPayload(body) {
+  return JSON.stringify({
+    address: body.address,
+    content: body.content,
+    coordinates: body.coordinates,
+    time: body.time,
+    title: body.title,
+  })
+}
 
 /**
  * Events Service Class
@@ -40,14 +51,14 @@ class eventsService {
     this.eventState$.next(nextState);
   }
 
-  createEvent(body: any) {
+  createEvent(content: any) {
     const reqURI = getCreateEventURI();
     const headers = {
       "Access-Control-Allow-Origin": "*",
       "Content-Type": "application/json",
     };
-    const payload = JSON.stringify(body);
-    new BaseRequestModel<any>(reqURI, "POST", headers, payload)
+    const body = createEventPayload(content);
+    new BaseRequestModel<any>(reqURI, "POST", headers, body)
       .request()
       .subscribe(this.eventState$);
   }
@@ -56,9 +67,7 @@ class eventsService {
     const reqURI = getEventsByUserId(userId);
     new BaseRequestModel<any>(reqURI, "GET")
       .request()
-      .subscribe((res) => {
-        this.eventsState$.next(res);
-      });
+      .subscribe(this.eventsState$);
   }
 
   getEventsByVis(visibility: string) {
@@ -68,9 +77,7 @@ class eventsService {
     };
     new BaseRequestModel<any>(reqURI, "GET", headers)
       .request()
-      .subscribe((res) => {
-        this.eventsState$.next(res);
-      });
+      .subscribe(this.eventsState$);
   }
 
   updateEvent(eventId: string, content: Partial<IEvent>) {
@@ -78,9 +85,8 @@ class eventsService {
     const headers = {
       "Content-Type": "application/json",
     };
-
-    console.log("eventsService updating event...");
-    const body = JSON.stringify(content);
+    log("eventsService updating event...");
+    const body = createEventPayload(content);
     new BaseRequestModel<any>(reqURI, "PUT", headers, body)
       .request()
       .subscribe(this.eventState$);

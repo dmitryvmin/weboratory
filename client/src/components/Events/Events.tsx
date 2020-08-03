@@ -31,6 +31,7 @@ import { getNewEventKey } from "@components/Events/utils/getEventKey";
 import { eventsInstance } from "@components/Events/eventsInstance";
 import { EventModal } from "@components/Events/EventModal";
 import { EventsMenu } from "@components/Events/EventsMenu";
+import { useNodeRef } from "@utils/hooks/useNodeRef";
 
 /**
  * Events App
@@ -42,8 +43,10 @@ import { EventsMenu } from "@components/Events/EventsMenu";
 const EventsApp: React.FC = () => {
 
   /**
-   * Hooks
+   * ========== Component hooks
    */
+  const { node: menuNode1, ref: menuRef1 } = useNodeRef<HTMLDivElement>();
+  const { node: menuNode2, ref: menuRef2 } = useNodeRef<HTMLDivElement>();
 
   /**
    * ========== Context hooks
@@ -82,11 +85,11 @@ const EventsApp: React.FC = () => {
   // Get events for logged in user or public
   useEffect(() => {
     if (!user?.sub) {
-      return;
+      eventsInstance.getEventsByVis("PUBLIC");
     }
-    console.log("Fetching all events");
-    // eventsInstance.current.getUserEvents(user.sub);
-    eventsInstance.getEventsByVis("PUBLIC");
+    else {
+      eventsInstance.getUserEvents(user.sub);
+    }
   }, [
     user,
     event$,
@@ -109,27 +112,6 @@ const EventsApp: React.FC = () => {
   }, [
     activeEvent,
   ]);
-
-
-  // // Center the map to the input address
-  // useEffect(() => {
-  //   // Don't center until input is long enough to make a prediction
-  //   if (
-  //     !searchedAddress ||
-  //     searchedAddress.length < SEARCH_MIN
-  //   ) {
-  //     return;
-  //   }
-  //   // Center Map
-  //   centerMapOnAddress(searchedAddress);
-  //
-  //   // Center Active Marker
-  //
-  // }, [
-  //   searchedAddress,
-  // ]);
-
-  console.log("@@ Saved event", events$);
 
   /**
    * Render fns
@@ -168,15 +150,9 @@ const EventsApp: React.FC = () => {
    */
   return (
     <div className={styles.container}>
-      <MapSearch/>
-      <EventsMenu/>
-      <EventModal/>
-
-      {/*{activeEvent &&*/}
-      {/*<EventModal*/}
-      {/*  activeEvent={activeEvent}*/}
-      {/*/>*/}
-      {/*}*/}
+      <EventsMenu menuRefs={{ menuRef1, menuRef2 }}/>
+      <EventModal menuNode={menuNode1}/>
+      <MapSearch menuNode={menuNode2}/>
       <Map>
         {renderNewEventMarker()}
         {renderSavedMarkers()}

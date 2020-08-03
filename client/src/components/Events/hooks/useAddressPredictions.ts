@@ -1,3 +1,5 @@
+declare const google: any
+
 // Libs
 import { useCallback, useEffect, useRef, useState } from "react";
 import { debounce } from "lodash";

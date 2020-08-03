@@ -1,11 +1,12 @@
 // Libs
 import React, { FC, useRef, ChangeEvent } from "react";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import IosClose from "react-ionicons/lib/IosClose";
 import MdAdd from "react-ionicons/lib/MdAdd";
 
 // Utils
 import { useWindowSize } from "@utils/hooks/useWindowSize";
+import { getPositionFromTarget } from "@components/Events/utils/getPositionFromTarget";
 
 // Styles
 import styles from "./styles.module.scss";
@@ -15,21 +16,17 @@ import { useMap } from "@stores/MapStore";
 import { useEvents } from "@stores/EventStore";
 
 // Components
-import { PredictionsDropdown } from "@components/Events/PredictionsDropdown/PredictionsDropdown";
 import { useMutationObserver } from "@utils/hooks/useMutationObserver";
 import { log } from "@utils/Logger";
 
 // Constants
-import { SEARCH_MIN } from "@stores/EventStore/constants";
+import { MENU_SIZE, PADDING_1, TIMELINE_HEIGHT } from "@common/constants";
+import { PredictionsDropdown } from "../PredictionsDropdown";
 
 /**
  * Map address search
  */
-const MapSearch: FC<{}> = () => {
-
-  /**
-   * Hooks
-   */
+const MapSearch: FC<any> = ({ menuNode }) => {
 
   /**
    * ========== Context hooks
@@ -40,6 +37,9 @@ const MapSearch: FC<{}> = () => {
     searchedAddress,
     updateActiveEvent,
     closeSearch,
+    isMenuOpen,
+    isEventOpen,
+    setSearchedAddressTo,
   } = useEvents();
 
   const {
@@ -49,7 +49,7 @@ const MapSearch: FC<{}> = () => {
   } = useMap();
 
   /**
-   * ========== State hooks
+   * ========== Component hooks
    */
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -63,8 +63,9 @@ const MapSearch: FC<{}> = () => {
   useMutationObserver(inputRef, mutationCallback);
 
   /**
-   * Effects
+   * Vars
    */
+  const menuBBox = getPositionFromTarget(menuNode);
 
   /**
    * Handlers
@@ -74,9 +75,7 @@ const MapSearch: FC<{}> = () => {
     // Get input search value
     const address = (ev.currentTarget as HTMLInputElement).value;
 
-    updateActiveEvent({ address });
-
-    const inputLength = address.length;
+    setSearchedAddressTo(address);
 
     centerMapOnAddress(address);
 
@@ -110,18 +109,28 @@ const MapSearch: FC<{}> = () => {
    * Framer variants
    */
   const searchVariants = {
-    closed: {
+    closedOnMenuItem: {
       borderRadius: "50%",
-      width: 50,
-      height: 50,
-      x: windowWidth - 60,
-      y: windowHeight - 120,
+      width: MENU_SIZE,
+      height: MENU_SIZE,
+      x: menuBBox?.x,
+      y: menuBBox?.y,
       transition: {
         type: "tween",
       },
     },
-    open: {
-      borderRadius: "3px",
+    closedOnMenuOrigin: {
+      borderRadius: "50%",
+      width: MENU_SIZE,
+      height: MENU_SIZE,
+      x: (windowWidth / 2) - (MENU_SIZE / 2),
+      y: windowHeight - TIMELINE_HEIGHT - PADDING_1,
+      transition: {
+        type: "tween",
+      },
+    },
+    openOnCenter: {
+      borderRadius: "2px",
       width: 300,
       height: 40,
       x: "calc(50vw - 150px)",
@@ -154,19 +163,38 @@ const MapSearch: FC<{}> = () => {
     },
   };
 
+  const getInitialVariant = () => {
+    if (isMenuOpen) {
+      return "closedOnMenuItem";
+    }
+    else {
+      return "closedOnMenuOrigin";
+    }
+  };
+
+  const getAnimationVariant = () => {
+    if (isSearchOpen) {
+      return "openOnCenter";
+    }
+    else {
+      if (isMenuOpen) {
+        return "closedOnMenuItem";
+      }
+      else {
+        return "closedOnMenuOrigin";
+      }
+    }
+  };
+
   /**
    * Return JSX
    */
-  if (!isSearchOpen) {
-    return null;
-  }
-
   return (
     <motion.div
       className={styles.searchContainer}
       variants={searchVariants}
-      initial={true}
-      animate={isSearchOpen ? "open" : "closed"}
+      initial={getInitialVariant()}
+      animate={getAnimationVariant()}
     >
       <div
         className={styles.searchInput}
@@ -190,10 +218,10 @@ const MapSearch: FC<{}> = () => {
         <motion.div
           animate={isSearchOpen ? "open" : "closed"}
           variants={inputVariants}
+          onClick={closeSearch}
         >
           <IosClose
             fontSize="40"
-            onClick={closeSearch}
             className={styles.closeBtn}
           />
         </motion.div>

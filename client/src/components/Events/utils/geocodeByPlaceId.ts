@@ -1,3 +1,5 @@
+declare const google: any
+
 type Geocoder = google.maps.Geocoder;
 
 /**
