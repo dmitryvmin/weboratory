@@ -1,16 +1,15 @@
+import "googlemaps";
 type Geocoder = google.maps.Geocoder;
-declare const google: any;
 
 /**
  * Return geo data for a placeId
  */
 const geocodeByPlaceId = (placeId: string) => {
   const geocoder: Geocoder = new google.maps.Geocoder();
-  const OK = google.maps.GeocoderStatus.OK;
 
   return new Promise((resolve, reject) => {
     geocoder.geocode({ placeId }, (results, status) => {
-      if (status !== OK) {
+      if (status !== google.maps.GeocoderStatus.OK) {
         reject(status);
       }
       resolve(results);
