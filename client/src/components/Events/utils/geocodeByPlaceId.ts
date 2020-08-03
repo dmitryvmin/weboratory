@@ -1,8 +1,11 @@
+type Geocoder = google.maps.Geocoder;
+declare const google: any;
+
 /**
  * Return geo data for a placeId
  */
 const geocodeByPlaceId = (placeId: string) => {
-  const geocoder = new google.maps.Geocoder();
+  const geocoder: Geocoder = new google.maps.Geocoder();
   const OK = google.maps.GeocoderStatus.OK;
 
   return new Promise((resolve, reject) => {
