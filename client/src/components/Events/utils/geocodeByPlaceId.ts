@@ -1,6 +1,6 @@
-declare const google: any
-
 type Geocoder = google.maps.Geocoder;
+
+declare const google: any;
 
 /**
  * Return geo data for a placeId

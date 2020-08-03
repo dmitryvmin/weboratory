@@ -1,8 +1,8 @@
-declare const google: any
-
 type GeocoderResult = google.maps.GeocoderResult;
 type GeocoderStatus = google.maps.GeocoderStatus;
 type Geocoder = google.maps.Geocoder;
+
+declare const google: any;
 
 /**
  * Return geo data for an address

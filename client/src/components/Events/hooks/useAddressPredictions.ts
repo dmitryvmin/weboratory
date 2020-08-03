@@ -1,9 +1,9 @@
-declare const google: any
-
 // Libs
 import { useCallback, useEffect, useRef, useState } from "react";
 import { debounce } from "lodash";
 import { NUM_OF_PREDICTIONS } from "@components/Events/constants";
+
+declare const google: any;
 
 /**
  * Return predictions for an input address
