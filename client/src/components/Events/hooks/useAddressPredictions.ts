@@ -10,9 +10,7 @@ function useAddressPredictions(input) {
 
   const [predictions, setPredictions] = useState<string[]>([]);
 
-  const w: any = window;
-
-  const autocomplete = useRef<any>(new w.google.maps.places.AutocompleteService());
+  const autocomplete = useRef<any>(new (window as any).google.maps.places.AutocompleteService());
 
   function getPlacePredictions(input) {
     autocomplete.current.getPlacePredictions(

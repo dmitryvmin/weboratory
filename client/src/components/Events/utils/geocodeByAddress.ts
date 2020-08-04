@@ -15,7 +15,7 @@ const geocodeByAddress = (address: string): Promise<GeocoderResult[]> => {
     geocoder.geocode(
       { address },
       (results: GeocoderResult[], status: GeocoderStatus) => {
-        if (status !== window.google.maps.GeocoderStatus.OK) {
+        if (status !== (window as any).google.maps.GeocoderStatus.OK) {
           console.log(`Couldn't geocode address "${address}"`, status);
           reject(status);
         }
