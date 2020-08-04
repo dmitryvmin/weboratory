@@ -33,6 +33,23 @@ const PostList = () => {
     postServiceSingleton.getAllPosts();
   }, []);
 
+  function getContainerHeight() {
+    if (!post$) {
+      return "100%";
+    }
+    const postsCount = post$.length;
+    const rowCount = Math.floor(windowWidth / 310);
+    const postHeight = 310;
+    const headerHeight = 120;
+
+    // Number of posts in a row * a Post's height
+    return (postsCount / rowCount * postHeight)
+      // Plus remaining Posts that will be on the last row
+      + (postsCount % rowCount * postHeight)
+      // Header height
+      + headerHeight;
+  }
+
   /**
    * Return JSX
    */
@@ -40,8 +57,7 @@ const PostList = () => {
     <div
       className={classNames.postListContainer}
       style={{
-        // width: windowWidth,
-        height: post$ ? Math.floor(windowWidth / 310) * post$.length : "100%",
+        height: getContainerHeight(),
       }}
     >
       {post$ && post$?.map((post: any, idx) => {

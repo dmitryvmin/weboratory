@@ -2,6 +2,7 @@
 @import "../../../styles/colors";
 @import "../../../styles/zIndex";
 @import "../../../styles/radius";
+@import "../../../styles/shadows";
 
 .header {
   display: flex;
@@ -15,22 +16,34 @@
 }
 
 .post {
-  box-shadow: 0 0 1px 1px #eee;
+  box-shadow: $shadow_1;
   background-color: white;
   max-width: 600px;
   width: 100%;
-  position: absolute;
 }
 
-.postSelected {
+.postSavedActive {
+  position: absolute;
   border-radius: $bradius_1;
   z-index: $zi1;
 }
 
-.postUnselected {
+.postSavedInactive {
+  position: absolute;
   border-radius: 50%;
   overflow: hidden;
   cursor: pointer;
+}
+
+.postNewActive {
+  position: absolute;
+  border-radius: $bradius_1;
+}
+
+.postNewInactive {
+  position: fixed;
+  border-radius: 50%;
+  box-shadow: $shadow_1;
 }
 
 .close {

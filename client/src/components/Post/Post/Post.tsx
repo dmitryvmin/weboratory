@@ -47,6 +47,24 @@ const closeVariants = {
   },
 };
 
+function getPostState(
+  title: string | undefined,
+  isSelected: boolean | undefined,
+) {
+  if (!!isSelected && !!title) {
+    return "postSavedActive";
+  }
+  if (!!isSelected && !title) {
+    return "postNewActive";
+  }
+  if (!isSelected && !!title) {
+    return "postSavedInactive";
+  }
+  if (!isSelected && !title) {
+    return "postNewInactive";
+  }
+}
+
 const Post: FC<PostProps> = ({
   post,
   idx,
@@ -205,8 +223,16 @@ const Post: FC<PostProps> = ({
     },
     exit: {
       scale: 0,
-    }
+    },
   };
+
+  function getClassNames() {
+    const postState = getPostState(title, isSelected);
+    return [
+      classNames.post,
+      postState && classNames[postState],
+    ].join(" ");
+  }
 
   return (
     <EditorProvider>
@@ -215,48 +241,54 @@ const Post: FC<PostProps> = ({
         animate={animationControls}
         variants={postVariants}
         exit="exit"
-        className={[
-          classNames.post,
-          isSelected ? classNames.postSelected : classNames.postUnselected,
-        ].join(" ")}
+        className={getClassNames()}
       >
-        {(!title && !isSelected) &&
-        <div className={classNames.addNewBtn}>
-          <IosAdd fontSize="40"/>
-        </div>
-        }
-        <div className={classNames.header}>
-          <input
-            className={classNames.title}
-            value={title !== undefined ? title : postTitle}
-            onChange={handleTitle}
-          />
-          {isSelected &&
-          <motion.div className={classNames.close} variants={closeVariants}>
-            <Link to="/posts">
-              <IosClose fontSize="40"/>
-            </Link>
-          </motion.div>
+        <>
+          {(!title && !isSelected) &&
+          <div className={classNames.addNewBtn}>
+            <IosAdd fontSize="40"/>
+          </div>
           }
-        </div>
-        <div className={classNames.postMenu}>
-          <PostMenu
-            post={post}
-            handleSave={handlePostSave}
-            tagMapSingleton={tagMapSingleton.current}
-            editorSingleton={editorSingleton.current}
-          />
-        </div>
-        <div className={classNames.postTags}>
-          <PostTags
-            post={post}
-            tagMapSingleton={tagMapSingleton.current}
-          />
-        </div>
-        <Editor
-          content={content}
-          onEditorChange={handleEditorChange}
-        />
+
+          {title &&
+          <>
+            <div className={classNames.header}>
+              <input
+                className={classNames.title}
+                value={title !== undefined ? title : postTitle}
+                onChange={handleTitle}
+              />
+
+              <motion.div className={classNames.close} variants={closeVariants}>
+                <Link to="/posts">
+                  <IosClose fontSize="40"/>
+                </Link>
+              </motion.div>
+            </div>
+
+            <div className={classNames.postMenu}>
+              <PostMenu
+                post={post}
+                handleSave={handlePostSave}
+                tagMapSingleton={tagMapSingleton.current}
+                editorSingleton={editorSingleton.current}
+              />
+            </div>
+
+            <div className={classNames.postTags}>
+              <PostTags
+                post={post}
+                tagMapSingleton={tagMapSingleton.current}
+              />
+            </div>
+
+            <Editor
+              content={content}
+              onEditorChange={handleEditorChange}
+            />
+          </>
+          }
+        </>
       </motion.div>
     </EditorProvider>
   );

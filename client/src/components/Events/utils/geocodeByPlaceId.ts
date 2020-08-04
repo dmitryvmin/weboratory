@@ -1,3 +1,5 @@
+/// <reference types="@types/googlemaps" />
+
 type Geocoder = google.maps.Geocoder;
 
 declare const google: any;
