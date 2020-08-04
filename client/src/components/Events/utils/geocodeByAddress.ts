@@ -9,7 +9,7 @@ type Geocoder = any;
  * Return geo data for an address
  */
 const geocodeByAddress = (address: string): Promise<GeocoderResult[]> => {
-  const geocoder: Geocoder = new window.google.maps.Geocoder();
+  const geocoder: Geocoder = new (window as any).google.maps.Geocoder();
 
   return new Promise((resolve, reject) => {
     geocoder.geocode(
