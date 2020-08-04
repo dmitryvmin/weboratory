@@ -17,9 +17,9 @@ const today = format(
 
 export const InitialEvent: TEventModal = {
   markerNode: undefined,
-  event_id: undefined,
-  created_at: undefined,
-  updated_at: undefined,
+  eventId: undefined,
+  createdAt: undefined,
+  updatedAt: undefined,
   time: today,
   title: "",
   content: "",

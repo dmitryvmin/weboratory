@@ -15,6 +15,7 @@ import { userAgentHandler } from "../middleware/userAgent.middleware";
 import { errorHandler } from "../middleware/error.middleware";
 import { applyApiMiddleware } from "../api";
 import { config } from "../config";
+import { iniGraphQlServer } from "../graphql";
 
 // Constants
 const { isProduction } = config.serverConfig;
@@ -33,6 +34,7 @@ function initKoa() {
     .use(compress())
     .use(cors())
     .use(json())
+    // .use(graphQl())
     .use(bodyParser());
 
   /**

@@ -28,11 +28,11 @@ export type TLngLat = {
 export type EventVisibility = "PUBLIC" | "PRIVATE";
 
 export type IEvent = {
-  event_id: string;
+  eventId: string;
   address: string;
   coordinates: TLngLat;
-  created_at: string;
-  updated_at: string;
+  createdAt: string;
+  updatedAt: string;
   time: string;
   title: string;
   content?: any;

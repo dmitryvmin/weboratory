@@ -79,7 +79,7 @@ const MapSearch: FC<any> = ({ menuNode }) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [searchBy, setSearchBy] = useState<IEventSearchCriterium>(EventSearchCriteria[0]);
-  const [isSelMenuOpen, setIsSelMenuTo] = useState<boolean>(false);
+  const [isSelMenuOpen, setSelMenuTo] = useState<boolean>(false);
 
   /**
    * ========== Util hooks
@@ -104,20 +104,6 @@ const MapSearch: FC<any> = ({ menuNode }) => {
     setSearchedAddressTo(address);
 
     centerMapOnAddress(address);
-
-    // let newZoom = mapZoom;
-    // // Zoom in when input gets longer
-    // if (inputLength < SEARCH_MIN) {
-    //   newZoom = 12;
-    // }
-    // else if (inputLength >= SEARCH_MIN && inputLength < 26) {
-    //   newZoom = (inputLength / 1.5) + 8;
-    // }
-    // else {
-    //   newZoom = 18;
-    // }
-    // log("!!!!!!!!!!!!!", inputLength < SEARCH_MIN, inputLength >= SEARCH_MIN && inputLength < 20, inputLength, newZoom);
-    // setMapZoom(newZoom);
   }
 
   /**
@@ -214,20 +200,27 @@ const MapSearch: FC<any> = ({ menuNode }) => {
 
   const selMenuVariants = {
     active: {
-
+      height: 30,
     },
-    inActive: {
-
+    inactive: {
+      height: 0,
     },
   };
 
   const renderSelectionMenu = () => {
     return (
-      <div className={classNames.selMenu}>
-        {EventSearchCriteria.map((item) => {
+      <div
+        className={classNames.selMenu}
+        onClick={() => setSelMenuTo(!isSelMenuOpen)}
+      >
+        <motion.div></motion.div>
+          {EventSearchCriteria.map((item) => {
             return (
               <motion.div
-                animate={searchBy.label === item.label ? "active" : "inactive"}
+                animate={(searchBy.label === item.label)
+                  ? "active"
+                  : "inactive"
+                }
                 variants={selMenuVariants}
                 onClick={() => setSearchBy(item)}
               >
@@ -235,7 +228,7 @@ const MapSearch: FC<any> = ({ menuNode }) => {
               </motion.div>
             );
           })
-        }
+          }
       </div>
     );
   };

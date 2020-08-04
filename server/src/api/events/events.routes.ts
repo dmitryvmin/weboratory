@@ -1,5 +1,5 @@
 "use strict";
-
+// App
 import { getUserEvents } from "./controllers/getUserEvents";
 import { updateEvent } from "./controllers/updateEvent";
 import { getAllEventsByVisibility } from "./controllers/getAllEventsByVisibility";
@@ -19,5 +19,7 @@ function createEventsRouter(Router, prefix) {
 
   return router;
 };
+
+
 
 export { createEventsRouter };

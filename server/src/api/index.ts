@@ -7,6 +7,7 @@ import { createPostsRouter } from "./posts";
 import { createTagMapRouter } from "./tagmap";
 import { createTagsRouter } from "./tags";
 import { createEventsRouter } from "./events";
+import { iniGraphQlServer } from "../graphql";
 
 // Constants
 const { apiVersion } = config.serverConfig.server;
@@ -29,6 +30,8 @@ function applyApiMiddleware(app) {
   app
     .use(router.routes())
     .use(router.allowedMethods());
+
+  iniGraphQlServer(app, router);
 }
 
 export { applyApiMiddleware };

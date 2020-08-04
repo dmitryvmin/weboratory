@@ -7,37 +7,44 @@ import { Events } from "../../../models/objection/Events";
 async function queryUpdateEvent(
   eventId: string,
   {
+    userId,
+    associatedIds,
     content,
     status,
     title,
     address,
     time,
     coordinates,
+    visibility,
+    createdAt,
   },
 ) {
   try {
 
     const eventContent = {
+      ...(userId && { userId }),
+      ...(associatedIds && { associatedIds }),
       ...(content && { content }),
       ...(status && { status }),
       ...(title && { title }),
       ...(address && { address }),
       ...(time && { time }),
       ...(coordinates && { coordinates }),
-      updated_at: new Date().toISOString(),
+      ...(visibility && { visibility }),
+      ...(createdAt && { createdAt }),
+      updatedAt: new Date().toISOString(),
     };
 
     const event = await Events
       .query()
       .update(eventContent)
-      .where("event_id", eventId)
+      .where("eventId", eventId)
       .first();
 
     return event;
   }
   catch (err) {
     console.log("Events service errored updating event_id:", eventId);
-
   }
 }
 

@@ -8,7 +8,7 @@ async function getAllEventsByUserId(userId: string) {
   try {
     const events = await Events
       .query()
-      .where("user_id", userId);
+      .where("userId", userId);
 
     return events;
   }

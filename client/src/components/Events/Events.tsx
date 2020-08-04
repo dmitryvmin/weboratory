@@ -122,7 +122,7 @@ const EventsApp: React.FC = () => {
       ?.map((event) => {
         return (
           <MapMarker
-            key={`marker-${event.event_id}`}
+            key={`marker-${event.eventId}`}
             event={event}
           />
         );
@@ -133,7 +133,7 @@ const EventsApp: React.FC = () => {
     if (
       !activeEvent?.address ||
       !activeEvent?.coordinates ||
-      !(activeEvent.event_id && activeEvent.event_id.startsWith("new"))
+      !(activeEvent.eventId && activeEvent.eventId.startsWith("new"))
     ) {
       return;
     }

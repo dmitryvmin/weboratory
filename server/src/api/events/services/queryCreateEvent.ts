@@ -7,7 +7,7 @@ import { Events } from "../../../models/objection/Events";
  * @return event
  */
 async function queryCreateEvent({
-  user_id,
+  userId,
   content,
   status,
   title,
@@ -19,7 +19,7 @@ async function queryCreateEvent({
   const event = await Events
     .query()
     .insert({
-      user_id,
+      userId,
       content,
       status,
       title,
@@ -27,8 +27,8 @@ async function queryCreateEvent({
       time,
       coordinates,
       visibility,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     });
 
   return event;

@@ -98,7 +98,7 @@ const useEvents = (): IUseEvents => {
    */
   async function createEventObject({
     coordinates: coordinatesArg,
-    event_id: eventIdArg,
+    eventId: eventIdArg,
     address,
     ...rest
   }: ActiveEvent) {
@@ -113,12 +113,12 @@ const useEvents = (): IUseEvents => {
       coordinates = coordinatesArg;
     }
 
-    // Generate a key if event_id doesn't exist
-    const event_id = eventIdArg ?? getNewEventKey(address);
+    // Generate a key if eventId doesn't exist
+    const eventId = eventIdArg ?? getNewEventKey(address);
 
     // Create event object
     const eventObject: ActiveEvent = {
-      event_id,
+      eventId,
       coordinates,
       address,
       ...rest,
@@ -184,7 +184,7 @@ const useEvents = (): IUseEvents => {
     setIsEventOpen(true);
 
     // Update browser history
-    history.push(`/events?eventId=${eventToOpen.event_id}`);
+    history.push(`/events?eventId=${eventToOpen.eventId}`);
 
     // Center marker above the event
     if (eventToOpen.coordinates) {

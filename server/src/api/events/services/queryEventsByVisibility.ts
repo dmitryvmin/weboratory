@@ -10,6 +10,7 @@ async function queryEventsByVisibility(visibility: string) {
     const events = await Events
       .query()
       .where("visibility", visibility);
+
     return events;
   }
   catch (err) {

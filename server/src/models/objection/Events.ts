@@ -7,8 +7,8 @@ class Events extends Model {
   static tableName = "events";
 
   id: string;
-  user_id: string;
-  associated_ids: string[];
+  userId: string;
+  associatedIds: string[];
   content: string;
   status: string;
   title: string;
@@ -16,8 +16,8 @@ class Events extends Model {
   coordinates: string;
   visibility: string;
   time: string;
-  created_at: string;
-  updated_at: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export { Events };
