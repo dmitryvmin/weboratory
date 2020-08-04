@@ -2,8 +2,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter as Router } from "react-router-dom";
-import { graphql, ApolloProvider } from "react-apollo";
-import { ApolloClient, createHttpLink, InMemoryCache } from "@apollo/client";
+import { ApolloProvider, ApolloClient, createHttpLink, InMemoryCache } from "@apollo/client";
 
 // App
 import "./index.scss";
@@ -12,6 +11,7 @@ import history from "./utils/history";
 import { Auth0Provider } from "@utils/hooks/useAuth0";
 import { getEnv } from "@configs/env";
 
+// Constants
 const cache = new InMemoryCache();
 const link = createHttpLink({
   uri: getEnv("GRAPHQL_SERVER"),
