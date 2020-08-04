@@ -1,5 +1,7 @@
 type Geocoder = google.maps.Geocoder;
 
+declare var google: any;
+
 /**
  * Return geo data for a placeId
  */
