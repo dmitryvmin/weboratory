@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { debounce } from "lodash";
 import { NUM_OF_PREDICTIONS } from "@components/Events/constants";
 
-declare var google: any;
+declare var google: any
 
 /**
  * Return predictions for an input address
