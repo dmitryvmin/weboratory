@@ -19,9 +19,14 @@ function iniGraphQlServer(app, router) {
     playground: true,
   });
 
-  apolloServer.applyMiddleware({
-    app,
-  });
+  // router.post('/graphql', apolloServer);
+  // router.get('/graphql', apolloServer);
+
+  app.use(apolloServer.getMiddleware());
+
+  // apolloServer.applyMiddleware({
+  //   app,
+  // });
 }
 
 export { iniGraphQlServer };
