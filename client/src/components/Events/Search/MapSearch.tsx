@@ -1,5 +1,5 @@
 // Libs
-import React, { FC, useRef, ChangeEvent } from "react";
+import React, { FC, useRef, ChangeEvent, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import IosClose from "react-ionicons/lib/IosClose";
 import MdAdd from "react-ionicons/lib/MdAdd";
@@ -9,7 +9,7 @@ import { useWindowSize } from "@utils/hooks/useWindowSize";
 import { getPositionFromTarget } from "@components/Events/utils/getPositionFromTarget";
 
 // Styles
-import styles from "./styles.module.scss";
+import classNames from "./styles.module.scss";
 
 // Store
 import { useMap } from "@stores/MapStore";
@@ -22,6 +22,29 @@ import { log } from "@utils/Logger";
 // Constants
 import { MENU_SIZE, PADDING_1, TIMELINE_HEIGHT } from "@common/constants";
 import { PredictionsDropdown } from "../PredictionsDropdown";
+
+type EventSearchCriteriaLabel = "Event @" | "Event #" | "Event ⓘ";
+type EventSearchCriteriaValue = "address" | "tag" | "info";
+type IEventSearchCriterium = {
+  label: EventSearchCriteriaLabel;
+  value: EventSearchCriteriaValue;
+}
+
+const EventSearchCriteria: IEventSearchCriterium[] = [
+  {
+    label: "Event @",
+    value: "address",
+  },
+  {
+    label: "Event #",
+    value: "tag",
+  },
+  {
+    label: "Event ⓘ",
+    value: "info",
+  },
+];
+
 
 /**
  * Map address search
@@ -54,6 +77,9 @@ const MapSearch: FC<any> = ({ menuNode }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const [searchBy, setSearchBy] = useState<IEventSearchCriterium>(EventSearchCriteria[0]);
+  const [isSelMenuOpen, setIsSelMenuTo] = useState<boolean>(false);
 
   /**
    * ========== Util hooks
@@ -186,10 +212,32 @@ const MapSearch: FC<any> = ({ menuNode }) => {
     }
   };
 
+  const selMenuVariants = {
+    active: {
+
+    },
+    inActive: {
+
+    },
+  };
+
   const renderSelectionMenu = () => {
-    return ["Search Address", "Search Event Hashtag", "Search Event Info"].map((item) => {
-      return <div>{item}</div>;
-    });
+    return (
+      <div className={classNames.selMenu}>
+        {EventSearchCriteria.map((item) => {
+            return (
+              <motion.div
+                animate={searchBy.label === item.label ? "active" : "inactive"}
+                variants={selMenuVariants}
+                onClick={() => setSearchBy(item)}
+              >
+                {item.label}
+              </motion.div>
+            );
+          })
+        }
+      </div>
+    );
   };
 
   /**
@@ -197,13 +245,13 @@ const MapSearch: FC<any> = ({ menuNode }) => {
    */
   return (
     <motion.div
-      className={styles.searchContainer}
+      className={classNames.searchContainer}
       variants={searchVariants}
       initial={getInitialVariant()}
       animate={getAnimationVariant()}
     >
       <div
-        className={styles.searchInput}
+        className={classNames.searchInput}
         ref={containerRef}
       >
         <motion.div>
@@ -213,7 +261,7 @@ const MapSearch: FC<any> = ({ menuNode }) => {
           onClick={() => setIsSearchOpen(true)}
           animate={isSearchOpen ? "open" : "closed"}
           variants={buttonVariants}
-          className={styles.addBtn}
+          className={classNames.addBtn}
         >
           <MdAdd/>
         </motion.div>
@@ -231,7 +279,7 @@ const MapSearch: FC<any> = ({ menuNode }) => {
         >
           <IosClose
             fontSize="40"
-            className={styles.closeBtn}
+            className={classNames.closeBtn}
           />
         </motion.div>
       </div>
