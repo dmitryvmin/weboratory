@@ -1,6 +1,9 @@
-type GeocoderResult = google.maps.GeocoderResult;
-type GeocoderStatus = google.maps.GeocoderStatus;
-type Geocoder = google.maps.Geocoder;
+// type GeocoderResult = google.maps.GeocoderResult;
+// type GeocoderStatus = google.maps.GeocoderStatus;
+// type Geocoder = google.maps.Geocoder;
+type GeocoderResult = any;
+type GeocoderStatus = any;
+type Geocoder = any;
 
 /**
  * Return geo data for an address

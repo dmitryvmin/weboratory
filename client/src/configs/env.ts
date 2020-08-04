@@ -4,6 +4,7 @@ type PublicEnv =
   | "APP"
   | "API_SERVER"
   | "AUTH_DOMAIN"
+  | "GRAPHQL_SERVER"
   ;
 
 const publicEnvs = {
@@ -12,6 +13,7 @@ const publicEnvs = {
     APP: "production",
     API_SERVER: "https://weboratory.herokuapp.com",
     AUTH_DOMAIN: "weboratory.auth0.com",
+    GRAPHQL_SERVER: "http://localhost:3000/graphql",
   },
 
   // Staging
@@ -27,6 +29,7 @@ const publicEnvs = {
     API_SERVER: "https://weboratory.herokuapp.com",
     // API_SERVER: "http://localhost:3000",
     AUTH_DOMAIN: "weboratory.auth0.com",
+    GRAPHQL_SERVER: "http://localhost:3000/graphql",
   },
 };
 

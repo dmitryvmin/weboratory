@@ -14,7 +14,7 @@ import { getEnv } from "@configs/env";
 
 const cache = new InMemoryCache();
 const link = createHttpLink({
-  uri: "https://weboratory.herokuapp.com/api/v1/events",
+  uri: getEnv("GRAPHQL_SERVER"),
 });
 
 const client = new ApolloClient({

@@ -1,4 +1,5 @@
-type Geocoder = google.maps.Geocoder;
+// type Geocoder = google.maps.Geocoder;
+type Geocoder = any;
 
 /**
  * Return geo data for a placeId
