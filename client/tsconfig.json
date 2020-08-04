@@ -20,16 +20,14 @@
     "noImplicitAny": false,
     "jsx": "react",
     "baseUrl": ".",
-    "isolatedModules": true,
-    "types": [
-      "googlemaps"
-    ]
+    "isolatedModules": true
   },
   "exclude": [
     "node_modules",
     "build"
   ],
   "include": [
-    "src"
+    "src",
+    "./index.d.ts"
   ]
 }
