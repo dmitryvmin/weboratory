@@ -2,6 +2,7 @@
 @import "../../../styles/radius";
 @import "../../../styles/shadows";
 @import "../../../styles/sizes";
+@import "../../../styles/colors";
 
 .eventsMenu {
   position: absolute;
@@ -20,7 +21,7 @@
 
 .menuItemBase {
   position: absolute;
-  background-color: white;
+  background-color: $color-white;
   width: $size_BUTTON;
   height: $size_BUTTON;
   border-radius: 50%;

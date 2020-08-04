@@ -65,15 +65,16 @@ class postService {
       .subscribe(this.posts$);
   }
 
-  savePost(postId, postTitle, postContent) {
+  savePost(postId, {title, content}) {
     const reqURI = updatePostURI(postId);
     const headers = {
       "Content-Type": "application/json",
     };
+
     const body = JSON.stringify({
       id: postId,
-      ...postTitle && { title: postTitle },
-      ...postContent && { content: postContent },
+      ...title && { title },
+      ...content && { content },
     });
 
     new BaseRequestModel<any>(reqURI, "PUT", headers, body)
@@ -81,7 +82,7 @@ class postService {
       .subscribe(this.activePost$);
   }
 
-  addPost(title: string, content: string) {
+  addPost({title, content}) {
     const reqURI = addPostURI();
     const headers = {
       "Content-Type": "application/json",

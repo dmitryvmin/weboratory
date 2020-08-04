@@ -2,32 +2,11 @@
 import React from "react";
 
 // Libs
-// import styled from "styled-components";
 import { useLocation } from "react-router-dom";
 // import { AnimatePresence, motion } from "framer-motion";
 
 // Utils
 import { useAuth0 } from "../../utils/hooks/useAuth0";
-
-// Styles
-import { colors } from "../../styles/vars";
-
-// Styles
-// const Container = styled(motion.div)`
-//   display: flex;
-//   // flex-direction: ${({animate}) => animate === "closed" ? "row" : "column"};
-//   flex-direction: column;
-//   background-color: ${colors.$color_2};
-//   padding: 20px;
-//   margin: 20px;
-//   position: absolute;
-//   z-index: 100;
-//   right: 0;
-//
-//   a {
-//     color: ${colors.$color_4};
-//   }
-// `;
 
 const transition = {
   duration: 1,

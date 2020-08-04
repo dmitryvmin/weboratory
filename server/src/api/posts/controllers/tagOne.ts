@@ -3,17 +3,11 @@ import { Context } from "koa";
 import * as HttpStatus from "http-status";
 
 // App
-import {
-  appendTagMapTagByPostId,
-  getTagMapByPostId,
-  updateTagMapTagsByPostId,
-} from "../../tagmap/tagmap.services";
-import {
-  createNewTag,
-  getTagByTagId,
-  getTagByTagTitle,
-} from "../../tags/tag.services";
+import { createNewTag } from "../../tags/tag.services";
 import Tags from "../../../models/objection/Tags";
+import { getTagMapByPostId } from "../../tagmap/services/getTagMapByPostId";
+import { updateTagMapTagsByPostId } from "../../tagmap/services/updateTagMapTagsByPostId";
+import { appendTagMapTagByPostId } from "../../tagmap/services/appendTagMapTagByPostId";
 
 /**
  * Updates Post tags in the TagMap tables

@@ -3,11 +3,12 @@
 @import "../../../styles/shadows";
 @import "../../../styles/sizes";
 @import "../../../styles/zIndex";
+@import "../../../styles/colors";
 
 .menuContainerBase {
   position: fixed;
   bottom: 60px;
-  right: 10px;
+  right: $size_2;
   z-index: $zi2;
 }
 
@@ -15,7 +16,7 @@
   position: relative;
   width: $size_BUTTON;
   height: $size_BUTTON;
-  background-color: white;
+  background-color: $color-white;
   border-radius: 50%;
   display: flex;
   justify-content: center;
@@ -27,13 +28,11 @@
 
 .menuItemBase {
   position: absolute;
-  background-color: white;
-  padding: 5px 10px;
+  background-color: $color-white;
+  padding: $size_1 $size_2;
   border-radius: $bradius_1;
-  z-index: 100;
 
   > a {
-    color: black;
     font-size: 12px;
   }
 }

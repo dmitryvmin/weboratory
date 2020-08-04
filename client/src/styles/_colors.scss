@@ -1,8 +1,95 @@
-$color_1: #2d3142;
-$color_2: #4f5d75;
-$color_3: #bfc0c0;
-$color_4: #ffffff;
-$color_5: #e0c3c3b5;
-$color_6: #fdc29f;
-$color_7: #e6e6e660;
-$color_8: #ddd;
+// https://colors.eva.design/
+// https://material.io/resources/color/#!/?view.left=0&view.right=0
+
+$color-primary-50: #fbe9e7;
+$color-primary-100: #ffccbc;
+$color-primary-200: #ffab91;
+$color-primary-300: #ff8a65;
+$color-primary-400: #ff7043;
+$color-primary-500: #ff5722;
+$color-primary-600: #f4511e;
+$color-primary-700: #e64a19;
+$color-primary-800: #d84315;
+$color-primary-900: #bf360c;
+
+$color-primary-accent-100: #ff9e80;
+$color-primary-accent-200: #ff6e40;
+$color-primary-accent-400: #ff3d00;
+$color-primary-accent-700: #dd2c00;
+
+$color-primary-b100: #FF9D80;
+$color-primary-b65: #A63716;
+$color-primary-b55: #8C2F12;
+$color-primary-b40: #66220D;
+$color-primary-b30: #4D1901;
+$color-primary-b20: #331107;
+
+$color-success-100: #F2FDD7;
+$color-success-200: #E3FBB0;
+$color-success-300: #CCF387;
+$color-success-400: #B3E766;
+$color-success-500: #90D838;
+$color-success-600: #72B928;
+$color-success-700: #569B1C;
+$color-success-800: #3E7D11;
+$color-success-900: #2C670A;
+
+$color-info-100: #D6FCFF;
+$color-info-200: #AEF5FF;
+$color-info-300: #85E8FF;
+$color-info-400: #67D8FF;
+$color-info-500: #35BFFF;
+$color-info-600: #2696DB;
+$color-info-700: #1A71B7;
+$color-info-800: #105093;
+$color-info-900: #0A397A;
+
+$color-warning-100: #FEF9D7;
+$color-warning-200: #FEF1B0;
+$color-warning-300: #FDE689;
+$color-warning-400: #FBDB6B;
+$color-warning-500: #F9CA3B;
+$color-warning-600: #D6A72B;
+$color-warning-700: #B3861D;
+$color-warning-800: #906712;
+$color-warning-900: #77510B;
+
+$color-danger-100: #FFEBE0;
+$color-danger-200: #FFD3C1;
+$color-danger-300: #FFB5A3;
+$color-danger-400: #FF998C;
+$color-danger-500: #FF6B66;
+$color-danger-600: #DB4A52;
+$color-danger-700: #B73345;
+$color-danger-800: #93203A;
+$color-danger-900: #7A1333;
+
+$color-neutral-900: #091E42;
+$color-neutral-800: #172B4D;
+$color-neutral-700: #253858;
+$color-neutral-600: #344563;
+$color-neutral-500: #42526E;
+$color-neutral-400: #505F79;
+$color-neutral-300: #5E6C84;
+$color-neutral-200: #6B778C;
+$color-neutral-100: #7A869A;
+$color-neutral-90: #8993A4;
+$color-neutral-80: #97A0AF;
+$color-neutral-70:#A5ADBA;
+$color-neutral-60: #B3BAC5;
+$color-neutral-50: #C1C7D0;
+$color-neutral-40: #DFE1E6;
+$color-neutral-30: #EBECF0;
+$color-neutral-20: #F4F5F7;
+$color-neutral-10: #FAFBFC;
+$color-neutral-0: #ffffff;
+
+$color-primary: $color-primary-200;
+$color-secondary: $color-neutral-100;
+$color-white: $color-neutral-0;
+$color-text: $color-neutral-900;
+$color-input: $color-neutral-30;
+$color-success: $color-success-500;
+$color-info: $color-info-500;
+$color-warning: $color-warning-500;
+$color-danger: $color-danger-500;

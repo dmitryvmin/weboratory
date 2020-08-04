@@ -57,4 +57,4 @@ const PostTags: FC<PostTagsProps> = ({ post, tagMapSingleton }) => {
   );
 };
 
-export default PostTags;
+export {PostTags};

@@ -5,7 +5,7 @@ import * as HttpStatus from "http-status";
 // App
 import { createNewPost } from "../services";
 import { addTagsByTagTitle } from "../../tags/tag.services";
-import { addTagMapTagsByPostId } from "../../tagmap/tagmap.services";
+import { addTagMapTagsByPostId } from "../../tagmap/services/addTagMapByPostId";
 
 /**
  * Saves new Post to the Posts table.

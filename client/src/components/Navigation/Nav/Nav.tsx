@@ -2,15 +2,13 @@
 import React from "react";
 
 // Libs
-import styled from "styled-components";
-import { NavLink, Switch, useLocation } from "react-router-dom";
-import { AnimatePresence, motion } from "framer-motion";
+import { NavLink, useLocation } from "react-router-dom";
+import { motion } from "framer-motion";
 
 // Utils
 import { useAuth0 } from "../../../utils/hooks/useAuth0";
 
 // Styles
-import { colors } from "../../../styles/vars";
 import styles from "./styles.module.scss";
 import { Button } from "@components/UI/Button";
 import { useWindowSize } from "@utils/hooks/useWindowSize";
@@ -45,11 +43,11 @@ const items: INavItem[] = [
 const Nav = () => {
   const location = useLocation();
   const { isAuthenticated, loginWithPopup, logout } = useAuth0();
-  const {windowWidth} = useWindowSize();
+  const { windowWidth } = useWindowSize();
 
   const renderDesktop = () => {
     return (
-      <div className={styles.container}>
+      <div className={styles.navigationContainer}>
         <motion.div
           className={styles.desktopNav}
           // animate={location.pathname.includes("/posts/") ? "closed" : "open"}

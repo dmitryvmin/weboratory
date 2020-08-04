@@ -16,6 +16,7 @@ import styles from "./styles.module.scss";
 
 // Types
 import { PostMenuProps } from "@components/Post/PostMenu/types";
+import { EditorMenu } from "@components/Editor/EditorMenu";
 
 const PostMenu: FC<PostMenuProps> = ({
   post,
@@ -51,14 +52,18 @@ const PostMenu: FC<PostMenuProps> = ({
 
   return (
     <div className={styles.container}>
-      <Button onClick={handleSave}>
+      <Button onClick={() => handleSave()}>
         Save
       </Button>
       {handleDelete &&
-      <Button onClick={handleDelete} confirm>
+      <Button onClick={() => handleDelete()} confirm>
         Delete Post
       </Button>}
-      <TagsMenu post={post} tagMapSingleton={tagMapSingleton}/>
+      <TagsMenu
+        post={post}
+        tagMapSingleton={tagMapSingleton}
+      />
+      <EditorMenu/>
     </div>
   );
 };

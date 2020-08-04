@@ -88,7 +88,7 @@ async function createNewTag({ tagTitle, tagId}: { tagTitle?: string, tagId?: str
     return tag;
   }
   catch(err) {
-    console.log("Errored creating new tag.");
+    throw new Error("Errored creating new tag.");
   }
 }
 

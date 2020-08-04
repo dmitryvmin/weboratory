@@ -4,7 +4,7 @@
 
 .container {
   display: inline-block;
-  color: $color_4;
+  color: $color-neutral-0;
   padding: $size_1;
   height: $size_6;
   cursor: pointer;
@@ -29,9 +29,9 @@
 }
 
 .primary {
-  background-color: $color_1;
+  background-color: $color-primary;
 }
 
 .secondary {
-  background-color: $color_4;
+  background-color: $color-secondary;
 }

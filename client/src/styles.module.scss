@@ -1,5 +1,6 @@
+@import "./styles/colors";
+
 .app {
-  //background-color: #e6e6e660;
-  background-color: #b3b3b3;
+  background-color: $color-input;
   height: 100%;
 }

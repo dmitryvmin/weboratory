@@ -1,0 +1,30 @@
+@import "../../../styles/colors";
+@import "../../../styles/sizes";
+@import "../../../styles/shadows";
+
+.switch {
+  width: $size_8;
+  height: $size_6;
+  border-radius: $bradius_1;
+  padding: $size_1;
+  display: flex;
+  cursor: pointer;
+
+  > div {
+    width: $size_4;
+    height: $size_4;
+    background-color: $color-input;
+    border-radius: 50%;
+    box-shadow: $shadow_1;
+  }
+}
+
+.on {
+  background-color: $color-success;
+  justify-content: flex-end;
+}
+
+.off {
+  background-color: $color-secondary;
+  justify-content: flex-start;
+}

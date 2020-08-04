@@ -23,7 +23,7 @@ const Tag: FC<TagProps> = ({ title , actionable, children}) => {
       style={pillStyle}
       className={styles.tagPill}
     >
-      <p>{title}</p>
+      <p>#{title}</p>
       {children}
     </div>
   );

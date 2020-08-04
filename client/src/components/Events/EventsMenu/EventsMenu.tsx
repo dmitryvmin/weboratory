@@ -94,7 +94,7 @@ const EventsMenu: FC<any> = ({menuRefs}) => {
    */
   let { windowWidth, windowHeight } = useWindowSize();
 
-  const controls = useAnimation();
+  // const controls = useAnimation();
 
   const menuItems = [
     {
@@ -160,16 +160,16 @@ const EventsMenu: FC<any> = ({menuRefs}) => {
   /**
    * Effects
    */
-  useEffect(() => {
-    if (isEventOpen) {
-      controls.start("eventIsOpen");
-    }
-    else {
-      controls.start("default");
-    }
-  }, [
-    isEventOpen,
-  ]);
+  // useEffect(() => {
+  //   if (isEventOpen) {
+  //     controls.start("eventIsOpen");
+  //   }
+  //   else {
+  //     controls.start("default");
+  //   }
+  // }, [
+  //   isEventOpen,
+  // ]);
 
   /**
    * Return JSX

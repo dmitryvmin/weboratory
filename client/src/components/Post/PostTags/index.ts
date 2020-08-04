@@ -1,4 +1,1 @@
-import PostTags from "./PostTags";
-
-export default PostTags;
-
+export * from "./PostTags";

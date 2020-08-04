@@ -5,8 +5,13 @@ import Posts from "../../../models/objection/Posts";
  * @return post[]
  */
 async function getAllPosts() {
-  const posts = await Posts.query();
-  return posts;
+  try {
+    const posts = await Posts.query();
+    return posts;
+  }
+  catch (err) {
+    throw(err);
+  }
 }
 
 export {getAllPosts};

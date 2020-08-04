@@ -3,8 +3,8 @@ import { Context } from "koa";
 import * as HttpStatus from "http-status";
 
 // App
-import { removeTagMapByPostId } from "../../tagmap/tagmap.services";
 import { deletePostByPostId } from "../services";
+import { removeTagMapByPostId } from "../../tagmap/services/removeTagMapByPostId";
 
 /**
  * Deletes a Post row from the Posts table by id.

@@ -32,6 +32,7 @@ import { getHtmlIdxFromTextIdx } from "@components/Editor/utils/getHtmlIdxFromTe
 import { renderStaticMarkup } from "@components/Editor/utils/renderStaticMarkup";
 import { useObservable } from "@utils/hooks/useObservable";
 import { editorServiceSingleton } from "@api/services/editorService";
+import { useEditor } from "@stores/EditorStore";
 
 /**
  * Editor
@@ -39,32 +40,38 @@ import { editorServiceSingleton } from "@api/services/editorService";
 const Editor: FC<TEditor> = ({ content, onEditorChange }) => {
 
   /**
-   * Local State
+   * ========== Context hooks
    */
-    // Keeps track of the Editor history
-  const [contentHistory, setContentHistory] = useState<HistoryRecord[]>([]);
-
-  const [isEditMenuVisible, setIsEditMenuVisible] = useState<boolean>(false);
-
-  const [activeRecordIdx, setActiveRecordIdx] = useState<number>(0);
-
-  const [cursorCoords, setCursorCoords] = useState<DOMRect | ClientRect | undefined>(undefined);
-
-  const [caretPos, setCaretPos] = useState<TSelectionPosition>(defaultPosition);
-
-  const [staticMarkup, setStaticMarkup] = useState<string>("");
-
-  const [editMarkers, setEditMarkers] = useState<TEditMarker[]>([]);
-
-  /**
-   * Hooks
-   */
-    // Ref to the Editor div
-  const editorRef = useRef<HTMLDivElement>(null);
+  const
+    {
+      contentHistory,
+      isEditMenuVisible,
+      activeRecordIdx,
+      cursorCoords,
+      caretPos,
+      staticMarkup,
+      editMarkers,
+      setContentHistory,
+      setIsEditMenuVisible,
+      setActiveRecordIdx,
+      setCursorCoords,
+      setCaretPos,
+      setStaticMarkup,
+      setEditMarkers,
+    } = useEditor();
 
   // const editorState$ = useObservable(editorServiceSingleton.onEditorState());
   // const editorContent$ = useObservable(editorServiceSingleton.onEditorContent());
 
+  /**
+   * ========== Component hooks
+   */
+    // Ref to the Editor div
+  const editorRef = useRef<HTMLDivElement>(null);
+
+  /**
+   * ========== Util hooks
+   */
   const { Portal } = usePortal();
 
   // const isOutside = useRef<boolean>(false);
@@ -182,33 +189,6 @@ const Editor: FC<TEditor> = ({ content, onEditorChange }) => {
   /**
    * Editor Handlers
    */
-  function insertCodeBlock() {
-    const { current: editor } = editorRef;
-    if (!editor) {
-      return;
-    }
-
-    const record = getLastContentRecord(contentHistory);
-    if (!record) {
-      return;
-    }
-
-    const pos = getCaretPosition(editor);
-    if (!pos) {
-      return;
-    }
-
-    const insertedHtml = `<pre><code><span className="language-javascript">function test() {console.log("hello");}</span></code></pre>`;
-
-    const html = record.html.slice(0, pos) + insertedHtml + record.html.slice(pos);
-
-    const newRecord = makeNewRecord(html);
-    if (!newRecord) {
-      return;
-    }
-
-    addNewRecordToState(setContentHistory, newRecord);
-  }
 
   function insertElIntoHtml(
     html: string,
@@ -219,65 +199,13 @@ const Editor: FC<TEditor> = ({ content, onEditorChange }) => {
     return html.slice(0, start) + el + html.slice(end ?? start);
   }
 
-  function convertSelectionTo(style) {
-    return function() {
-      const { current: editor } = editorRef;
-      if (!editor) {
-        return;
-      }
-      const { html } = getActiveRecord(contentHistory, activeRecordIdx);
-      const { start, end } = caretPos;
-      const [from, to] = [start, end].sort((a, b) => a - b);
-      let newHtml;
-
-      switch (style) {
-        case "H1":
-          const selected = (to > from) ? editor.innerText.slice(from, to) : "Header";
-          const [htmlFrom, htmlTo] = getHtmlIdxFromTextIdx(from, to, editor.innerText, html);
-          if (!htmlFrom || !htmlTo) {
-            const htmlPos = getCaretPosition(editor);
-            if (!htmlPos) {
-              return;
-            }
-            newHtml = insertElIntoHtml(
-              html,
-              `<h1 className="${styles.editorStyleH1}">${selected}</h1>`,
-              htmlPos,
-              htmlPos,
-            );
-          }
-          else {
-            newHtml = insertElIntoHtml(
-              html,
-              `<h1 className="${styles.editorStyleH1}">${selected}</h1>`,
-              htmlFrom,
-              htmlTo,
-            );
-          }
-          break;
-      }
-
-      const newRecord = makeNewRecord(newHtml);
-      addNewRecordToState(setContentHistory, newRecord);
-
-      setIsEditMenuVisible(false);
-    };
-  }
-
   /**
    * Event Handlers
    */
-
-  function setRecordIdx(idx: number) {
-    return function() {
-      setActiveRecordIdx(activeRecordIdx + idx);
-    };
-  }
-
   function handleEditorOnKeyDown(ev) {
     if (ev.key === "Enter") {
       ev.preventDefault();
-      document.execCommand("insertHTML", false, "<br/>");
+      document.execCommand("insertHTML", false, "<br/> ");
       return;
     }
   }
@@ -381,37 +309,6 @@ const Editor: FC<TEditor> = ({ content, onEditorChange }) => {
   /**
    * Render functions
    */
-
-
-  // function renderEditMenu() {
-  //   if (!isEditMenuVisible || !cursorCoords) {
-  //     return null;
-  //   }
-  //
-  //   const {x, y} = cursorCoords as DOMRect;
-  //   const style = {
-  //     transform: `translate3d(${x - 60}px, ${y - 40}px, 0)`,
-  //   };
-  //
-  //   console.log("@@ Rendering Edit Menu.");
-  //
-  //   return (
-  //     <Portal>
-  //       <div className={styles.editMenu} style={style}>
-  //         <div onClick={convertSelectionTo("H1")} className={styles.editMenuButton}>H1</div>
-  //         <div onClick={insertCodeBlock} className={styles.editMenuButton}>Code</div>
-  //       </div>
-  //     </Portal>
-  //   );
-  // }
-
-  // function handleSave() {
-  //   const record = getActiveRecord(contentHistory, activeRecordIdx);
-  //   editorState.setEditorContent({ content: record.html });
-  //   // TODO: pass save event with rxjs
-  //   onSave(record.html);
-  // }
-
   function handleEditMarker(marker: TEditMarker, idx: number) {
     return function() {
 
@@ -480,29 +377,8 @@ const Editor: FC<TEditor> = ({ content, onEditorChange }) => {
    * Render
    */
   return (
-    <div className={styles.editorContainer}>
+    <>
       {renderEditMarkers()}
-      {/*{renderEditMenu()}*/}
-      <div className={styles.editorMenu}>
-        <Button onClick={toggleEditMenu}>Edit</Button>
-        <Button
-          disabled={contentHistory.length < 2}
-          onClick={setRecordIdx(-1)}
-        >
-          Back
-        </Button>
-        <Button
-          disabled={activeRecordIdx > -1}
-          onClick={setRecordIdx(1)}
-        >
-          Forward
-        </Button>
-        {/*<Button onClick={toggleEditMenu}>*/}
-        {/*  Edit Menu {isEditMenuVisible ? "on" : "off"}*/}
-        {/*</Button>*/}
-        <Button onClick={convertSelectionTo("H1")}>H1</Button>
-        <Button onClick={insertCodeBlock}>Code</Button>
-      </div>
       <div
         id="editor"
         contentEditable={true}
@@ -516,7 +392,7 @@ const Editor: FC<TEditor> = ({ content, onEditorChange }) => {
         // onClick={handleEditorOnClick}
         dangerouslySetInnerHTML={{ __html: staticMarkup }}
       />
-    </div>
+    </>
   );
 };
 

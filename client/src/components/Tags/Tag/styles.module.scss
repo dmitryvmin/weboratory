@@ -1,15 +1,24 @@
 @import "../../../styles/colors";
 @import "../../../styles/sizes";
+@import "../../../styles/radius";
 
 .tagPill {
   display: inline-flex;
-  background-color: $color_5;
-  border-radius: $size_1;
+  color: $color-secondary;
+  border-radius: $bradius_2;
+  border: 1px solid $color-neutral-40;
   margin: 1px;
   align-items: center;
-  padding: 0 $size_1;
+  padding: $size_1 $size_1 $size_1 $size_2;
+  height: $size_6;
 
   > p {
     white-space: nowrap;
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  svg {
+    fill: $color-secondary;
   }
 }

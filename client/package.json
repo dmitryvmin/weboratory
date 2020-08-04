@@ -44,7 +44,6 @@
     "react-spring": "9.0.0-rc.3",
     "react-use-gesture": "^7.0.15",
     "rxjs": "^6.5.5",
-    "styled-components": "^5.0.1",
     "typescript": "^3.9.3"
   },
   "scripts": {

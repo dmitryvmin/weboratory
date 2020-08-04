@@ -7,7 +7,7 @@ import * as HttpStatus from "http-status";
 // Schema
 import Tags from "../../models/objection/Tags";
 import { deleteTagById, deleteTagByTitle, getAllTags } from "./tag.services";
-import { removeTagFromTagMaps } from "../tagmap/tagmap.services";
+import { removeTagFromTagMaps } from "../tagmap/services/removeTagFromTagMaps";
 
 /**
  * Retrieve all Tags

@@ -1,8 +1,9 @@
 // Libs
-import React, { FC, SyntheticEvent, useRef, useState } from "react";
+import React, { FC, SyntheticEvent, useEffect, useRef, useState } from "react";
 import { useHistory, Link, match as Imatch } from "react-router-dom";
 import { useRouteMatch } from "react-router";
-import { motion } from "framer-motion";
+import { motion, useAnimation } from "framer-motion";
+import IosAdd from "react-ionicons/lib/IosAdd";
 import IosClose from "react-ionicons/lib/IosClose";
 
 // API
@@ -13,13 +14,17 @@ import { PostMenu } from "@components/Post/PostMenu";
 import { Editor } from "@components/Editor/Editor";
 
 // Styles
-import styles from "./styles.module.scss";
+import classNames from "./styles.module.scss";
 
 // Types
 import { useWindowOffset } from "@utils/hooks/useWindowOffset";
 import { useObservable } from "@utils/hooks/useObservable";
 import { PostProps } from "@components/Post/Post/types";
+import { PostTags } from "@components/Post/PostTags";
+
+// Utils
 import { checkIfSelected } from "./utils";
+import { EditorProvider } from "@stores/EditorStore";
 
 const transition = {
   duration: 0.5,
@@ -77,6 +82,8 @@ const Post: FC<PostProps> = ({
    */
   const history = useHistory();
 
+  const animationControls = useAnimation();
+
   const match: Imatch<{ id: string }> | null = useRouteMatch("/posts/:id");
 
   const isSelected = checkIfSelected(title, match);
@@ -85,30 +92,60 @@ const Post: FC<PostProps> = ({
 
   const postSingleton = useRef<postService>(new postService());
 
-  const editorSingleton = useRef<editorService>(new editorService());
-
-  const [postTitle, setPostTitle] = useState<string>(post ? "" : "New Post");
+  const [postTitle, setPostTitle] = useState<string>("New Post");
 
   const { pageYOffset } = useWindowOffset();
 
-  const editor$ = useObservable(editorSingleton.current.onEditorContent());
+  const editorSingleton = useRef<editorService>(new editorService());
+
+  const editorContent$ = useObservable(editorSingleton.current.onEditorContent());
 
   /**
    * Effects
    */
-  const xPosition = post ? idx! % Math.floor(windowWidth / 300) * 300 : undefined;
+  const xPosition = post ? idx! % Math.floor(windowWidth / 300) * 310 + 10 : undefined;
 
   const yPosition = post ? Math.floor(idx! / Math.floor(windowWidth / 300) + 1) * 320 - 200 : undefined;
+
+  useEffect(() => {
+    if (content === undefined) {
+      return;
+    }
+    editorSingleton.current.setEditorContent(content);
+  }, [
+    content,
+  ]);
+
+  useEffect(() => {
+    if (isSelected) {
+      if (windowWidth < 620) {
+        animationControls.start("activeMobile");
+      }
+      else {
+        animationControls.start("activeDesktop");
+      }
+    }
+    else {
+      if (!!title) {
+        animationControls.start("inactiveSavedPost");
+      }
+      else {
+        animationControls.start("inactiveNewPost");
+      }
+    }
+  }, [
+    isSelected,
+    windowWidth,
+  ]);
 
   /**
    * Handlers
    */
   function handleEditorChange(content: string) {
-    // editorSingleton.current.setEditorContent(content);
+    editorSingleton.current.setEditorContent(content);
   }
 
   function handlePostClick() {
-
     if (isSelected) {
       return;
     }
@@ -117,93 +154,111 @@ const Post: FC<PostProps> = ({
 
   function handlePostSave() {
     if (post) {
-      postSingleton.current.savePost(post.id, title, editorSingleton);
+      postSingleton.current.savePost(post.id, { title: title, content: editorContent$ });
     }
     else {
-      postSingleton.current.addPost(editor$!, postTitle);
+      postSingleton.current.addPost({ title: postTitle, content: editorContent$ });
     }
   }
 
   function handleTitle(ev: SyntheticEvent<HTMLInputElement>) {
     const value = (ev.target as HTMLInputElement).value;
-    if (value) {
-      setPostTitle(value);
-    }
+    setPostTitle(value);
   }
 
   const postVariants = {
-    inactive: {
-      borderRadius: "50%",
-      width: post ? 300 : 50,
-      height: post ? 300 : 50,
-      // left: xOffset,
-      // top: yOffset,
-      x: post ? xPosition : windowWidth - 60,
-      y: post ? yPosition : windowHeight - 55,
-      // scale: scale as any,
+    inactiveSavedPost: {
+      width: 300,
+      height: 300,
+      x: xPosition,
+      y: yPosition,
       transition: {
         type: "tween",
       },
     },
-    active: {
-      borderRadius: "0%",
-      width: windowWidth > 620 ? 600 : windowWidth - 20,
+    inactiveNewPost: {
+      width: 50,
+      height: 50,
+      x: windowWidth - 60,
+      y: windowHeight - 55,
+      transition: {
+        type: "tween",
+      },
+    },
+    activeDesktop: {
+      width: 600,
       height: "100%",
-      x: windowWidth > 620 ? (windowWidth - 620) / 2 : 10,
+      x: (windowWidth - 620) / 2,
       y: pageYOffset + 120,
-      // scale: 1,
       transition: {
         type: "tween",
       },
     },
+    activeMobile: {
+      width: windowWidth - 20,
+      height: "100%",
+      x: 10,
+      y: pageYOffset + 120,
+      transition: {
+        type: "tween",
+      },
+    },
+    exit: {
+      scale: 0,
+    }
   };
 
   return (
-    <motion.div
-      // layout // TODO
-      onClick={handlePostClick}
-      // drag={!isSelected}
-      initial="inactive"
-      animate={isSelected ? "active" : "inactive"}
-      exit="inactive"
-      variants={postVariants}
-
-      className={[
-        styles.post,
-        isSelected ? styles.postSelected : styles.postUnselected,
-      ].join(" ")}
-    >
-      <div className={styles.header}>
-        <input
-          className={styles.title}
-          value={postTitle.length ? postTitle : title}
-          onChange={handleTitle}
-        />
-        {isSelected &&
-        <motion.div className={styles.close} variants={closeVariants}>
-          <Link to="/posts">
-            <IosClose fontSize="40"/>
-          </Link>
-        </motion.div>
+    <EditorProvider>
+      <motion.div
+        onClick={handlePostClick}
+        animate={animationControls}
+        variants={postVariants}
+        exit="exit"
+        className={[
+          classNames.post,
+          isSelected ? classNames.postSelected : classNames.postUnselected,
+        ].join(" ")}
+      >
+        {(!title && !isSelected) &&
+        <div className={classNames.addNewBtn}>
+          <IosAdd fontSize="40"/>
+        </div>
         }
-      </div>
-      <div className={styles.postMenu}>
-        <PostMenu
-          post={post}
-          handleSave={handlePostSave}
-          tagMapSingleton={tagMapSingleton.current}
-          editorSingleton={editorSingleton.current}
+        <div className={classNames.header}>
+          <input
+            className={classNames.title}
+            value={title !== undefined ? title : postTitle}
+            onChange={handleTitle}
+          />
+          {isSelected &&
+          <motion.div className={classNames.close} variants={closeVariants}>
+            <Link to="/posts">
+              <IosClose fontSize="40"/>
+            </Link>
+          </motion.div>
+          }
+        </div>
+        <div className={classNames.postMenu}>
+          <PostMenu
+            post={post}
+            handleSave={handlePostSave}
+            tagMapSingleton={tagMapSingleton.current}
+            editorSingleton={editorSingleton.current}
+          />
+        </div>
+        <div className={classNames.postTags}>
+          <PostTags
+            post={post}
+            tagMapSingleton={tagMapSingleton.current}
+          />
+        </div>
+        <Editor
+          content={content}
+          onEditorChange={handleEditorChange}
         />
-        {/*<PostTags*/}
-        {/*  post={post}*/}
-        {/*  tagMapSingleton={tagMapSingleton.current}*/}
-        {/*/>*/}
-      </div>
-      <Editor
-        content={content}
-        onEditorChange={handleEditorChange}
-      />
-    </motion.div>
+      </motion.div>
+    </EditorProvider>
   );
 };
 

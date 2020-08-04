@@ -29,13 +29,7 @@ module.exports = {
   // },
   development: {
     client: "pg",
-    connection: {
-      host: config.dbConfig.host,
-      user: config.dbConfig.user,
-      password: config.dbConfig.password,
-      database: config.dbConfig.database,
-      port: config.dbConfig.port,
-    },
+    connection: process.env.DB_DEV_URL,
     migrations: {
       directory: path.resolve("./src/db/migrations"),
       extension: extension,

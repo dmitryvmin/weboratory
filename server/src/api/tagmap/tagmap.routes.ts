@@ -1,13 +1,9 @@
 "use strict";
 
-import {
-  getOne,
-  deleteTagFromPost,
-  addTagByTagId,
-} from "./tagmap.controllers";
-
-// TODO: Move to controllers
-import { addTagByTagTitle } from "./tagmap.services";
+import { getPostTagMap } from "./controllers/getPostTagMap";
+import { addTagByTagTitle } from "./services/addTagByTagTitle";
+import { addTagByTagId } from "./controllers/addTagByTagId";
+import { deleteTagFromPost } from "./controllers/deleteTagFromPost";
 
 function createTagMapRouter(Router, prefix) {
 
@@ -16,11 +12,11 @@ function createTagMapRouter(Router, prefix) {
   });
 
   router
-    .get("/:postId", getOne)
+    .get("/:postId", getPostTagMap)
+    .delete("/:postId/:tagId", deleteTagFromPost)
     // TODO: combine addTagByTagId && addTagByTagTitle into a single controller
     .post("/:postId/id/:tagId", addTagByTagId)
-    .post("/:postId/title/:tagTitle", addTagByTagTitle)
-    .delete("/:postId/:tagId", deleteTagFromPost);
+    .post("/:postId/title/:tagTitle", addTagByTagTitle);
 
   return router;
 };

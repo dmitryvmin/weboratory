@@ -23,15 +23,17 @@ const useEvents = (): IUseEvents => {
    * =============== Hooks ===============
    */
   const [
-    {
-      activeEvent,
-      isSearchOpen,
-      isEventOpen,
-      isMenuOpen,
-      searchedAddress,
-    },
+    state,
     setState,
   ] = useContext<IEventsContext>(EventsContext);
+
+  const {
+    activeEvent,
+    isSearchOpen,
+    isEventOpen,
+    isMenuOpen,
+    searchedAddress,
+  } = state;
 
   const { easeTo, flyTo } = useMap();
 
@@ -157,7 +159,7 @@ const useEvents = (): IUseEvents => {
     // Update browser history
     history.push("/events");
 
-    // // If Event address has been set...
+    // If Event address has been set...
     if (activeEvent?.coordinates) {
 
       easeTo({
@@ -221,6 +223,8 @@ const useEvents = (): IUseEvents => {
 
     setIsEventOpen(true);
   };
+
+  log({ labelAs: "Events state" }, state);
 
   /**
    * Return memoized events state and public utilities

@@ -1,5 +1,7 @@
 // Libs
 import React, { FC, SyntheticEvent, useRef, useEffect, useState, memo } from "react";
+import IosAdd from "react-ionicons/lib/IosAdd";
+import IosRemove from "react-ionicons/lib/IosRemove";
 
 // Hooks
 import { useEventListener } from "@utils/hooks/useEventListener";
@@ -13,7 +15,7 @@ import { Tag } from "@components/Tags/Tag";
 import { Button } from "@components/UI/Button";
 
 // Style
-import styles from "./styles.module.scss";
+import classNames from "./styles.module.scss";
 
 // Types
 import { TagMenuProps } from "@components/Tags/TagsMenu/types";
@@ -57,6 +59,7 @@ const TagsMenu: FC<TagMenuProps> = memo(({ post, tagMapSingleton }) => {
         if (!post?.id) {
           return;
         }
+        debugger;
         tagMapSingleton.addTagByTagId(post.id, tagId);
       };
     }
@@ -103,25 +106,32 @@ const TagsMenu: FC<TagMenuProps> = memo(({ post, tagMapSingleton }) => {
      */
     function renderAddNewTag() {
       return (
-        <div className={styles.newTagInput}>
+        <div className={classNames.newTagInput}>
           <input value={tagTitle} onChange={handleInput} type="text"/>
-          <Button onClick={handleAddNewTagToPost}>Add New Tag</Button>
+          <IosAdd onClick={handleAddNewTagToPost}/>
         </div>
       );
     }
 
     return (
-      <div className={styles.container}>
-        <Button onClick={toggleMenu}>Tag Post</Button>
+      <div className={classNames.container}>
+        <Button onClick={toggleMenu} color="secondary">
+          Tag Post
+        </Button>
         {menuVisible &&
-        <div ref={menuRef} className={styles.menuPanel}>
+        <div ref={menuRef} className={classNames.menuPanel}>
+          <div className={classNames.title}>Tag Menu</div>
           {
             tags$ && tags$?.map(({ id, title }: any, idx) => {
               return (
-                <Tag key={`option-${title}-${idx}`} title={title ?? "null"} actionable>
+                <Tag
+                  key={`option-${title}-${idx}`}
+                  title={title ?? "null"}
+                  actionable
+                >
                   <>
-                    <Button onClick={handleDeleteTagFromAll(id)}>Delete</Button>
-                    <Button onClick={handleAddTagToPost(id)}>Add</Button>
+                    {/*<IosRemove onClick={handleDeleteTagFromAll(id)}/>*/}
+                    <IosAdd onClick={handleAddTagToPost(id)}/>
                   </>
                 </Tag>
               );

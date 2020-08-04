@@ -1,25 +1,49 @@
 @import "../../../styles/colors";
 @import "../../../styles/sizes";
+@import "../../../styles/shadows";
+@import "../../../styles/radius";
 
 .container {
   position: relative;
 }
 
+.title {
+  width: 100%;
+  font-weight: 500;
+  padding: $size_1 0 $size_2;
+}
+
 .menuPanel {
   position: absolute;
   display: flex;
-  flex-direction: column;
-  left: $size_0;
-  background-color: $color_4;
+  flex-wrap: wrap;
+  bottom: 35px;
   padding: $size_1;
-  box-shadow: 0 0 1px 1px #eee;
-  z-index: 100;
+  background-color: $color-white;
+  box-shadow: $shadow_1;
 }
 
 .newTagInput {
-  background-color: $color_5;
+  display: flex;
+  height: 30px;
+  border: 1px solid $color-input;
+  border-radius: $bradius_2;
+  align-items: center;
+  background-color: $color-white;
+  margin: $size_2 0 $size_1;
 
   input {
     border: none;
+    height: 100%;
+    border-radius: $bradius_2;
+    padding: 0 $size_2;
+
+    &:focus {
+      outline: none;
+    }
+  }
+  
+  svg {
+    cursor: pointer;
   }
 }

@@ -1,6 +1,7 @@
 @import "../../../styles/radius";
 @import "../../../styles/shadows";
 @import "../../../styles/sizes";
+@import "../../../styles/colors";
 
 .predictionsContainer {
   position: absolute;
@@ -16,14 +17,14 @@
     margin: 0;
 
     & > li {
-      background-color: white;
+      background-color: $color-neutral-0;
       margin-bottom: $size_1;
     }
   }
 }
 
 .predictionItem {
-  background-color: white;
+  background-color: $color-neutral-0;
   cursor: pointer;
   margin-top: $size_1;
   font-size: 12px;

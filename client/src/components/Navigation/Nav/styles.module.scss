@@ -4,11 +4,11 @@
 @import "../../../styles/sizes";
 @import "../../../styles/radius";
 
-.container {
+.navigationContainer {
   position: fixed;
   top: 0;
   right: 0;
-  z-index: $zi1;
+  z-index: $zi2;
 }
 
 .desktopNav {
@@ -25,7 +25,7 @@
   border-radius: $bradius_1;
 
   a {
-    color: $color_1;
+    color: $color-text;
     margin: 0 $size_2;
     display: flex;
     align-items: center;

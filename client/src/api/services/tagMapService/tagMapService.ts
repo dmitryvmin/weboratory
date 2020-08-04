@@ -82,24 +82,16 @@ class tagMapService {
 
   // post requests
   addTagByTagId(postId, tagId) {
-
     const reqURI = addTagByTagIdURI(postId, tagId);
-
     const headers = {
       "Access-Control-Allow-Origin": "*",
-      "Content-Type": "application/json",
     };
-
-    const body = JSON.stringify({
-      post_id: postId,
-      tag_id: tagId,
-    });
-
-    new BaseRequestModel<any>(reqURI, "POST", headers, body)
+    // const body = JSON.stringify({
+    //   post_id: postId,
+    //   tag_id: tagId,
+    // });
+    new BaseRequestModel<any>(reqURI, "POST", headers)
       .request()
-      // .pipe(
-      //   take(1),
-      //   map((res) => {}))
       .subscribe(this.tagMap$);
   }
 
@@ -107,14 +99,8 @@ class tagMapService {
     const reqURI = addTagByTagTitleURI(postId, tagTitle);
     const headers = {
       "Access-Control-Allow-Origin": "*",
-      "Content-Type": "application/json",
     };
-    const body = JSON.stringify({
-      post_id: postId,
-      tag_title: tagTitle,
-    });
-
-    new BaseRequestModel<any>(reqURI, "POST", headers, body)
+    new BaseRequestModel<any>(reqURI, "POST", headers)
       .request()
       .subscribe(this.tagMap$);
   }

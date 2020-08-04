@@ -2,7 +2,7 @@
 import React, { FC, SyntheticEvent, useState } from "react";
 
 // Styles
-import styles from "./styles.module.scss";
+import classNames from "./styles.module.scss";
 
 // Types
 import { TButton } from "@components/UI/Button/types";
@@ -30,9 +30,9 @@ const Button: FC<TButton> = ({
   return (
     <div
       className={[
-        disabled && styles.disabled,
-        styles.container,
-        styles[color],
+        disabled && classNames.disabled,
+        classNames.container,
+        classNames[color],
         className && className,
       ].join(" ")}
       onClick={handleOnClick}

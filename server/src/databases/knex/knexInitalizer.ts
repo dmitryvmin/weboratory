@@ -9,6 +9,7 @@ import * as knexConfig from "./knexConfig";
 const environment = process.env.NODE_ENV || 'development';
 
 async function initDB() {
+  debugger;
   const knex = await Knex(knexConfig[environment]);
   await Model.knex(knex);
 }

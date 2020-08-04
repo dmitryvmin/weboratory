@@ -57,7 +57,6 @@ const EventModal: FC<any> = ({ menuNode }) => {
    */
   const variants = {
     closedOnMarker: {
-      borderRadius: "50%",
       width: 0,
       height: 0,
       x: targetBBox?.x,
@@ -67,7 +66,6 @@ const EventModal: FC<any> = ({ menuNode }) => {
       },
     },
     closedOnMenuItem: {
-      borderRadius: "50%",
       width: MENU_SIZE,
       height: MENU_SIZE,
       x: menuBBox?.x,
@@ -77,7 +75,6 @@ const EventModal: FC<any> = ({ menuNode }) => {
       },
     },
     closedOnMenuOrigin: {
-      borderRadius: "50%",
       width: MENU_SIZE,
       height: MENU_SIZE,
       x: (windowWidth / 2) - (MENU_SIZE / 2),
@@ -87,7 +84,6 @@ const EventModal: FC<any> = ({ menuNode }) => {
       },
     },
     openOnCenter: {
-      borderRadius: "2px",
       width: (windowWidth < 520) ? "calc(100% - 20px)" : 500,
       height: 300,
       x: (windowWidth < 600) ? "-50%" : (windowWidth / 2 - 250),
@@ -98,7 +94,6 @@ const EventModal: FC<any> = ({ menuNode }) => {
       },
     },
     openOnMarker: {
-      borderRadius: "2px",
       width: (windowWidth < 520) ? "calc(100% - 20px)" : 500,
       height: 300,
       x: (windowWidth < 600) ? "-50%" : (windowWidth / 2 - 250),
@@ -130,7 +125,7 @@ const EventModal: FC<any> = ({ menuNode }) => {
     isMenuOpen,
   ]);
 
-  const centerModalOn = (variant) => {
+  function centerModalOn(variant) {
     animationControls.start(variant);
   };
 
@@ -158,6 +153,7 @@ const EventModal: FC<any> = ({ menuNode }) => {
       variants={variants}
       className={classNames.eventModal}
       initial={getInitialPosition()}
+      style={{ borderRadius: isEventOpen ? "2px" : "50%" }}
     >
       <ModalContent centerModalOn={centerModalOn}/>
     </motion.div>

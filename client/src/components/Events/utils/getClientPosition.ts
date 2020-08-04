@@ -20,7 +20,6 @@ async function getClientPosition() {
   try {
     const { coords } = await getCurrentPosition();
     const { latitude, longitude } = coords;
-    console.log("Client geo position:", coords, ~~(Date.now() / 1000));
     return ({
       lng: longitude,
       lat: latitude,

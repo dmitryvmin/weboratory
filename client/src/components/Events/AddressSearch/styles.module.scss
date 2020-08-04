@@ -1,13 +1,14 @@
 @import "../../../styles/zIndex";
 @import "../../../styles/sizes";
 @import "../../../styles/shadows";
+@import "../../../styles/colors";
 
 .searchContainer {
   position: absolute;
   display: flex;
   align-items: center;
   z-index: $zi1;
-  background-color: white;
+  background-color: $color-neutral-0;
   box-shadow: $shadow_1;
 }
 
