@@ -7,7 +7,7 @@ import { postServiceSingleton } from "@api/services";
 import { useWindowSize } from "@utils/hooks/useWindowSize";
 
 // Styles
-import styles from "../../../views/posts/styles.module.scss";
+import classNames from "./styles.module.scss";
 
 // Components
 import { Post } from "@components/Post/Post";
@@ -37,26 +37,28 @@ const PostList = () => {
    * Return JSX
    */
   return (
-    <div className={styles.container}>
-      <AnimatePresence>
-        <div className={styles.postList} style={{ width: windowWidth, height: windowHeight }}>
-          {post$ && post$?.map((post: any, idx) => {
-            return (
-              <Post
-                key={`post-${post?.title}-${idx}`}
-                post={post}
-                idx={idx}
-                windowWidth={windowWidth}
-                windowHeight={windowHeight}
-              />
-            );
-          })}
+    <div
+      className={classNames.postListContainer}
+      style={{
+        // width: windowWidth,
+        height: post$ ? Math.floor(windowWidth / 310) * post$.length : "100%",
+      }}
+    >
+      {post$ && post$?.map((post: any, idx) => {
+        return (
           <Post
+            key={`post-${post?.title}-${idx}`}
+            post={post}
+            idx={idx}
             windowWidth={windowWidth}
             windowHeight={windowHeight}
           />
-        </div>
-      </AnimatePresence>
+        );
+      })}
+      <Post
+        windowWidth={windowWidth}
+        windowHeight={windowHeight}
+      />
     </div>
   );
 };

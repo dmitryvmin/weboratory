@@ -103,7 +103,7 @@ const Post: FC<PostProps> = ({
   /**
    * Effects
    */
-  const xPosition = post ? idx! % Math.floor(windowWidth / 300) * 310 + 10 : undefined;
+  const xPosition = post ? idx! % Math.floor(windowWidth / 310) * 310 + 10 : undefined;
 
   const yPosition = post ? Math.floor(idx! / Math.floor(windowWidth / 300) + 1) * 320 - 200 : undefined;
 

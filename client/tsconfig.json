@@ -20,7 +20,10 @@
     "noImplicitAny": false,
     "jsx": "react",
     "baseUrl": ".",
-    "isolatedModules": true
+    "isolatedModules": true,
+    "types": [
+      "googlemaps"
+    ]
   },
   "exclude": [
     "node_modules",
