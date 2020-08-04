@@ -1,5 +1,3 @@
-///<reference path="../../../../node_modules/@types/googlemaps/index.d.ts"/>
-
 type GeocoderResult = google.maps.GeocoderResult;
 type GeocoderStatus = google.maps.GeocoderStatus;
 type Geocoder = google.maps.Geocoder;
