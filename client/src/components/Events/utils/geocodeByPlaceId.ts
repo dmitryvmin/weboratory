@@ -1,5 +1,3 @@
-/// <reference types="@types/googlemaps" />
-
 type Geocoder = google.maps.Geocoder;
 
 declare const google: any;
@@ -8,6 +6,7 @@ declare const google: any;
  * Return geo data for a placeId
  */
 const geocodeByPlaceId = (placeId: string) => {
+  // @ts-ignore
   const geocoder: Geocoder = new google.maps.Geocoder();
 
   return new Promise((resolve, reject) => {

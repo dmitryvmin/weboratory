@@ -186,6 +186,12 @@ const MapSearch: FC<any> = ({ menuNode }) => {
     }
   };
 
+  const renderSelectionMenu = () => {
+    return ["Search Address", "Search Event Hashtag", "Search Event Info"].map((item) => {
+      return <div>{item}</div>;
+    });
+  };
+
   /**
    * Return JSX
    */
@@ -200,6 +206,9 @@ const MapSearch: FC<any> = ({ menuNode }) => {
         className={styles.searchInput}
         ref={containerRef}
       >
+        <motion.div>
+          {renderSelectionMenu()}
+        </motion.div>
         <motion.div
           onClick={() => setIsSearchOpen(true)}
           animate={isSearchOpen ? "open" : "closed"}
