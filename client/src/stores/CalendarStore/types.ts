@@ -1,13 +1,19 @@
 import { Dispatch, ReactNode, SetStateAction } from "react";
-import { CalendarPeriod } from "@stores/CalendarStore/constants";
+import { TimeScaleEnum } from "@stores/CalendarStore/constants";
 
-export type CalendarPeriodTuple = typeof CalendarPeriod;
-export type TCalendarPeriodTuple = CalendarPeriodTuple[number];
+export type TimeScaleEnumKeys = typeof TimeScaleEnum;
+export type TimeScaleEnumValues = TimeScaleEnumKeys[number];
+
+export type TimeMarker = {
+  start: Date;
+  end: Date;
+  idx: number,
+}
 
 export type ICalendarState = {
-  period: TCalendarPeriodTuple;
+  timeScale: TimeScaleEnumValues;
   isOpen: boolean;
-  activeIndex: number;
+  centerTimeMarker: TimeMarker | undefined;
   xPosition: number;
 };
 
@@ -19,3 +25,23 @@ export type ICalendarContext = [
 export type ICalendarProvider = {
   children: ReactNode;
 }
+
+export type TimeSegmentInfo = {
+  segmentLabel: string;
+  segmentCount: number
+};
+
+type UseCalendarFunction = {
+  setCalendarIsOpen: any;
+  zoomIn: any;
+  zoomOut: any;
+  isFirstPeriod: any;
+  isLastPeriod: any;
+  moveLeft: any;
+  moveRight: any;
+  setCenterTimeMarker: any;
+}
+
+export type UseCalendar = ICalendarState & UseCalendarFunction;
+
+export type TypeTimeSegments = { [k: string]: TimeSegmentInfo };

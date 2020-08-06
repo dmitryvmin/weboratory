@@ -7,21 +7,19 @@ import React, { FC, useEffect, useRef } from "react";
 import { PageContainer } from "@components/Page";
 
 // Styles
-import styles from "./styles.module.scss";
+import classNames from "./styles.module.scss";
 
 /**
  * Design Page
  */
-const Design: FC<{}> = () => {
+const Photos: FC<{}> = () => {
   return (
     <PageContainer>
       <div>
-        Design
+        Photos
       </div>
     </PageContainer>
   );
 };
 
-Design.displayName = "Design";
-
-export { Design };
+export { Photos };

@@ -1,9 +1,8 @@
-// React
-import React from "react";
-
 // Libs
+import React from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
+import IosContact from "react-ionicons/lib/IosContact";
 
 // Utils
 import { useAuth0 } from "../../../utils/hooks/useAuth0";
@@ -34,10 +33,16 @@ export type INavItem = {
 const items: INavItem[] = [
   { icon: null, to: "/", label: "Home", props: { exact: true } },
   { icon: null, to: "/posts", label: "Posts", props: { exact: true } },
+  { icon: null, to: "/photos", label: "Photos", props: { exact: true } },
   // { icon: null, to: "/about", label: "About" },
   // { icon: null, to: "/design", label: "Design" },
   // { icon: null, to: "/projects", label: "Projects" },
   { icon: null, to: "/events", label: "Events" },
+  {
+    icon: <IosContact />,
+    to: "/profile",
+    label: "Profile",
+  },
 ];
 
 const Nav = () => {
@@ -59,14 +64,14 @@ const Nav = () => {
           {items.map((item: INavItem) => {
             return (
               <NavLink key={item.label} to={item.to} {...item.props}>
-                {item.label}
+                {item.icon ?? item.label}
               </NavLink>
             );
           })}
-          {!isAuthenticated && (
-            <Button onClick={() => loginWithPopup({})}>Log in</Button>
-          )}
-          {isAuthenticated && <Button onClick={() => logout()}>Log out</Button>}
+          {/*{!isAuthenticated && (*/}
+          {/*  <Button onClick={() => loginWithPopup({})}>Log in</Button>*/}
+          {/*)}*/}
+          {/*{isAuthenticated && <Button onClick={() => logout()}>Log out</Button>}*/}
         </motion.div>
       </div>
     );

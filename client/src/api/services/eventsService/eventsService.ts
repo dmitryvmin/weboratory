@@ -73,7 +73,7 @@ class eventsService {
   getEventsByVis(visibility: string) {
     const reqURI = getEventsByVisibility(visibility);
     const headers = {
-      "Access-Control-Allow-Origin": "*",
+      // "Access-Control-Allow-Origin": "*",
     };
     new BaseRequestModel<any>(reqURI, "GET", headers)
       .request()

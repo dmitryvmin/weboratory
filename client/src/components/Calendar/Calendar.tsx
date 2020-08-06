@@ -16,8 +16,6 @@ import { useCalendar } from "@stores/CalendarStore";
 import { TCalendarProps } from "./types";
 import { CalendarMenu } from "@components/Calendar/CalendarMenu";
 
-const mockData = createMockData();
-
 /**
  * Calendar
  */

@@ -217,6 +217,7 @@ const MapSearch: FC<any> = ({ menuNode }) => {
           {EventSearchCriteria.map((item) => {
             return (
               <motion.div
+                key={`map-search-criteria-${item.label}`}
                 animate={(searchBy.label === item.label)
                   ? "active"
                   : "inactive"

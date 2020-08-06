@@ -1,6 +1,7 @@
 // Libs
 import React, { useEffect, useRef, useContext, useMemo } from "react";
 import { history } from "../../router";
+import { useQuery } from "@apollo/client";
 
 // styles
 import styles from "./styles.module.scss";
@@ -119,10 +120,10 @@ const EventsApp: React.FC = () => {
   const renderSavedMarkers = () => {
     return events$
       // ?.filter((event) => event.event_id !== activeEvent?.event_id)
-      ?.map((event) => {
+      ?.map((event, idx) => {
         return (
           <MapMarker
-            key={`marker-${event.eventId}`}
+            key={`marker-${event.eventId}-${idx}`}
             event={event}
           />
         );
@@ -153,10 +154,10 @@ const EventsApp: React.FC = () => {
       <EventsMenu menuRefs={{ menuRef1, menuRef2 }}/>
       <EventModal menuNode={menuNode1}/>
       <MapSearch menuNode={menuNode2}/>
-      <Map>
-        {renderNewEventMarker()}
-        {renderSavedMarkers()}
-      </Map>
+      {/*<Map>*/}
+      {/*  {renderNewEventMarker()}*/}
+      {/*  {renderSavedMarkers()}*/}
+      {/*</Map>*/}
     </div>
   );
 };

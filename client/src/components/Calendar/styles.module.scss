@@ -23,10 +23,6 @@
   z-index: $zi2;
   height: 50px;
 
-  .period {
-    user-select: none;
-  }
-
   .btn {
     margin: $size_1 $size_1 $size_1 0;
     cursor: pointer;
@@ -58,19 +54,19 @@
   }
 }
 
-.period-HOUR {
+.timeScale-HOUR {
   grid-template-columns: repeat(60, 1fr);
 }
-.period-DAY {
+.timeScale-DAY {
   grid-template-columns: repeat(24, 1fr);
 }
-.period-WEEK {
+.timeScale-WEEK {
   grid-template-columns: repeat(7, 1fr);
 }
-.period-MONTH {
+.timeScale-MONTH {
   grid-template-columns: repeat(30, 1fr);
 }
-.period-YEAR {
+.timeScale-YEAR {
   grid-template-columns: repeat(360, 1fr);
 }
-.period-ALL {}
+.timeScale-ALL {}

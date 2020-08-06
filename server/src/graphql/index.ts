@@ -3,7 +3,7 @@ import { ApolloServer } from "apollo-server-koa";
 
 // App
 import models from './connectors';
-import schema from "./schema/index";
+import schema from "./schema";
 
 /**
  * Sets up a graphQl server + Events service

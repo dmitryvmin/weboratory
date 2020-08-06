@@ -3,13 +3,13 @@ import { useContext } from "react";
 
 // Components
 import { CalendarContext } from "@stores/CalendarStore/CalendarContext";
-import { ICalendarContext } from "@stores/CalendarStore/types";
-import { CalendarPeriod } from "@stores/CalendarStore/constants";
+import { ICalendarContext, UseCalendar } from "@stores/CalendarStore/types";
+import { TimeScaleEnum } from "@stores/CalendarStore/constants";
 
 /**
  * Calendar Context Facade
  */
-const useCalendar = () => {
+const useCalendar = (): UseCalendar => {
 
   /**
    * Hooks
@@ -17,12 +17,15 @@ const useCalendar = () => {
   const [state, setState] = useContext<ICalendarContext>(CalendarContext);
 
   /**
-   * Effects
+   * Public functions
    */
+  function setCenterTimeMarker(timeMarker) {
+    setState((s) => ({
+      ...s,
+      centerTimeMarker: timeMarker,
+    }));
+  }
 
-  /**
-   * Public store fns
-   */
   function toggleCalendar() {
     setState((s) => ({
       ...s,
@@ -38,11 +41,11 @@ const useCalendar = () => {
   };
 
   function isFirstPeriod() {
-    return CalendarPeriod.indexOf(state.period) === 0;
+    return TimeScaleEnum.indexOf(state.timeScale) === 0;
   }
 
   function isLastPeriod() {
-    return CalendarPeriod.indexOf(state.period) === (CalendarPeriod.length - 1);
+    return TimeScaleEnum.indexOf(state.timeScale) === (TimeScaleEnum.length - 1);
   }
 
   function zoomIn() {
@@ -52,9 +55,9 @@ const useCalendar = () => {
       return;
     }
 
-    const curPeriodIdx = CalendarPeriod.indexOf(state.period);
-    const newPeriodIdx = curPeriodIdx - 1;
-    const period = CalendarPeriod[newPeriodIdx];
+    const curTimeScaleIdx = TimeScaleEnum.indexOf(state.timeScale);
+    const newTimeScaleIdx = curTimeScaleIdx - 1;
+    const period = TimeScaleEnum[newTimeScaleIdx];
 
     setState((s) => ({
       ...s,
@@ -69,9 +72,9 @@ const useCalendar = () => {
       return;
     }
 
-    const curPeriodIdx = CalendarPeriod.indexOf(state.period);
-    const newPeriodIdx = curPeriodIdx + 1;
-    const period = CalendarPeriod[newPeriodIdx];
+    const curTimeScaleIdx = TimeScaleEnum.indexOf(state.timeScale);
+    const newTimeScaleIdx = curTimeScaleIdx + 1;
+    const period = TimeScaleEnum[newTimeScaleIdx];
 
     setState((s) => ({
       ...s,
@@ -94,12 +97,12 @@ const useCalendar = () => {
   }
 
   /**
-   * Hook functions
+   * useCalendar hook state and functions
    */
   return {
     isOpen: state.isOpen,
-    period: state.period,
-    activeIndex: state.activeIndex,
+    timeScale: state.timeScale,
+    centerTimeMarker: state.centerTimeMarker,
     xPosition: state.xPosition,
     setCalendarIsOpen,
     zoomIn,
@@ -108,6 +111,7 @@ const useCalendar = () => {
     isLastPeriod,
     moveLeft,
     moveRight,
+    setCenterTimeMarker,
   };
 };
 

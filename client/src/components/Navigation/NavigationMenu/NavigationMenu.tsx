@@ -71,7 +71,7 @@ const MenuItem: FC<NavigationMenuItem> = ({
       whileTap={{ scale: 0.90 }}
     >
       <NavLink to={item.to} {...item.props}>
-        {item.label}
+        {item.icon ?? item.label}
       </NavLink>
     </motion.div>
   );

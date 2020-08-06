@@ -1,93 +1,32 @@
 // Libs
 import React, {
-  FC,
   useRef,
   useState,
   memo,
   useEffect,
 } from "react";
-import {
-  AnimatePresence,
-  animationControls,
-  motion,
-  motionValue,
-  PanInfo,
-  useAnimation,
-  useDragControls,
-  useMotionValue,
-} from "framer-motion";
 import { useSpring, animated } from "react-spring";
-import { useDrag, useGesture } from "react-use-gesture";
+import { useGesture } from "react-use-gesture";
 
 // Utils
 import { useWindowSize } from "@utils/hooks/useWindowSize";
+import { createMockData } from "@components/Calendar/__tests__/utils";
 import { useIntersectionObserver } from "@utils/hooks/useIntersectionObserver";
 
 // Styles
 import styles from "./styles.module.scss";
 
 // Store
-import { useCalendar, CalendarPeriodSegments } from "@stores/CalendarStore";
+import { useCalendar } from "@stores/CalendarStore";
 
-const SLIDER_MARGIN = 20;
+// Constants
+import { DRAG_STATUS, SLIDER_MARGIN } from "@components/Calendar/constants";
 
-/**
- * Slide
- */
-const Slide: FC<any> = ({ idx }) => {
+// Components
+import { Slide } from "@components/Calendar/Slide";
+import { getCurrentTimeMarker, getSlideData, getTimeMarker } from "@components/Calendar/utils";
 
-  /**
-   * Hooks
-   */
-  const { period } = useCalendar();
-
-  const slideRef = useRef<HTMLDivElement>(null);
-
-  const { windowWidth, windowHeight } = useWindowSize();
-
-  // const [inView, entry] = useIntersectionObserver(slideRef, {
-  //   threshold: 0,
-  // });
-
-  const slideWidth = windowWidth - (SLIDER_MARGIN * 2);
-
-  /**
-   * Effects
-   */
-  // useEffect(() => {
-  //   cb(idx);
-  // }, [inView]);
-
-  /**
-   * Return JSX
-   */
-  return (
-    <div
-      ref={slideRef}
-      style={{
-        width: `${slideWidth}px`,
-        left: `${idx * slideWidth}px`,
-        // backgroundColor: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
-      }}
-      className={[styles.slide, styles[`period-${period}`]].join(" ")}
-    >
-      {[...Array(CalendarPeriodSegments[period].count).keys()].map(i => i + 1).map((s) => {
-        return (
-          <div key={s}>
-            {`${CalendarPeriodSegments[period].segment}-${s}`}
-          </div>
-        );
-      })}
-      {/*{`${period}-${idx}`}*/}
-    </div>
-  );
-};
-
-export const DRAG_STATUS = {
-  NONE: "none",
-  DRAG_STARTED: "drag started",
-  DRAG_ENDED: "drag ended",
-};
+const mockData = createMockData();
 
 /**
  * Slider
@@ -97,122 +36,113 @@ const Slider = memo(() => {
   /**
    * Hooks
    */
-  const { activeIndex, xPosition } = useCalendar();
+  const {
+    timeScale,
+    centerTimeMarker,
+    setCenterTimeMarker,
+    xPosition,
+  } = useCalendar();
 
   const [inView, setInView] = useState<any>();
-
-  const [slideCount, setSlideCount] = useState<number[]>([0, 1, 2]);
 
   // @ts-ignore
   const [{ x }, setSpring] = useSpring(() => ({ x: 0 }));
 
   const dragContainerRef = useRef<HTMLDivElement>(null);
 
-  const { windowWidth, windowHeight } = useWindowSize();
+  const [dragStatus, setDragStatus] = useState(DRAG_STATUS.NONE);
 
-  const [slides, setSides] = useState<any>();
+  const isDragging = useRef<boolean>(false);
 
-  const [dragStatus, setDragStatus] = React.useState(DRAG_STATUS.NONE);
+  // const { windowWidth, windowHeight } = useWindowSize();
+  // const slideWidth = windowWidth - (SLIDER_MARGIN * 2);
 
-  const isDragging = React.useRef<boolean>(false);
+  /**
+   * Variables
+   */
 
-  const slideWidth = windowWidth - (SLIDER_MARGIN * 2);
 
   /**
    * Effects
    */
+  // Set up slides based on the timeScale
+  useEffect(() => {
+    if (centerTimeMarker === undefined) {
+      setCenterTimeMarker(getCurrentTimeMarker(timeScale));
+    }
+  }, [
+    timeScale,
+  ]);
+
   useEffect(() => {
 
     if (!isDragging || !inView) {
       return;
     }
 
-    console.log("Sliding", activeIndex);
+    console.log("Sliding", centerTimeMarker);
 
     // Sliding to right-slide:
     // - add next-right-slide
     // - remove next-left-slide
-    if (inView === activeIndex + 1) {
-      console.log("Load next-right-slide");
-    }
+    // if (inView === activeIndex + 1) {
+    //     //   console.log("Load next-right-slide");
+    //     // }
 
     // Sliding to left-slide:
     // - add next-left-slide
     // - remove next-left-slide
-    if (inView === activeIndex - 1) {
-      console.log("Load next-left-slide");
-    }
+    // if (inView === activeIndex - 1) {
+    //   console.log("Load next-left-slide");
+    // }
 
   }, [
     inView,
     isDragging,
   ]);
 
-  // On mount
-  useEffect(() => {
-    // if (!dragContainerRef.current) {
-    //   return;
-    // }
-    setSides(renderSlides());
-  }, [
-    // dragContainerRef.current,
-  ]);
-
   useEffect(() => {
     if (dragContainerRef.current) {
-      x.set(
-        -slideWidth + (slideWidth * (activeIndex - 1)),
-      );
+      // x.set(
+      //   -slideWidth + (slideWidth * (activeIndex - 1)),
+      // );
     }
   }, [
     dragContainerRef.current,
-    activeIndex,
+    centerTimeMarker,
   ]);
 
   useEffect(() => {
-    const curX = x.get();
     setSpring({
-      x: curX + xPosition,
+      x: x.get() + xPosition,
     });
   }, [
     xPosition,
   ]);
 
   /**
-   * Utils
+   * Handlers
    */
-  const updateSlides = (inView) => {
-    setInView(inView);
-  };
+  function updateSlide(inView) {
+    // setInView(inView);
+  }
 
-  const renderSlides = () => {
-    return slideCount.map((s, idx) => {
-      return (
-        <Slide
-          key={s}
-          idx={s}
-          cb={updateSlides}
-        />
-      );
-    });
-  };
-
-  const handleDragStart = () => {
+  function handleDragStart() {
     console.log("Dragging started");
     // setIsDragging(true);
-  };
+  }
 
-  const handleDrag = () => {
+  function handleDrag() {
     console.log("Dragging...");
     if (!isDragging) {
       // setIsDragging(true);
     }
-  };
+  }
 
-  const handleDragEnd = () => {
+  function handleDragEnd() {
     console.log("Dragging ended");
     // setIsDragging(false);
-  };
+  }
 
   // Set the drag hook and define component movement based on gesture data
   const dragBind = useGesture(
@@ -240,7 +170,81 @@ const Slider = memo(() => {
   );
 
   /**
-   * Return JSX
+   * =============== JSX ===============
+   */
+
+  /**
+   * Render Slides
+   */
+  const renderLeftSlide = () => {
+
+    const timeMarker = {
+      idx: -1,
+      start: getTimeMarker(centerTimeMarker, timeScale, -1),
+      end: centerTimeMarker,
+    };
+
+    const data = getSlideData(mockData, timeMarker.start, timeMarker.end);
+
+    return (
+      <Slide
+        {...timeMarker}
+        {...data}
+        cb={updateSlide}
+        timeScale={timeScale}
+      />
+    );
+  };
+
+  const renderCenterSlide = () => {
+    if (!centerTimeMarker || !centerTimeMarker.start || !centerTimeMarker.end) {
+      return;
+    }
+debugger;
+    const data = getSlideData(mockData, centerTimeMarker.start, centerTimeMarker.end);
+
+    return (
+      <Slide
+        {...centerTimeMarker}
+        {...data}
+        cb={updateSlide}
+        timeScale={timeScale}
+      />
+    );
+  };
+
+  const renderRightSlide = () => {
+    const timeMarker = {
+      idx: 1,
+      start: getTimeMarker(centerTimeMarker, timeScale, 1),
+      end: getTimeMarker(centerTimeMarker, timeScale, 2),
+    };
+
+    const data = getSlideData(mockData, timeMarker.start, timeMarker.end);
+
+    return (
+      <Slide
+        cb={updateSlide}
+        timeScale={timeScale}
+      />
+    );
+  };
+
+  const renderSlides = () => {
+    if (!centerTimeMarker) {
+      return;
+    }
+    return (
+      <>
+        {/*{renderLeftSlide()}*/}
+        {renderCenterSlide()}
+        {/*{renderRightSlide()}*/}
+      </>
+    );
+  };
+
+  /**
+   * Render Component
    */
   return (
     <div
@@ -263,6 +267,7 @@ const Slider = memo(() => {
           // width: windowWidth * 3,
           x,
         }}
+
         // onPanStart={handleDragStart}
 
         // onDrag={
@@ -271,7 +276,7 @@ const Slider = memo(() => {
         //   }
         // }
       >
-        {slides}
+        {renderSlides()}
       </animated.div>
     </div>
   );

@@ -20,7 +20,7 @@ const CalendarMenu: FC<{}> = ({}) => {
   const {
     zoomIn,
     zoomOut,
-    period,
+    timeScale,
     isFirstPeriod,
     isLastPeriod,
   } = useCalendar();
@@ -31,16 +31,24 @@ const CalendarMenu: FC<{}> = ({}) => {
   return (
     <>
       <IosRemoveCircleOutline
-        className={[styles.btn, isFirstPeriod() && styles.btnDisabled].join(" ")}
+        className={[
+          styles.btn,
+          isFirstPeriod() && styles.btnDisabled,
+        ].join(" ")}
         fontSize="40px"
         onClick={zoomOut}
       />
       <IosAddCircleOutline
-        className={[styles.btn, isLastPeriod() && styles.btnDisabled].join(" ")}
+        className={[
+          styles.btn,
+          isLastPeriod() && styles.btnDisabled,
+        ].join(" ")}
         fontSize="40px"
         onClick={zoomIn}
       />
-      <div className={styles.period}>{period}</div>
+      <div className={styles.period}>
+        {timeScale}
+      </div>
     </>
   );
 };
