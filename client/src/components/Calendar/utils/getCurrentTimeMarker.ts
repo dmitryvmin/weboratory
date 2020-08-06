@@ -1,0 +1,26 @@
+// Libs
+import invariant from "invariant";
+
+// App
+import { TimeScaleEnumValues } from "@stores/CalendarStore/types";
+import { getTimestamp } from "@components/Calendar/utils/getTimestamp";
+
+/**
+ * Returns a timeMarker of [timeScale] duration starting at current time
+ */
+function getCurrentTimeMarker(timeScale: TimeScaleEnumValues) {
+
+  invariant(timeScale, "Couldn't get getCurrentTimeMarker. The [timeScale] object is falsy:", timeScale);
+
+  const currentTime = new Date();
+  const markerStart = currentTime;
+  const markerEnd = getTimestamp(markerStart, timeScale, 1);
+
+  return ({
+    idx: 0,
+    start: currentTime,
+    end: markerEnd,
+  });
+}
+
+export { getCurrentTimeMarker };

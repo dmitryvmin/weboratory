@@ -44,10 +44,10 @@
 .slide {
   position: absolute;
   height: 200px;
-  opacity: 0.5;
   display: grid;
   column-gap: $size_1;
   padding: 0 2.5px;
+  background: rgba(255,255,255,0.8);
 
   > div {
     background-color: white;
@@ -58,7 +58,7 @@
   grid-template-columns: repeat(60, 1fr);
 }
 .timeScale-DAY {
-  grid-template-columns: repeat(24, 1fr);
+  grid-template-columns: repeat(24, calc(100% / 24));
 }
 .timeScale-WEEK {
   grid-template-columns: repeat(7, 1fr);
@@ -70,3 +70,19 @@
   grid-template-columns: repeat(360, 1fr);
 }
 .timeScale-ALL {}
+
+.calendarInstant {
+  position: absolute;
+  display: flex;
+}
+
+.calendarInstantTitle {
+  white-space: nowrap;
+}
+
+.calendarInstantBlob {
+  width: $size_4;
+  height: $size_4;
+  border-radius: 50%;
+  white-space: nowrap;
+}

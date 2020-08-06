@@ -1,5 +1,12 @@
+// Libs
 import { Dispatch, ReactNode, SetStateAction } from "react";
+
+// App
 import { TimeScaleEnum } from "@stores/CalendarStore/constants";
+import { ValueOf } from "@utils/TS";
+
+// export type TimeScaleEnumKeys = keyof typeof TimeScaleEnum;
+// export type TimeScaleEnumValues = ValueOf<typeof TimeScaleEnum>;
 
 export type TimeScaleEnumKeys = typeof TimeScaleEnum;
 export type TimeScaleEnumValues = TimeScaleEnumKeys[number];
@@ -7,7 +14,7 @@ export type TimeScaleEnumValues = TimeScaleEnumKeys[number];
 export type TimeMarker = {
   start: Date;
   end: Date;
-  idx: number,
+  idx: number;
 }
 
 export type ICalendarState = {
@@ -27,8 +34,8 @@ export type ICalendarProvider = {
 }
 
 export type TimeSegmentInfo = {
-  segmentLabel: string;
-  segmentCount: number
+  segmentPeriod: TimeScaleEnumValues;
+  segmentCount: number;
 };
 
 type UseCalendarFunction = {

@@ -4,7 +4,7 @@ import {
 } from "@stores/CalendarStore/types";
 
 export const CalendarInitState: ICalendarState = {
-  timeScale: "HOUR",
+  timeScale: "DAY",
   isOpen: true,
   centerTimeMarker: undefined,
   xPosition: 0,
@@ -21,6 +21,7 @@ export const TimeFormatMap = {
 }
 
 export const TimeScaleEnum = [
+  "SECOND",
   "MINUTE",
   "HOUR",
   "DAY",
@@ -32,31 +33,31 @@ export const TimeScaleEnum = [
 
 export const TimeSegments: TypeTimeSegments = {
   "MINUTE": {
-    segmentLabel: "SECONDS",
+    segmentPeriod: "SECOND",
     segmentCount: 60,
   },
   "HOUR": {
-    segmentLabel: "MINUTES",
+    segmentPeriod: "MINUTE",
     segmentCount: 60,
   },
   "DAY": {
-    segmentLabel: "HOURS",
+    segmentPeriod: "HOUR",
     segmentCount: 24,
   },
   "WEEK": {
-    segmentLabel: "DAYS",
+    segmentPeriod: "DAY",
     segmentCount: 7,
   },
   "MONTH": {
-    segmentLabel: "WEEKS",
+    segmentPeriod: "WEEK",
     segmentCount: 4,
   },
   "YEAR": {
-    segmentLabel: "MONTHS",
+    segmentPeriod: "MONTH",
     segmentCount: 12,
   },
   "ALL": {
-    segmentLabel: "YEARS",
+    segmentPeriod: "YEAR",
     segmentCount: 10,
   },
 };

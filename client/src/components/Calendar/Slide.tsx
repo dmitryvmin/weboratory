@@ -1,23 +1,35 @@
 // Libs
 import React, { FC, useRef } from "react";
+import { format } from "date-fns";
+import { motion } from "framer-motion";
 
 // Utils
 import { useWindowSize } from "@utils/hooks/useWindowSize";
+import { getRandomHEX } from "@utils/getRandomHEX";
 
 // Styles
-import styles from "@components/Calendar/styles.module.scss";
+import classNames from "./styles.module.scss";
 
 // Constants
 import { SLIDER_MARGIN } from "@components/Calendar/constants";
+import { TimeSegments } from "@stores/CalendarStore";
+
+import { getEventMap } from "@components/Calendar/utils/getEventMap";
+
+export type SlideProps = any;
 
 /**
  * Slide
  */
-const Slide: FC<any> = ({
-  idx,
-  cb,
-  timeScale,
-}) => {
+const Slide: FC<SlideProps> = (props) => {
+
+  const {
+    idx,
+    cb,
+    timeScale,
+    data,
+    marker,
+  } = props;
 
   /**
    * Hooks
@@ -30,7 +42,19 @@ const Slide: FC<any> = ({
   //   threshold: 0,
   // });
 
+  /**
+   * Variables
+   */
   const slideWidth = windowWidth - (SLIDER_MARGIN * 2);
+
+  const { segmentPeriod, segmentCount } = TimeSegments[timeScale];
+
+  const { eventMap, mapHeight } = getEventMap(data, marker.start, segmentPeriod) || {};
+
+  /**
+   * Utils - move out of the component
+   */
+
 
   /**
    * Effects
@@ -46,16 +70,77 @@ const Slide: FC<any> = ({
     <div
       ref={slideRef}
       style={{
+        gridTemplateColumns: `repeat(${mapHeight}, 20px)`,
         width: `${slideWidth}px`,
         left: `${idx * slideWidth}px`,
-        // backgroundColor: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
       }}
       className={[
-        styles.slide,
-        styles[`timeScale-${timeScale}`],
+        classNames.slide,
+        classNames[`timeScale-${timeScale}`],
       ].join(" ")}
     >
-      {`Slide-${idx}`}
+      {[...Array(segmentCount).keys()].map((segment) => {
+        const eventsAtSegment = eventMap ? eventMap[segment] : undefined;
+
+        if (eventsAtSegment) {
+          return eventsAtSegment.map((e) => {
+            return (
+              <div
+                key={`instant-${segmentPeriod}-${e.toString()}`}
+                className={classNames.calendarInstant}
+                style={{
+                  gridColumnStart: segment,
+                  // gridColumnEnd: ,
+                  // gridRowStart: ,
+                  // gridRowEnd: ,
+                }}
+              >
+                <div className={classNames.calendarInstantTitle}>
+                  Event Title
+                </div>
+                <motion.div
+                  className={classNames.calendarInstantBlob}
+                  style={{
+                    backgroundColor: getRandomHEX(),
+                  }}
+                >
+                  {/*{format(date, "dd-mm:hh")}*/}
+                </motion.div>
+              </div>
+            );
+          });
+        }
+        else {
+          return <div>no event</div>;
+        }
+      })}
+      {/*{data && data.map((date) => {*/}
+      {/*  const distanceFromStart = getTimeDifference(marker.start, date, segmentPeriod);*/}
+      {/*  return (*/}
+      {/*    <div*/}
+      {/*      key={`instant-${segmentPeriod}-${date.toString()}`}*/}
+      {/*      className={classNames.calendarInstant}*/}
+      {/*      style={{*/}
+      {/*        gridColumnStart: distanceFromStart,*/}
+      {/*        // gridColumnEnd: ,*/}
+      {/*        // gridRowStart: ,*/}
+      {/*        // gridRowEnd: ,*/}
+      {/*      }}*/}
+      {/*    >*/}
+      {/*      <div className={classNames.calendarInstantTitle}>*/}
+      {/*        Event Title*/}
+      {/*      </div>*/}
+      {/*      <motion.div*/}
+      {/*        className={classNames.calendarInstantBlob}*/}
+      {/*        style={{*/}
+      {/*          backgroundColor: getRandomHEX(),*/}
+      {/*        }}*/}
+      {/*      >*/}
+      {/*        /!*{format(date, "dd-mm:hh")}*!/*/}
+      {/*      </motion.div>*/}
+      {/*    </div>*/}
+      {/*  );*/}
+      {/*})}*/}
     </div>
   );
 };

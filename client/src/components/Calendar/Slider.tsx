@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import { useSpring, animated } from "react-spring";
 import { useGesture } from "react-use-gesture";
+import invariant from "invariant";
 
 // Utils
 import { useWindowSize } from "@utils/hooks/useWindowSize";
@@ -14,17 +15,22 @@ import { createMockData } from "@components/Calendar/__tests__/utils";
 import { useIntersectionObserver } from "@utils/hooks/useIntersectionObserver";
 
 // Styles
-import styles from "./styles.module.scss";
+import classNames from "./styles.module.scss";
 
 // Store
-import { useCalendar } from "@stores/CalendarStore";
+import { TimeSegments, useCalendar } from "@stores/CalendarStore";
 
 // Constants
 import { DRAG_STATUS, SLIDER_MARGIN } from "@components/Calendar/constants";
 
 // Components
 import { Slide } from "@components/Calendar/Slide";
-import { getCurrentTimeMarker, getSlideData, getTimeMarker } from "@components/Calendar/utils";
+
+import { TimeMarker } from "@stores/CalendarStore/types";
+import { getCurrentTimeMarker } from "@components/Calendar/utils/getCurrentTimeMarker";
+import { getSlideData } from "@components/Calendar/utils/getSlideData";
+import { getTimestamp } from "@components/Calendar/utils/getTimestamp";
+import { getTimeMarker } from "@components/Calendar/utils/getTimeMarker";
 
 const mockData = createMockData();
 
@@ -60,7 +66,7 @@ const Slider = memo(() => {
   /**
    * Variables
    */
-
+  const currentTimeMarker = getCurrentTimeMarker(timeScale);
 
   /**
    * Effects
@@ -68,7 +74,7 @@ const Slider = memo(() => {
   // Set up slides based on the timeScale
   useEffect(() => {
     if (centerTimeMarker === undefined) {
-      setCenterTimeMarker(getCurrentTimeMarker(timeScale));
+      setCenterTimeMarker(currentTimeMarker);
     }
   }, [
     timeScale,
@@ -178,11 +184,17 @@ const Slider = memo(() => {
    */
   const renderLeftSlide = () => {
 
-    const timeMarker = {
+    if (!centerTimeMarker || !centerTimeMarker.start || !centerTimeMarker.end) {
+      return;
+    }
+
+    const timeMarker = getTimeMarker({
+      start: getTimestamp(centerTimeMarker.start, timeScale, -1),
+      end: centerTimeMarker.start,
       idx: -1,
-      start: getTimeMarker(centerTimeMarker, timeScale, -1),
-      end: centerTimeMarker,
-    };
+    });
+
+    invariant(timeMarker, "Couldn't create a left TimeMarker");
 
     const data = getSlideData(mockData, timeMarker.start, timeMarker.end);
 
@@ -200,25 +212,31 @@ const Slider = memo(() => {
     if (!centerTimeMarker || !centerTimeMarker.start || !centerTimeMarker.end) {
       return;
     }
-debugger;
+
     const data = getSlideData(mockData, centerTimeMarker.start, centerTimeMarker.end);
 
     return (
       <Slide
-        {...centerTimeMarker}
-        {...data}
+        marker={centerTimeMarker}
         cb={updateSlide}
         timeScale={timeScale}
+        data={data}
       />
     );
   };
 
   const renderRightSlide = () => {
-    const timeMarker = {
+    if (!centerTimeMarker || !centerTimeMarker.start || !centerTimeMarker.end) {
+      return;
+    }
+
+    const timeMarker = getTimeMarker({
+      start: centerTimeMarker.end,
+      end: getTimestamp(centerTimeMarker.end, timeScale, 1),
       idx: 1,
-      start: getTimeMarker(centerTimeMarker, timeScale, 1),
-      end: getTimeMarker(centerTimeMarker, timeScale, 2),
-    };
+    });
+
+    invariant(timeMarker, "Couldn't create a left TimeMarker");
 
     const data = getSlideData(mockData, timeMarker.start, timeMarker.end);
 
@@ -231,9 +249,6 @@ debugger;
   };
 
   const renderSlides = () => {
-    if (!centerTimeMarker) {
-      return;
-    }
     return (
       <>
         {/*{renderLeftSlide()}*/}
@@ -248,7 +263,7 @@ debugger;
    */
   return (
     <div
-      className={styles.sliderContainer}
+      className={classNames.sliderContainer}
       {...dragBind()}
       // onDragStart={handleDragStart}
       // onDragEnd={handleDragEnd}
@@ -259,7 +274,7 @@ debugger;
         // {...bind()}
         ref={dragContainerRef}
         // animate={controls}
-        className={styles.dragContainer}
+        className={classNames.dragContainer}
         // whileTap={{ cursor: "grabbing" }}
         // drag="x"
 

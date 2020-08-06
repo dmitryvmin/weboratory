@@ -78,7 +78,7 @@ const EventModal: FC<any> = ({ menuNode }) => {
       width: MENU_SIZE,
       height: MENU_SIZE,
       x: (windowWidth / 2) - (MENU_SIZE / 2),
-      y: windowHeight - TIMELINE_HEIGHT - PADDING_1,
+      y: windowHeight - TIMELINE_HEIGHT,
       transition: {
         type: "tween",
       },

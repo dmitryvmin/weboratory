@@ -68,10 +68,10 @@ const Nav = () => {
               </NavLink>
             );
           })}
-          {/*{!isAuthenticated && (*/}
-          {/*  <Button onClick={() => loginWithPopup({})}>Log in</Button>*/}
-          {/*)}*/}
-          {/*{isAuthenticated && <Button onClick={() => logout()}>Log out</Button>}*/}
+          {!isAuthenticated && (
+            <Button onClick={() => loginWithPopup({})}>Log in</Button>
+          )}
+          {isAuthenticated && <Button onClick={() => logout()}>Log out</Button>}
         </motion.div>
       </div>
     );
