@@ -1,5 +1,6 @@
 // Libs
 import React, {
+  FC,
   useRef,
   useState,
   memo,
@@ -32,12 +33,10 @@ import { getSlideData } from "@components/Calendar/utils/getSlideData";
 import { getTimestamp } from "@components/Calendar/utils/getTimestamp";
 import { getTimeMarker } from "@components/Calendar/utils/getTimeMarker";
 
-const mockData = createMockData();
-
 /**
  * Slider
  */
-const Slider = memo(() => {
+const Slider: FC<any> = memo(({data}) => {
 
   /**
    * Hooks
@@ -188,20 +187,20 @@ const Slider = memo(() => {
       return;
     }
 
-    const timeMarker = getTimeMarker({
+    const leftTimeMarker = getTimeMarker({
       start: getTimestamp(centerTimeMarker.start, timeScale, -1),
       end: centerTimeMarker.start,
       idx: -1,
     });
 
-    invariant(timeMarker, "Couldn't create a left TimeMarker");
+    invariant(leftTimeMarker, "Couldn't create a left TimeMarker");
 
-    const data = getSlideData(mockData, timeMarker.start, timeMarker.end);
+    const slideData = getSlideData(data, leftTimeMarker.start, leftTimeMarker.end);
 
     return (
       <Slide
-        {...timeMarker}
-        {...data}
+        data={slideData}
+        marker={leftTimeMarker}
         cb={updateSlide}
         timeScale={timeScale}
       />
@@ -213,14 +212,14 @@ const Slider = memo(() => {
       return;
     }
 
-    const data = getSlideData(mockData, centerTimeMarker.start, centerTimeMarker.end);
+    const slideData = getSlideData(data, centerTimeMarker.start, centerTimeMarker.end);
 
     return (
       <Slide
+        data={slideData}
         marker={centerTimeMarker}
         cb={updateSlide}
         timeScale={timeScale}
-        data={data}
       />
     );
   };
@@ -230,18 +229,20 @@ const Slider = memo(() => {
       return;
     }
 
-    const timeMarker = getTimeMarker({
+    const rightTimeMarker = getTimeMarker({
       start: centerTimeMarker.end,
       end: getTimestamp(centerTimeMarker.end, timeScale, 1),
       idx: 1,
     });
 
-    invariant(timeMarker, "Couldn't create a left TimeMarker");
+    invariant(rightTimeMarker, "Couldn't create a left TimeMarker");
 
-    const data = getSlideData(mockData, timeMarker.start, timeMarker.end);
+    const slideData = getSlideData(data, rightTimeMarker.start, rightTimeMarker.end);
 
     return (
       <Slide
+        data={slideData}
+        marker={centerTimeMarker}
         cb={updateSlide}
         timeScale={timeScale}
       />

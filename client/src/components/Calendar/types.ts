@@ -1,1 +1,1 @@
-export type TCalendarProps = {};
+export type TCalendarProps = any;

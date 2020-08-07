@@ -21,7 +21,11 @@ function getEventMap(
     return;
   }
 
+  // Associative array of events with array index mapped to the
+  // events' distance in [segmentPeriod] from [markerStart]
   const eventMap: any[] = [];
+
+  // Highest number of events occurring on a [segmentPeriod]
   let mapHeight: number = 1;
 
   for (let i = 0; i < data.length; i++) {
@@ -29,25 +33,28 @@ function getEventMap(
     // Event item
     const datum = data[i];
     const distanceFromStart = getTimeDifference(markerStart, datum, segmentPeriod);
-    const atSlot = eventMap[distanceFromStart];
 
-    // If nothing has been inserted at this slot, add the event
-    if (atSlot === undefined) {
-      eventMap[atSlot] = datum;
+    // If nothing has been inserted at slot [distanceFromStart], add the event
+    if (eventMap[distanceFromStart] === undefined) {
+      eventMap[distanceFromStart] = [datum];
     }
+    // Otherwise add this event to the array of events at index [distanceFromStart]
     else {
-      eventMap[i] = [...eventMap[i], datum];
+      eventMap[distanceFromStart] = [...eventMap[distanceFromStart], datum];
 
       // If current iteration produces a higher number of events per time instant
       // than has been captured by the mapHeight variable, update mapHeight
-      const countAtSlot: number = eventMap[atSlot].length;
-      if (countAtSlot + 1 > mapHeight) {
-        mapHeight = countAtSlot + 1;
+      const countAtSlot: number = eventMap[distanceFromStart].length;
+      if (countAtSlot > mapHeight) {
+        mapHeight = countAtSlot;
       }
     }
   }
 
-  return { eventMap, mapHeight };
+  return {
+    eventMap,
+    mapHeight,
+  };
 }
 
 export { getEventMap };

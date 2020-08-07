@@ -18,6 +18,7 @@ function getTimeDifference(
   end: Date,
   timeScale: TimeScaleEnumValues,
 ): number {
+
   switch (timeScale) {
     case "MINUTE":
       return differenceInMinutes(end, start);
@@ -34,6 +35,7 @@ function getTimeDifference(
     default:
       return 0;
   }
+
   // return Math.floor((Date.UTC(end.getFullYear(), end.getMonth(), end.getDate()) - Date.UTC(start.getFullYear(), start.getMonth(), start.getDate())));
 }
 

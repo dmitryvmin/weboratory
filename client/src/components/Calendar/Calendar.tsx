@@ -19,7 +19,7 @@ import { CalendarMenu } from "@components/Calendar/CalendarMenu";
 /**
  * Calendar
  */
-const Calendar: FC<TCalendarProps> = () => {
+const Calendar: FC<TCalendarProps> = ({data}) => {
 
   const { isOpen } = useCalendar();
 
@@ -33,7 +33,7 @@ const Calendar: FC<TCalendarProps> = () => {
             animate={{ opacity: 1, y: 0, transition: { duration: 0.5 } }}
             exit={{ opacity: 0, y: 200, transition: { duration: 0.5 } }}
           >
-            <Slider/>
+            <Slider data={data}/>
           </motion.div>
           <motion.div
             className={styles.calendarMenuContainer}

@@ -12,7 +12,7 @@ const rangeEnd = subDays(new Date(), 14);
 // Generates an array of Date objects of length [num]
 // that fall within the [start] - [end] timeframe
 function createMockData(
-  num = 200,
+  num = 500,
   start = rangeStart,
   end = rangeEnd,
 ) {

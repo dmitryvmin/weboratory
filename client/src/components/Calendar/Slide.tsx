@@ -1,5 +1,5 @@
 // Libs
-import React, { FC, useRef } from "react";
+import React, { FC, useRef, memo } from "react";
 import { format } from "date-fns";
 import { motion } from "framer-motion";
 
@@ -21,7 +21,7 @@ export type SlideProps = any;
 /**
  * Slide
  */
-const Slide: FC<SlideProps> = (props) => {
+const Slide: FC<SlideProps> = memo((props) => {
 
   const {
     idx,
@@ -66,24 +66,23 @@ const Slide: FC<SlideProps> = (props) => {
   /**
    * Return JSX
    */
+
   return (
     <div
       ref={slideRef}
       style={{
-        gridTemplateColumns: `repeat(${mapHeight}, 20px)`,
+        gridTemplateRows: `repeat(${mapHeight}, 1fr)`,
+        gridTemplateColumns: `repeat(${segmentCount}, 1fr)`,
         width: `${slideWidth}px`,
         left: `${idx * slideWidth}px`,
       }}
-      className={[
-        classNames.slide,
-        classNames[`timeScale-${timeScale}`],
-      ].join(" ")}
+      className={classNames.slide}
     >
       {[...Array(segmentCount).keys()].map((segment) => {
         const eventsAtSegment = eventMap ? eventMap[segment] : undefined;
 
         if (eventsAtSegment) {
-          return eventsAtSegment.map((e) => {
+          return eventsAtSegment.map((e, eventIdxAtSegment) => {
             return (
               <div
                 key={`instant-${segmentPeriod}-${e.toString()}`}
@@ -91,12 +90,12 @@ const Slide: FC<SlideProps> = (props) => {
                 style={{
                   gridColumnStart: segment,
                   // gridColumnEnd: ,
-                  // gridRowStart: ,
+                  gridRowStart: eventIdxAtSegment + 1,
                   // gridRowEnd: ,
                 }}
               >
                 <div className={classNames.calendarInstantTitle}>
-                  Event Title
+                  {/*Event Title*/}
                 </div>
                 <motion.div
                   className={classNames.calendarInstantBlob}
@@ -111,7 +110,8 @@ const Slide: FC<SlideProps> = (props) => {
           });
         }
         else {
-          return <div>no event</div>;
+          return <div/>;
+          // return <div>no event</div>;
         }
       })}
       {/*{data && data.map((date) => {*/}
@@ -143,6 +143,6 @@ const Slide: FC<SlideProps> = (props) => {
       {/*})}*/}
     </div>
   );
-};
+});
 
 export { Slide };

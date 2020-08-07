@@ -15,6 +15,9 @@ import { EventsProvider } from "@stores/EventStore";
 
 // Constants
 import { GOOGLE_MAPS_API } from "../../constants";
+import { createMockData } from "@components/Calendar/__tests__/utils";
+
+const mockData = createMockData();
 
 /**
  * Events Page
@@ -27,7 +30,7 @@ const Events = () => {
           <PageContainer>
             <EventsApp/>
             <CalendarProvider>
-              <Calendar/>
+              <Calendar data={mockData}/>
               <Timeline/>
             </CalendarProvider>
           </PageContainer>

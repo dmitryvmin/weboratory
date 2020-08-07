@@ -54,23 +54,6 @@
   }
 }
 
-.timeScale-HOUR {
-  grid-template-columns: repeat(60, 1fr);
-}
-.timeScale-DAY {
-  grid-template-columns: repeat(24, calc(100% / 24));
-}
-.timeScale-WEEK {
-  grid-template-columns: repeat(7, 1fr);
-}
-.timeScale-MONTH {
-  grid-template-columns: repeat(30, 1fr);
-}
-.timeScale-YEAR {
-  grid-template-columns: repeat(360, 1fr);
-}
-.timeScale-ALL {}
-
 .calendarInstant {
   position: absolute;
   display: flex;
