@@ -1,63 +1,43 @@
 import {
-  ICalendarState,
-  TypeTimeSegments,
+  CalendarState,
+  TimeFormatMapInterface,
+  TimeSegmentMapInterface,
 } from "@stores/CalendarStore/types";
 
-export const CalendarInitState: ICalendarState = {
+export const CalendarInitState: CalendarState = {
   timeScale: "DAY",
   isOpen: true,
   centerTimeMarker: undefined,
   xPosition: 0,
 };
 
-export const TimeFormatMap = {
+export const TimeFormatMap: TimeFormatMapInterface = {
   "MINUTE": "mm",
   "HOUR": "hh",
   "DAY": "dd",
-  "WEEK": "ww",
+  // "WEEK": "ww",
   "MONTH": "mm",
   "YEAR": "yyyy",
   "ALL": "",
-}
+};
 
-export const TimeScaleEnum = [
+export const TimeScaleMap = [
   "SECOND",
   "MINUTE",
   "HOUR",
   "DAY",
-  "WEEK",
+  // "WEEK",
   "MONTH",
   "YEAR",
   "ALL",
 ] as const;
 
-export const TimeSegments: TypeTimeSegments = {
-  "MINUTE": {
-    segmentPeriod: "SECOND",
-    segmentCount: 60,
-  },
-  "HOUR": {
-    segmentPeriod: "MINUTE",
-    segmentCount: 60,
-  },
-  "DAY": {
-    segmentPeriod: "HOUR",
-    segmentCount: 24,
-  },
-  "WEEK": {
-    segmentPeriod: "DAY",
-    segmentCount: 7,
-  },
-  "MONTH": {
-    segmentPeriod: "WEEK",
-    segmentCount: 4,
-  },
-  "YEAR": {
-    segmentPeriod: "MONTH",
-    segmentCount: 12,
-  },
-  "ALL": {
-    segmentPeriod: "YEAR",
-    segmentCount: 10,
-  },
-};
+export const TimeScaleSegmentMap: TimeSegmentMapInterface = {
+  "MINUTE": "SECOND",
+  "HOUR": "MINUTE",
+  "DAY": "HOUR",
+  // "WEEK": "DAY",
+  "MONTH": "DAY",
+  "YEAR": "MONTH",
+  "ALL": "YEAR",
+} as const;

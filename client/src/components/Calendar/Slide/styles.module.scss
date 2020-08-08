@@ -1,0 +1,56 @@
+@import "../../../styles/sizes";
+@import "../../../styles/zIndex";
+@import "../../../styles/radius";
+@import "../../../styles/colors";
+
+.slide {
+  position: absolute;
+  height: 200px;
+  column-gap: $size_1;
+  padding: 0 2.5px;
+  background: rgba(255,255,255,0.8);
+}
+
+.slideLabel {
+  height: 20px;
+}
+
+.slideContent {
+  display: grid;
+  height: 180px;
+}
+
+.segment {
+  //display: grid;
+}
+
+.segmentLabel {
+  user-select: none;
+  font-weight: 600;
+  color: $color-neutral-200;
+}
+
+.segmentContent {
+  display: grid;
+  height: calc(100% - 20px);
+}
+
+.segmentInstant {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.segmentInstantTitle {
+  white-space: nowrap;
+  position: absolute;
+  top: 0;
+  user-select: none;
+}
+
+.segmentInstantBlob {
+  width: $size_4;
+  height: $size_4;
+  border-radius: 50%;
+  white-space: nowrap;
+}

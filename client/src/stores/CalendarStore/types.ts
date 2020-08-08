@@ -2,40 +2,41 @@
 import { Dispatch, ReactNode, SetStateAction } from "react";
 
 // App
-import { TimeScaleEnum } from "@stores/CalendarStore/constants";
 import { ValueOf } from "@utils/TS";
+import { TimeScaleMap } from "@stores/CalendarStore/constants";
 
 // export type TimeScaleEnumKeys = keyof typeof TimeScaleEnum;
 // export type TimeScaleEnumValues = ValueOf<typeof TimeScaleEnum>;
 
-export type TimeScaleEnumKeys = typeof TimeScaleEnum;
-export type TimeScaleEnumValues = TimeScaleEnumKeys[number];
+export type TimeScaleKeys = typeof TimeScaleMap;
+export type TimeScaleValues = TimeScaleKeys[number];
+export type TimeSegmentMapInterface = { [arg: string]: TimeScaleValues };
+export type TimeFormatMapInterface = { [arg: string]: string };
 
 export type TimeMarker = {
   start: Date;
   end: Date;
-  idx: number;
+  x: number;
 }
 
-export type ICalendarState = {
-  timeScale: TimeScaleEnumValues;
+export type CalendarState = {
+  timeScale: TimeScaleValues;
   isOpen: boolean;
   centerTimeMarker: TimeMarker | undefined;
   xPosition: number;
 };
 
-export type ICalendarContext = [
-  ICalendarState,
-  Dispatch<SetStateAction<ICalendarState>>,
+export type CalendarContextInterface = [
+  CalendarState,
+  Dispatch<SetStateAction<CalendarState>>,
 ];
 
-export type ICalendarProvider = {
+export type CalendarProviderInterface = {
   children: ReactNode;
 }
 
 export type TimeSegmentInfo = {
-  segmentPeriod: TimeScaleEnumValues;
-  segmentCount: number;
+  segmentPeriod: TimeScaleValues;
 };
 
 type UseCalendarFunction = {
@@ -49,6 +50,6 @@ type UseCalendarFunction = {
   setCenterTimeMarker: any;
 }
 
-export type UseCalendar = ICalendarState & UseCalendarFunction;
+export type UseCalendar = CalendarState & UseCalendarFunction;
 
-export type TypeTimeSegments = { [k: string]: TimeSegmentInfo };
+export type TimeSegments = { [k: string]: string};

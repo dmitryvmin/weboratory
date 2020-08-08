@@ -10,11 +10,11 @@ import { TimeMarker } from "@stores/CalendarStore/types";
 function getTimeMarker({
     start,
     end,
-    idx = 0,
+    x,
   }: {
     start: Date,
     end: Date,
-    idx: number,
+    x: number,
   },
 ): TimeMarker {
 
@@ -22,9 +22,9 @@ function getTimeMarker({
   invariant(end, "Couldn't create a TimeMarker because the startTime is falsy:", end);
 
   return {
-    idx,
     start,
     end,
+    x,
   };
 }
 

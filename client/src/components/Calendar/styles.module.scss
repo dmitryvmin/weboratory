@@ -39,33 +39,3 @@
   height: 200px;
   width: 1px;
 }
-
-// Slide
-.slide {
-  position: absolute;
-  height: 200px;
-  display: grid;
-  column-gap: $size_1;
-  padding: 0 2.5px;
-  background: rgba(255,255,255,0.8);
-
-  > div {
-    background-color: white;
-  }
-}
-
-.calendarInstant {
-  position: absolute;
-  display: flex;
-}
-
-.calendarInstantTitle {
-  white-space: nowrap;
-}
-
-.calendarInstantBlob {
-  width: $size_4;
-  height: $size_4;
-  border-radius: 50%;
-  white-space: nowrap;
-}

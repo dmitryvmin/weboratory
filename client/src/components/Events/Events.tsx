@@ -154,10 +154,10 @@ const EventsApp: React.FC = () => {
       <EventsMenu menuRefs={{ menuRef1, menuRef2 }}/>
       <EventModal menuNode={menuNode1}/>
       <MapSearch menuNode={menuNode2}/>
-      <Map>
-        {renderNewEventMarker()}
-        {renderSavedMarkers()}
-      </Map>
+      {/*<Map>*/}
+      {/*  {renderNewEventMarker()}*/}
+      {/*  {renderSavedMarkers()}*/}
+      {/*</Map>*/}
     </div>
   );
 };

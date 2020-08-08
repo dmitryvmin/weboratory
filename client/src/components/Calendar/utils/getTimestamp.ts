@@ -1,14 +1,22 @@
 // Libs
-import { TimeScaleEnumValues } from "@stores/CalendarStore/types";
-import { addDays, addHours, addMinutes, addWeeks, addYears } from "date-fns";
+import {
+  addDays,
+  addHours,
+  addMinutes,
+  addWeeks,
+  addYears,
+} from "date-fns";
 import invariant from "invariant";
+
+// App
+import { TimeScaleValues } from "@stores/CalendarStore/types";
 
 /**
  * Returns a timestamp offset by [numOf] of [timeScale] starting at [start]
  */
 function getTimestamp(
   start: Date,
-  timeScale: TimeScaleEnumValues,
+  timeScale: TimeScaleValues,
   numOf = 1,
 ): Date {
 
@@ -22,8 +30,8 @@ function getTimestamp(
       return addHours(start, numOf);
     case "DAY":
       return addDays(start, numOf);
-    case "WEEK":
-      return addWeeks(start, numOf);
+    // case "WEEK":
+    //   return addWeeks(start, numOf);
     case "MONTH":
       return addHours(start, numOf);
     case "YEAR":
@@ -33,4 +41,4 @@ function getTimestamp(
   }
 }
 
-export {getTimestamp};
+export { getTimestamp };

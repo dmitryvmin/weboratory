@@ -5,6 +5,7 @@ import React, {
   useState,
   memo,
   useEffect,
+  createRef, useCallback,
 } from "react";
 import { useSpring, animated } from "react-spring";
 import { useGesture } from "react-use-gesture";
@@ -19,24 +20,26 @@ import { useIntersectionObserver } from "@utils/hooks/useIntersectionObserver";
 import classNames from "./styles.module.scss";
 
 // Store
-import { TimeSegments, useCalendar } from "@stores/CalendarStore";
+import { useCalendar } from "@stores/CalendarStore";
 
 // Constants
 import { DRAG_STATUS, SLIDER_MARGIN } from "@components/Calendar/constants";
 
 // Components
-import { Slide } from "@components/Calendar/Slide";
+import { Slide } from "@components/Calendar/Slide/Slide";
 
 import { TimeMarker } from "@stores/CalendarStore/types";
 import { getCurrentTimeMarker } from "@components/Calendar/utils/getCurrentTimeMarker";
 import { getSlideData } from "@components/Calendar/utils/getSlideData";
 import { getTimestamp } from "@components/Calendar/utils/getTimestamp";
 import { getTimeMarker } from "@components/Calendar/utils/getTimeMarker";
+import { CalendarEvent } from "@components/Calendar/types";
+import { useCallbackRef } from "@utils/hooks/useCallbackRef";
 
 /**
  * Slider
  */
-const Slider: FC<any> = memo(({data}) => {
+const Slider: FC<any> = memo(({ data }: { data: CalendarEvent[] }) => {
 
   /**
    * Hooks
@@ -48,24 +51,44 @@ const Slider: FC<any> = memo(({data}) => {
     xPosition,
   } = useCalendar();
 
-  const [inView, setInView] = useState<any>();
-
   // @ts-ignore
   const [{ x }, setSpring] = useSpring(() => ({ x: 0 }));
 
   const dragContainerRef = useRef<HTMLDivElement>(null);
 
+  const centerSlideRef = useRef<HTMLDivElement>(null);
+
   const [dragStatus, setDragStatus] = useState(DRAG_STATUS.NONE);
 
   const isDragging = useRef<boolean>(false);
 
-  // const { windowWidth, windowHeight } = useWindowSize();
-  // const slideWidth = windowWidth - (SLIDER_MARGIN * 2);
+  const { windowWidth, windowHeight } = useWindowSize();
+  const slideWidth = windowWidth - (SLIDER_MARGIN * 2);
+
+  // const [leftTimeMarker, setLeftTimeMarker] = useState();
+  // const [rightTimeMarker, setRightTimeMarker] = useState();
+  // const [rightTimeMarker, setRightTimeMarker] = useState();
 
   /**
    * Variables
    */
-  const currentTimeMarker = getCurrentTimeMarker(timeScale);
+  const currentTimeMarker = getCurrentTimeMarker(timeScale, 0);
+
+  const leftTimeMarker = centerTimeMarker
+    ? getTimeMarker({
+      start: getTimestamp(centerTimeMarker.start, timeScale, -1),
+      end: centerTimeMarker.start,
+      x: centerTimeMarker.x - slideWidth,
+    })
+    : undefined;
+
+  const rightTimeMarker = centerTimeMarker
+    ? getTimeMarker({
+      start: centerTimeMarker.end,
+      end: getTimestamp(centerTimeMarker.end, timeScale, 1),
+      x: centerTimeMarker.x + slideWidth,
+    })
+    : undefined;
 
   /**
    * Effects
@@ -81,9 +104,9 @@ const Slider: FC<any> = memo(({data}) => {
 
   useEffect(() => {
 
-    if (!isDragging || !inView) {
-      return;
-    }
+    // if (!isDragging || !inView) {
+    //   return;
+    // }
 
     console.log("Sliding", centerTimeMarker);
 
@@ -102,20 +125,20 @@ const Slider: FC<any> = memo(({data}) => {
     // }
 
   }, [
-    inView,
+    // inView,
     isDragging,
   ]);
 
-  useEffect(() => {
-    if (dragContainerRef.current) {
-      // x.set(
-      //   -slideWidth + (slideWidth * (activeIndex - 1)),
-      // );
-    }
-  }, [
-    dragContainerRef.current,
-    centerTimeMarker,
-  ]);
+  // useEffect(() => {
+  //   if (dragContainerRef.current) {
+  //     // x.set(
+  //     //   -slideWidth + (slideWidth * (activeIndex - 1)),
+  //     // );
+  //   }
+  // }, [
+  //   dragContainerRef.current,
+  //   centerTimeMarker,
+  // ]);
 
   useEffect(() => {
     setSpring({
@@ -125,11 +148,54 @@ const Slider: FC<any> = memo(({data}) => {
     xPosition,
   ]);
 
+  // Create an observer instance for the center slide
+  useEffect(() => {
+    const dragEl = dragContainerRef.current;
+
+    if (!dragEl) {
+      return;
+    }
+    const observer = new MutationObserver(updateSlide);
+
+    // Start observing the target node for configured mutations
+    observer.observe(dragEl, {
+      attributes: true,
+      attributeFilter: ["style"],
+      childList: false,
+      subtree: false,
+    });
+    return () => {
+      observer.disconnect();
+    };
+  }, [
+    dragContainerRef.current,
+  ]);
+
+  // const dragContainerRef = useCallbackRef(null, (node) => {
+  //   debugger;
+  // });
+
   /**
    * Handlers
    */
-  function updateSlide(inView) {
-    // setInView(inView);
+  function updateSlide(e) {
+
+    const centerSlideBBox = e[0].target.getBoundingClientRect();
+
+    if (centerSlideBBox.x > windowWidth / 2) {
+      console.log("@@@ Left slide is new center");
+      setCenterTimeMarker({
+        ...leftTimeMarker,
+        x: centerSlideBBox.x,
+      });
+    }
+    if (centerSlideBBox.x < -windowWidth / 2) {
+      console.log("@@@ Right slide is new center");
+      setCenterTimeMarker({
+        ...rightTimeMarker,
+        x: centerSlideBBox.x,
+      });
+    }
   }
 
   function handleDragStart() {
@@ -183,15 +249,9 @@ const Slider: FC<any> = memo(({data}) => {
    */
   const renderLeftSlide = () => {
 
-    if (!centerTimeMarker || !centerTimeMarker.start || !centerTimeMarker.end) {
+    if (!leftTimeMarker) {
       return;
     }
-
-    const leftTimeMarker = getTimeMarker({
-      start: getTimestamp(centerTimeMarker.start, timeScale, -1),
-      end: centerTimeMarker.start,
-      idx: -1,
-    });
 
     invariant(leftTimeMarker, "Couldn't create a left TimeMarker");
 
@@ -201,14 +261,13 @@ const Slider: FC<any> = memo(({data}) => {
       <Slide
         data={slideData}
         marker={leftTimeMarker}
-        cb={updateSlide}
         timeScale={timeScale}
       />
     );
   };
 
   const renderCenterSlide = () => {
-    if (!centerTimeMarker || !centerTimeMarker.start || !centerTimeMarker.end) {
+    if (!centerTimeMarker) {
       return;
     }
 
@@ -218,22 +277,15 @@ const Slider: FC<any> = memo(({data}) => {
       <Slide
         data={slideData}
         marker={centerTimeMarker}
-        cb={updateSlide}
         timeScale={timeScale}
       />
     );
   };
 
   const renderRightSlide = () => {
-    if (!centerTimeMarker || !centerTimeMarker.start || !centerTimeMarker.end) {
+    if (!rightTimeMarker) {
       return;
     }
-
-    const rightTimeMarker = getTimeMarker({
-      start: centerTimeMarker.end,
-      end: getTimestamp(centerTimeMarker.end, timeScale, 1),
-      idx: 1,
-    });
 
     invariant(rightTimeMarker, "Couldn't create a left TimeMarker");
 
@@ -242,8 +294,7 @@ const Slider: FC<any> = memo(({data}) => {
     return (
       <Slide
         data={slideData}
-        marker={centerTimeMarker}
-        cb={updateSlide}
+        marker={rightTimeMarker}
         timeScale={timeScale}
       />
     );
@@ -252,9 +303,9 @@ const Slider: FC<any> = memo(({data}) => {
   const renderSlides = () => {
     return (
       <>
-        {/*{renderLeftSlide()}*/}
+        {renderLeftSlide()}
         {renderCenterSlide()}
-        {/*{renderRightSlide()}*/}
+        {renderRightSlide()}
       </>
     );
   };

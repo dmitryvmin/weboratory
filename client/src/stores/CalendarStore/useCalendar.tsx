@@ -1,10 +1,10 @@
 // Libs
 import { useContext } from "react";
 
-// Components
+// App
 import { CalendarContext } from "@stores/CalendarStore/CalendarContext";
-import { ICalendarContext, UseCalendar } from "@stores/CalendarStore/types";
-import { TimeScaleEnum } from "@stores/CalendarStore/constants";
+import { CalendarContextInterface, UseCalendar } from "@stores/CalendarStore/types";
+import { TimeScaleMap } from "@stores/CalendarStore/constants";
 
 /**
  * Calendar Context Facade
@@ -14,7 +14,7 @@ const useCalendar = (): UseCalendar => {
   /**
    * Hooks
    */
-  const [state, setState] = useContext<ICalendarContext>(CalendarContext);
+  const [state, setState] = useContext<CalendarContextInterface>(CalendarContext);
 
   /**
    * Public functions
@@ -41,11 +41,11 @@ const useCalendar = (): UseCalendar => {
   };
 
   function isFirstPeriod() {
-    return TimeScaleEnum.indexOf(state.timeScale) === 0;
+    return TimeScaleMap.indexOf(state.timeScale) === 0;
   }
 
   function isLastPeriod() {
-    return TimeScaleEnum.indexOf(state.timeScale) === (TimeScaleEnum.length - 1);
+    return TimeScaleMap.indexOf(state.timeScale) === (TimeScaleMap.length - 1);
   }
 
   function zoomIn() {
@@ -55,9 +55,9 @@ const useCalendar = (): UseCalendar => {
       return;
     }
 
-    const curTimeScaleIdx = TimeScaleEnum.indexOf(state.timeScale);
+    const curTimeScaleIdx = TimeScaleMap.indexOf(state.timeScale);
     const newTimeScaleIdx = curTimeScaleIdx - 1;
-    const period = TimeScaleEnum[newTimeScaleIdx];
+    const period = TimeScaleMap[newTimeScaleIdx];
 
     setState((s) => ({
       ...s,
@@ -72,9 +72,9 @@ const useCalendar = (): UseCalendar => {
       return;
     }
 
-    const curTimeScaleIdx = TimeScaleEnum.indexOf(state.timeScale);
+    const curTimeScaleIdx = TimeScaleMap.indexOf(state.timeScale);
     const newTimeScaleIdx = curTimeScaleIdx + 1;
-    const period = TimeScaleEnum[newTimeScaleIdx];
+    const period = TimeScaleMap[newTimeScaleIdx];
 
     setState((s) => ({
       ...s,

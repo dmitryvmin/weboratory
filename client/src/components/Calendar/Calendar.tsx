@@ -35,14 +35,14 @@ const Calendar: FC<TCalendarProps> = ({data}) => {
           >
             <Slider data={data}/>
           </motion.div>
-          <motion.div
-            className={styles.calendarMenuContainer}
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0, transition: { duration: 0.5 } }}
-            exit={{ opacity: 0, y: 50, transition: { duration: 0.5 } }}
-          >
-            <CalendarMenu/>
-          </motion.div>
+          {/*<motion.div*/}
+          {/*  className={styles.calendarMenuContainer}*/}
+          {/*  initial={{ opacity: 0, y: 50 }}*/}
+          {/*  animate={{ opacity: 1, y: 0, transition: { duration: 0.5 } }}*/}
+          {/*  exit={{ opacity: 0, y: 50, transition: { duration: 0.5 } }}*/}
+          {/*>*/}
+          {/*  <CalendarMenu/>*/}
+          {/*</motion.div>*/}
         </>
       )}
     </AnimatePresence>

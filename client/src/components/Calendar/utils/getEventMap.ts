@@ -1,6 +1,7 @@
 // App
-import { TimeScaleEnumValues } from "@stores/CalendarStore/types";
+import { TimeScaleValues } from "@stores/CalendarStore/types";
 import { getTimeDifference } from "@components/Calendar/utils/getTimeDifference";
+import { CalendarEvent } from "@components/Calendar/types";
 
 type GetEventMap = {
   eventMap: any[];
@@ -11,9 +12,9 @@ type GetEventMap = {
  * Returns a map of Events mapped over time distance from [markerStart] time
  */
 function getEventMap(
-  data: any[],
+  data: CalendarEvent[],
   markerStart: Date,
-  segmentPeriod: TimeScaleEnumValues,
+  segmentPeriod: TimeScaleValues,
 ): GetEventMap | undefined {
 
   // If not data, return empty map
@@ -31,16 +32,16 @@ function getEventMap(
   for (let i = 0; i < data.length; i++) {
 
     // Event item
-    const datum = data[i];
-    const distanceFromStart = getTimeDifference(markerStart, datum, segmentPeriod);
+    const calendarEvent: CalendarEvent = data[i];
+    const distanceFromStart = getTimeDifference(markerStart, calendarEvent.time, segmentPeriod);
 
     // If nothing has been inserted at slot [distanceFromStart], add the event
     if (eventMap[distanceFromStart] === undefined) {
-      eventMap[distanceFromStart] = [datum];
+      eventMap[distanceFromStart] = [calendarEvent];
     }
     // Otherwise add this event to the array of events at index [distanceFromStart]
     else {
-      eventMap[distanceFromStart] = [...eventMap[distanceFromStart], datum];
+      eventMap[distanceFromStart] = [...eventMap[distanceFromStart], calendarEvent];
 
       // If current iteration produces a higher number of events per time instant
       // than has been captured by the mapHeight variable, update mapHeight
