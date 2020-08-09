@@ -35,6 +35,8 @@ import { getTimestamp } from "@components/Calendar/utils/getTimestamp";
 import { getTimeMarker } from "@components/Calendar/utils/getTimeMarker";
 import { CalendarEvent } from "@components/Calendar/types";
 import { useCallbackRef } from "@utils/hooks/useCallbackRef";
+import { log } from "@utils/Logger";
+import { TimeTable } from "@components/Calendar/utils/TimeTable";
 
 /**
  * Slider
@@ -46,9 +48,8 @@ const Slider: FC<any> = memo(({ data }: { data: CalendarEvent[] }) => {
    */
   const {
     timeScale,
-    centerTimeMarker,
-    setCenterTimeMarker,
     xPosition,
+    activeIdx,
   } = useCalendar();
 
   // @ts-ignore
@@ -65,42 +66,40 @@ const Slider: FC<any> = memo(({ data }: { data: CalendarEvent[] }) => {
   const { windowWidth, windowHeight } = useWindowSize();
   const slideWidth = windowWidth - (SLIDER_MARGIN * 2);
 
-  // const [leftTimeMarker, setLeftTimeMarker] = useState();
-  // const [rightTimeMarker, setRightTimeMarker] = useState();
-  // const [rightTimeMarker, setRightTimeMarker] = useState();
+  const [slides, setSlides] = useState<TimeMarker[]>([]);
 
   /**
    * Variables
    */
-  const currentTimeMarker = getCurrentTimeMarker(timeScale, 0);
 
-  const leftTimeMarker = centerTimeMarker
-    ? getTimeMarker({
-      start: getTimestamp(centerTimeMarker.start, timeScale, -1),
-      end: centerTimeMarker.start,
-      x: centerTimeMarker.x - slideWidth,
-    })
-    : undefined;
-
-  const rightTimeMarker = centerTimeMarker
-    ? getTimeMarker({
-      start: centerTimeMarker.end,
-      end: getTimestamp(centerTimeMarker.end, timeScale, 1),
-      x: centerTimeMarker.x + slideWidth,
-    })
-    : undefined;
 
   /**
    * Effects
    */
   // Set up slides based on the timeScale
   useEffect(() => {
-    if (centerTimeMarker === undefined) {
-      setCenterTimeMarker(currentTimeMarker);
+    if (slides.length === 0) {
+      const currentTimeMarker = getCurrentTimeMarker(timeScale, 0);
+
+      const leftTimeMarker = getTimeMarker({
+        start: getTimestamp(currentTimeMarker.start, timeScale, -1),
+        end: currentTimeMarker.start,
+        x: currentTimeMarker.x - slideWidth,
+      });
+
+      const rightTimeMarker = getTimeMarker({
+        start: currentTimeMarker.end,
+        end: getTimestamp(currentTimeMarker.end, timeScale, 1),
+        x: currentTimeMarker.x + slideWidth,
+      });
+
+      setSlides([
+        leftTimeMarker,
+        currentTimeMarker,
+        rightTimeMarker,
+      ]);
     }
-  }, [
-    timeScale,
-  ]);
+  }, []);
 
   useEffect(() => {
 
@@ -108,7 +107,7 @@ const Slider: FC<any> = memo(({ data }: { data: CalendarEvent[] }) => {
     //   return;
     // }
 
-    console.log("Sliding", centerTimeMarker);
+    console.log("Sliding");
 
     // Sliding to right-slide:
     // - add next-right-slide
@@ -155,7 +154,7 @@ const Slider: FC<any> = memo(({ data }: { data: CalendarEvent[] }) => {
     if (!dragEl) {
       return;
     }
-    const observer = new MutationObserver(updateSlide);
+    const observer = new MutationObserver(onDragContainerUpdate);
 
     // Start observing the target node for configured mutations
     observer.observe(dragEl, {
@@ -175,28 +174,34 @@ const Slider: FC<any> = memo(({ data }: { data: CalendarEvent[] }) => {
   //   debugger;
   // });
 
+  function onDragContainerUpdate(e) {
+
+    log("$$", onDragContainerUpdate);
+
+  }
+
+  const timeTable = new TimeTable();
+
+  var tt = timeTable.initTimeTable();
+
+  debugger;
+
   /**
    * Handlers
    */
-  function updateSlide(e) {
-
-    const centerSlideBBox = e[0].target.getBoundingClientRect();
-
-    if (centerSlideBBox.x > windowWidth / 2) {
-      console.log("@@@ Left slide is new center");
-      setCenterTimeMarker({
-        ...leftTimeMarker,
-        x: centerSlideBBox.x,
-      });
-    }
-    if (centerSlideBBox.x < -windowWidth / 2) {
-      console.log("@@@ Right slide is new center");
-      setCenterTimeMarker({
-        ...rightTimeMarker,
-        x: centerSlideBBox.x,
-      });
-    }
-  }
+  // function updateSlide(e) {
+  //
+  //   const centerSlideBBox = e[0].target.getBoundingClientRect();
+  //
+  //   if (centerSlideBBox.x > windowWidth / 2) {
+  //     console.log("@@@ Center slide 50% Left");
+  //
+  //   }
+  //   if (centerSlideBBox.x < -windowWidth / 2) {
+  //     console.log("@@@ Center slide 50% Right");
+  //
+  //   }
+  // }
 
   function handleDragStart() {
     console.log("Dragging started");
@@ -247,67 +252,20 @@ const Slider: FC<any> = memo(({ data }: { data: CalendarEvent[] }) => {
   /**
    * Render Slides
    */
-  const renderLeftSlide = () => {
-
-    if (!leftTimeMarker) {
-      return;
-    }
-
-    invariant(leftTimeMarker, "Couldn't create a left TimeMarker");
-
-    const slideData = getSlideData(data, leftTimeMarker.start, leftTimeMarker.end);
-
-    return (
-      <Slide
-        data={slideData}
-        marker={leftTimeMarker}
-        timeScale={timeScale}
-      />
-    );
-  };
-
-  const renderCenterSlide = () => {
-    if (!centerTimeMarker) {
-      return;
-    }
-
-    const slideData = getSlideData(data, centerTimeMarker.start, centerTimeMarker.end);
-
-    return (
-      <Slide
-        data={slideData}
-        marker={centerTimeMarker}
-        timeScale={timeScale}
-      />
-    );
-  };
-
-  const renderRightSlide = () => {
-    if (!rightTimeMarker) {
-      return;
-    }
-
-    invariant(rightTimeMarker, "Couldn't create a left TimeMarker");
-
-    const slideData = getSlideData(data, rightTimeMarker.start, rightTimeMarker.end);
-
-    return (
-      <Slide
-        data={slideData}
-        marker={rightTimeMarker}
-        timeScale={timeScale}
-      />
-    );
-  };
-
   const renderSlides = () => {
-    return (
-      <>
-        {renderLeftSlide()}
-        {renderCenterSlide()}
-        {renderRightSlide()}
-      </>
-    );
+    if (!slides.length) {
+      return;
+    }
+    return slides.map((slide) => {
+      const slideData = getSlideData(data, slide.start, slide.end);
+      return (
+        <Slide
+          timeScale={timeScale}
+          data={slideData}
+          marker={slide}
+        />
+      );
+    });
   };
 
   /**

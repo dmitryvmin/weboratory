@@ -19,10 +19,10 @@ const useCalendar = (): UseCalendar => {
   /**
    * Public functions
    */
-  function setCenterTimeMarker(timeMarker) {
+  function setActiveIdx(idx) {
     setState((s) => ({
       ...s,
-      centerTimeMarker: timeMarker,
+      setActiveIdx: idx,
     }));
   }
 
@@ -102,7 +102,7 @@ const useCalendar = (): UseCalendar => {
   return {
     isOpen: state.isOpen,
     timeScale: state.timeScale,
-    centerTimeMarker: state.centerTimeMarker,
+    activeIdx: state.activeIdx,
     xPosition: state.xPosition,
     setCalendarIsOpen,
     zoomIn,
@@ -111,7 +111,7 @@ const useCalendar = (): UseCalendar => {
     isLastPeriod,
     moveLeft,
     moveRight,
-    setCenterTimeMarker,
+    setActiveIdx,
   };
 };
 

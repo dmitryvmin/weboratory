@@ -22,8 +22,8 @@ export type TimeMarker = {
 export type CalendarState = {
   timeScale: TimeScaleValues;
   isOpen: boolean;
-  centerTimeMarker: TimeMarker | undefined;
   xPosition: number;
+  activeIdx: number;
 };
 
 export type CalendarContextInterface = [
@@ -47,7 +47,7 @@ type UseCalendarFunction = {
   isLastPeriod: any;
   moveLeft: any;
   moveRight: any;
-  setCenterTimeMarker: any;
+  setActiveIdx: any;
 }
 
 export type UseCalendar = CalendarState & UseCalendarFunction;

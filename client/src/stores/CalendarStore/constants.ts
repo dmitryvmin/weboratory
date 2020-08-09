@@ -7,8 +7,8 @@ import {
 export const CalendarInitState: CalendarState = {
   timeScale: "DAY",
   isOpen: true,
-  centerTimeMarker: undefined,
   xPosition: 0,
+  activeIdx: 0,
 };
 
 export const TimeFormatMap: TimeFormatMapInterface = {
