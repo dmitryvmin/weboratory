@@ -1,7 +1,9 @@
 // Libs
 import React, { FC } from "react";
-import IosAddCircleOutline from "react-ionicons/lib/IosAddCircleOutline";
-import IosRemoveCircleOutline from "react-ionicons/lib/IosRemoveCircleOutline";
+
+// Components
+import { ZoomIn, ZoomOut } from "@components/UI/Icon";
+import { Text } from "@components/UI/Text";
 
 // Store
 import { useCalendar } from "@stores/CalendarStore";
@@ -30,7 +32,10 @@ const CalendarMenu: FC<{}> = ({}) => {
    */
   return (
     <>
-      <IosRemoveCircleOutline
+      <div className={styles.period}>
+        <Text style="p3">{timeScale}</Text>
+      </div>
+      <ZoomOut
         className={[
           styles.btn,
           isFirstPeriod() && styles.btnDisabled,
@@ -38,7 +43,7 @@ const CalendarMenu: FC<{}> = ({}) => {
         fontSize="40px"
         onClick={zoomOut}
       />
-      <IosAddCircleOutline
+      <ZoomIn
         className={[
           styles.btn,
           isLastPeriod() && styles.btnDisabled,
@@ -46,9 +51,6 @@ const CalendarMenu: FC<{}> = ({}) => {
         fontSize="40px"
         onClick={zoomIn}
       />
-      <div className={styles.period}>
-        {timeScale}
-      </div>
     </>
   );
 };
