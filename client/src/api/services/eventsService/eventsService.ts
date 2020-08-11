@@ -1,6 +1,7 @@
 // Libs
 import { Observable, pipe, Subject } from "rxjs";
 import { map } from "rxjs/operators";
+import { log } from "@dmitrymin/fe-log";
 
 // API
 import { BaseRequestModel } from "@api/utils/BaseRequestModel";
@@ -11,7 +12,6 @@ import { parseJSON } from "@utils/parseJSON";
 
 // Types
 import { IEvent } from "@common/types";
-import { log } from "@utils/Logger";
 
 function createEventPayload(body) {
   return JSON.stringify({

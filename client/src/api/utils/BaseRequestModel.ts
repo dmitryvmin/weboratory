@@ -1,9 +1,9 @@
 // Libs
 import { Observable } from "rxjs";
+import { log } from "@dmitrymin/fe-log";
 
 // App
 import { getEnv } from "@configs/env";
-import { log } from "@utils/Logger";
 
 // Types
 import { _Headers, Body, Method, Props } from "./types";

@@ -1,0 +1,64 @@
+@import "../../../styles/sizes";
+@import "../../../styles/zIndex";
+@import "../../../styles/radius";
+@import "../../../styles/colors";
+
+.contentContainer {
+  opacity: 1;
+}
+
+//%segment {
+//  display: grid;
+//  column-gap: $size_1;
+//  padding-right: $size_1;
+//}
+//
+//.yearSegmentActive {
+//  @extend %segment;
+//}
+//
+//.yearSegmentInactive {
+//  //display: flex;
+//  height: 100%;
+//  display: grid;
+//}
+//
+//.monthSegmentActive {
+//  @extend %segment;
+//}
+//
+//.monthSegmentInactive {
+//  display: flex;
+//}
+//
+//.daySegmentActive {
+//  @extend %segment;
+//
+//  > div {
+//    background-color: rgba(255,255,255,0.5);
+//  }
+//}
+//
+//.daySegmentInactive {
+//  @extend %segment;
+//
+//  > div {
+//    background-color: rgba(255,255,255,0.5);
+//  }
+//}
+
+
+.segmentDay {
+  display: grid;
+  grid-template-columns: repeat(24, 10px);
+}
+
+.segmentHour {
+  display: grid;
+  grid-template-columns: repeat(60, 10px);
+}
+
+.minuteSegment {
+  display: flex;
+  flex-direction: column;
+}

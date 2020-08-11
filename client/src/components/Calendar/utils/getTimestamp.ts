@@ -4,7 +4,7 @@ import {
   addHours,
   addMinutes,
   addWeeks,
-  addYears,
+  addYears, subDays, subHours, subMinutes, subMonths, subYears,
 } from "date-fns";
 import invariant from "invariant";
 
@@ -23,19 +23,28 @@ function getTimestamp(
   invariant(start, "Couldn't getTimestamp, timeMarker value is falsy", start);
   invariant(timeScale, "Couldn't getTimestamp, timeScale value is falsy", timeScale);
 
+  // TODO: simplify - use -[value] on the date-fn sub methods
   switch (timeScale) {
     case "MINUTE":
-      return addMinutes(start, numOf);
+      return (numOf > 0)
+        ? addMinutes(start, numOf)
+        : subMinutes(start, Math.abs(numOf));
     case "HOUR":
-      return addHours(start, numOf);
+      return (numOf > 0)
+        ? addHours(start, numOf)
+        : subHours(start, Math.abs(numOf));
     case "DAY":
-      return addDays(start, numOf);
-    // case "WEEK":
-    //   return addWeeks(start, numOf);
+      return (numOf > 0)
+        ? addDays(start, numOf)
+        : subDays(start, Math.abs(numOf));
     case "MONTH":
-      return addHours(start, numOf);
+      return (numOf > 0)
+        ? addHours(start, numOf)
+        : subMonths(start, Math.abs(numOf));
     case "YEAR":
-      return addYears(start, numOf);
+      return (numOf > 0)
+        ? addYears(start, numOf)
+        : subYears(start, Math.abs(numOf));
     default:
       return start;
   }

@@ -35,7 +35,6 @@ const Slide = forwardRef(
       marker: {
         start,
         end,
-        x,
       },
     }: SlideProps,
     centerSlideRef: any,
@@ -119,7 +118,7 @@ const Slide = forwardRef(
         ref={centerSlideRef}
         style={{
           width: `${slideWidth}px`,
-          left: `${x}px`,
+          // left: `${x}px`,
           // left: `${idx * slideWidth}px`,
         }}
         className={classNames.slide}

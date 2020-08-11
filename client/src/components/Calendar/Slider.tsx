@@ -5,11 +5,13 @@ import React, {
   useState,
   memo,
   useEffect,
-  createRef, useCallback,
+  createRef, useCallback, useMemo, ReactNode, ReactElement,
 } from "react";
 import { useSpring, animated } from "react-spring";
 import { useGesture } from "react-use-gesture";
 import invariant from "invariant";
+import { log } from "@dmitrymin/fe-log";
+import { getDay, getDaysInMonth, getHours, getMinutes, getMonth, getYear } from "date-fns";
 
 // Utils
 import { useWindowSize } from "@utils/hooks/useWindowSize";
@@ -30,13 +32,14 @@ import { Slide } from "@components/Calendar/Slide/Slide";
 
 import { TimeMarker } from "@stores/CalendarStore/types";
 import { getCurrentTimeMarker } from "@components/Calendar/utils/getCurrentTimeMarker";
-import { getSlideData } from "@components/Calendar/utils/getSlideData";
 import { getTimestamp } from "@components/Calendar/utils/getTimestamp";
 import { getTimeMarker } from "@components/Calendar/utils/getTimeMarker";
 import { CalendarEvent } from "@components/Calendar/types";
 import { useCallbackRef } from "@utils/hooks/useCallbackRef";
-import { log } from "@utils/Logger";
 import { TimeTable } from "@components/Calendar/utils/TimeTable";
+import { Content } from "@components/Calendar/Content";
+import { getIntervalData } from "@components/Calendar/utils/getIntervalData";
+import { checkProps } from "@utils/react/checkProps";
 
 /**
  * Slider
@@ -49,7 +52,7 @@ const Slider: FC<any> = memo(({ data }: { data: CalendarEvent[] }) => {
   const {
     timeScale,
     xPosition,
-    activeIdx,
+    calendarMarker,
   } = useCalendar();
 
   // @ts-ignore
@@ -63,43 +66,96 @@ const Slider: FC<any> = memo(({ data }: { data: CalendarEvent[] }) => {
 
   const isDragging = useRef<boolean>(false);
 
-  const { windowWidth, windowHeight } = useWindowSize();
-  const slideWidth = windowWidth - (SLIDER_MARGIN * 2);
-
   const [slides, setSlides] = useState<TimeMarker[]>([]);
 
-  /**
-   * Variables
-   */
+  const [timeTable, setTimeTable] = useState<any>();
 
+  const [intervalData, setIntervalData] = useState<any>();
+
+  const { windowWidth, windowHeight } = useWindowSize();
+
+  const [slideWidth, setSlideWidth] = useState<number>(400);
+  const [slideCount, setSlideCount] = useState<number>(1);
 
   /**
    * Effects
    */
-  // Set up slides based on the timeScale
   useEffect(() => {
-    if (slides.length === 0) {
-      const currentTimeMarker = getCurrentTimeMarker(timeScale, 0);
 
-      const leftTimeMarker = getTimeMarker({
-        start: getTimestamp(currentTimeMarker.start, timeScale, -1),
-        end: currentTimeMarker.start,
-        x: currentTimeMarker.x - slideWidth,
-      });
-
-      const rightTimeMarker = getTimeMarker({
-        start: currentTimeMarker.end,
-        end: getTimestamp(currentTimeMarker.end, timeScale, 1),
-        x: currentTimeMarker.x + slideWidth,
-      });
-
-      setSlides([
-        leftTimeMarker,
-        currentTimeMarker,
-        rightTimeMarker,
-      ]);
+    // 1 Slide
+    if (windowWidth < 400) {
+      setSlideCount(3);
+      const _slideWidth = (windowWidth - (4 * SLIDER_MARGIN));
+      setSlideWidth(slideWidth);
     }
-  }, []);
+    // 2 Slides
+    else if (windowWidth < 840) {
+      setSlideCount(4);
+      const _slideWidth = (windowWidth - (4 * SLIDER_MARGIN)) / 2;
+      setSlideWidth(slideWidth);
+    }
+    // 3 slides - max 1140
+    else {
+      setSlideCount(5);
+      const _slideWidth = (windowWidth - (4 * SLIDER_MARGIN)) / 3;
+      setSlideWidth(slideWidth);
+    }
+
+  }, [
+    windowWidth,
+  ]);
+
+
+  useEffect(() => {
+
+    if (!calendarMarker || !timeScale) {
+      return;
+    }
+
+    const timeRangeStart = getTimestamp(calendarMarker, timeScale, -slideCount);
+    const timeRangeEnd = getTimestamp(calendarMarker, timeScale, slideCount);
+
+    const _intervalData = getIntervalData(data, timeRangeStart, timeRangeEnd);
+    setIntervalData(_intervalData);
+
+    const _timeTable = new TimeTable();
+    _timeTable.createTable({
+      timeScale,
+      timeRangeStart,
+      timeRangeEnd
+    });
+    setTimeTable(_timeTable.timetable);
+
+  }, [
+    calendarMarker,
+    timeScale,
+    slideCount
+  ]);
+
+  // Set up slides based on the timeScale
+  // useEffect(() => {
+  //   if (slides.length === 0) {
+  //     const currentTimeMarker = getCurrentTimeMarker(timeScale, 0);
+  //
+  //     const leftTimeMarker = getTimeMarker({
+  //       start: getTimestamp(currentTimeMarker.start, timeScale, -1),
+  //       end: currentTimeMarker.start,
+  //       x: currentTimeMarker.x - slideWidth,
+  //     });
+  //
+  //     const rightTimeMarker = getTimeMarker({
+  //       start: currentTimeMarker.end,
+  //       end: getTimestamp(currentTimeMarker.end, timeScale, 1),
+  //       x: currentTimeMarker.x + slideWidth,
+  //     });
+  //
+  //     setSlides([
+  //       leftTimeMarker,
+  //       currentTimeMarker,
+  //       rightTimeMarker,
+  //     ]);
+  //   }
+  // }, []);
 
   useEffect(() => {
 
@@ -175,16 +231,8 @@ const Slider: FC<any> = memo(({ data }: { data: CalendarEvent[] }) => {
   // });
 
   function onDragContainerUpdate(e) {
-
     log("$$", onDragContainerUpdate);
-
   }
-
-  const timeTable = new TimeTable();
-
-  var tt = timeTable.initTimeTable();
-
-  debugger;
 
   /**
    * Handlers
@@ -252,20 +300,18 @@ const Slider: FC<any> = memo(({ data }: { data: CalendarEvent[] }) => {
   /**
    * Render Slides
    */
-  const renderSlides = () => {
-    if (!slides.length) {
-      return;
-    }
-    return slides.map((slide) => {
-      const slideData = getSlideData(data, slide.start, slide.end);
-      return (
-        <Slide
+  const renderTimetable = () => {
+    return (
+      checkProps(
+        <Content
+          timeTable={timeTable}
+          data={intervalData}
           timeScale={timeScale}
-          data={slideData}
-          marker={slide}
-        />
-      );
-    });
+          calendarMarker={calendarMarker}
+          slideWidth={slideWidth}
+        />,
+      )
+    );
   };
 
   /**
@@ -301,7 +347,7 @@ const Slider: FC<any> = memo(({ data }: { data: CalendarEvent[] }) => {
         //   }
         // }
       >
-        {renderSlides()}
+        {renderTimetable()}
       </animated.div>
     </div>
   );

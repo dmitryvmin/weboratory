@@ -1,6 +1,6 @@
 // Libs
 import invariant from "invariant";
-import { log } from "@utils/Logger";
+import { log } from "@dmitrymin/fe-log";
 
 // Types
 import { TLngLat } from "@common/types";

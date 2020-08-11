@@ -1,6 +1,7 @@
 import subDays from "date-fns/subDays";
 import { getRandomHEX } from "@utils/getRandomHEX";
 import { CalendarEvent } from "@components/Calendar/types";
+import { addYears, subYears } from "date-fns";
 
 // Get a random date between the start and end dates
 function getRandomDate(start, end) {
@@ -8,8 +9,8 @@ function getRandomDate(start, end) {
 };
 
 // Make a range one week back to one week forward
-const rangeStart = subDays(new Date(), -14);
-const rangeEnd = subDays(new Date(), 14);
+const rangeStart = subYears(new Date(), -1);
+const rangeEnd = addYears(new Date(), 1);
 
 function getRandomString(length: number = 15) {
   return [...Array(10)]
@@ -20,7 +21,7 @@ function getRandomString(length: number = 15) {
 // Generates an array of Date objects of length [num]
 // that fall within the [start] - [end] timeframe
 function createMockData(
-  num = 500,
+  num = 2000,
   start = rangeStart,
   end = rangeEnd,
 ): CalendarEvent[] {

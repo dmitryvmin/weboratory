@@ -17,7 +17,6 @@ import { useEvents } from "@stores/EventStore";
 
 // Components
 import { useMutationObserver } from "@utils/hooks/useMutationObserver";
-import { log } from "@utils/Logger";
 
 // Constants
 import { MENU_SIZE, PADDING_1, TIMELINE_HEIGHT } from "@common/constants";

@@ -10,11 +10,9 @@ import { TimeMarker } from "@stores/CalendarStore/types";
 function getTimeMarker({
     start,
     end,
-    x,
   }: {
     start: Date,
     end: Date,
-    x: number,
   },
 ): TimeMarker {
 
@@ -24,7 +22,6 @@ function getTimeMarker({
   return {
     start,
     end,
-    x,
   };
 }
 

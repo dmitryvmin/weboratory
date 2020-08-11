@@ -13,7 +13,6 @@ import { useMap } from "@stores/MapStore";
 
 // Utils
 import { getLngLatTuple } from "@components/Events/utils/getLngLatTuple";
-import { log } from "@utils/Logger";
 
 // Constants
 import { Mapbox } from "@components/Map/constants";

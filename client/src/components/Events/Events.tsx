@@ -20,7 +20,6 @@ import { MapMarker } from "@components/Map/components/MapMarker/MapMarker";
 import { MapSearch } from "@components/Events/Search/MapSearch";
 
 // Utils
-import { log } from "@utils/Logger";
 
 // Store
 import { useMap } from "@stores/MapStore";

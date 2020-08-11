@@ -8,7 +8,7 @@ import { getTimestamp } from "@components/Calendar/utils/getTimestamp";
 /**
  * Returns a timeMarker of [timeScale] duration starting at current time
  */
-function getCurrentTimeMarker(timeScale: TimeScaleValues, x: number) {
+function getCurrentTimeMarker(timeScale: TimeScaleValues) {
 
   invariant(timeScale, "Couldn't get getCurrentTimeMarker. The [timeScale] object is falsy:", timeScale);
 
@@ -17,7 +17,6 @@ function getCurrentTimeMarker(timeScale: TimeScaleValues, x: number) {
   const markerEnd = getTimestamp(markerStart, timeScale, 1);
 
   return ({
-    x: 0,
     start: currentTime,
     end: markerEnd,
   });

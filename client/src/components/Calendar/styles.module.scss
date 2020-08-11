@@ -20,7 +20,7 @@
   align-items: center;
   left: $size_2;
   bottom: 1px;
-  z-index: $zi2;
+  z-index: $zi4;
   height: 50px;
 
   .btn {
@@ -37,5 +37,5 @@
 
 .dragContainer {
   height: 200px;
-  width: 1px;
+  border-radius: $bradius_1;
 }

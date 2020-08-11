@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
+    "@dmitrymin/fe-log": "^1.0.1",
     "@types/googlemaps": "^3.39.11",
     "@types/styled-components": "^4.4.3"
   },

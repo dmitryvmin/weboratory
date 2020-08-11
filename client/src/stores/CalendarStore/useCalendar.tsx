@@ -3,7 +3,7 @@ import { useContext } from "react";
 
 // App
 import { CalendarContext } from "@stores/CalendarStore/CalendarContext";
-import { CalendarContextInterface, UseCalendar } from "@stores/CalendarStore/types";
+import { CalendarContextInterface, CalendarState, UseCalendar } from "@stores/CalendarStore/types";
 import { TimeScaleMap } from "@stores/CalendarStore/constants";
 
 /**
@@ -19,10 +19,10 @@ const useCalendar = (): UseCalendar => {
   /**
    * Public functions
    */
-  function setActiveIdx(idx) {
+  function setCalendarMarker(calendarMarker) {
     setState((s) => ({
       ...s,
-      setActiveIdx: idx,
+      calendarMarker,
     }));
   }
 
@@ -57,11 +57,11 @@ const useCalendar = (): UseCalendar => {
 
     const curTimeScaleIdx = TimeScaleMap.indexOf(state.timeScale);
     const newTimeScaleIdx = curTimeScaleIdx - 1;
-    const period = TimeScaleMap[newTimeScaleIdx];
+    const timeScale = TimeScaleMap[newTimeScaleIdx];
 
-    setState((s) => ({
+    setState((s): CalendarState => ({
       ...s,
-      period,
+      timeScale,
     }));
   }
 
@@ -74,11 +74,11 @@ const useCalendar = (): UseCalendar => {
 
     const curTimeScaleIdx = TimeScaleMap.indexOf(state.timeScale);
     const newTimeScaleIdx = curTimeScaleIdx + 1;
-    const period = TimeScaleMap[newTimeScaleIdx];
+    const timeScale = TimeScaleMap[newTimeScaleIdx];
 
-    setState((s) => ({
+    setState((s): CalendarState => ({
       ...s,
-      period,
+      timeScale,
     }));
   }
 
@@ -102,7 +102,7 @@ const useCalendar = (): UseCalendar => {
   return {
     isOpen: state.isOpen,
     timeScale: state.timeScale,
-    activeIdx: state.activeIdx,
+    calendarMarker: state.calendarMarker,
     xPosition: state.xPosition,
     setCalendarIsOpen,
     zoomIn,
@@ -111,7 +111,7 @@ const useCalendar = (): UseCalendar => {
     isLastPeriod,
     moveLeft,
     moveRight,
-    setActiveIdx,
+    setCalendarMarker,
   };
 };
 

@@ -8,7 +8,7 @@ export const CalendarInitState: CalendarState = {
   timeScale: "DAY",
   isOpen: true,
   xPosition: 0,
-  activeIdx: 0,
+  calendarMarker: new Date,
 };
 
 export const TimeFormatMap: TimeFormatMapInterface = {

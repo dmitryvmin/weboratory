@@ -14,7 +14,6 @@ import styles from "./styles.module.scss";
 import "highlight.js/styles/github.css";
 
 // Utils
-import { log } from "@utils/Logger";
 import { usePortal } from "@utils/hooks/usePortal";
 
 // Components

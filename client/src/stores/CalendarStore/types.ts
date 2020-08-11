@@ -16,14 +16,22 @@ export type TimeFormatMapInterface = { [arg: string]: string };
 export type TimeMarker = {
   start: Date;
   end: Date;
-  x: number;
+}
+
+export type DateMap = {
+  year: number;
+  month: number;
+  day: number;
+  hour: number;
+  minute: number;
+  // second: number;
 }
 
 export type CalendarState = {
   timeScale: TimeScaleValues;
   isOpen: boolean;
   xPosition: number;
-  activeIdx: number;
+  calendarMarker: Date;
 };
 
 export type CalendarContextInterface = [
@@ -47,7 +55,7 @@ type UseCalendarFunction = {
   isLastPeriod: any;
   moveLeft: any;
   moveRight: any;
-  setActiveIdx: any;
+  setCalendarMarker: any;
 }
 
 export type UseCalendar = CalendarState & UseCalendarFunction;

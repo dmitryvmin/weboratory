@@ -1,8 +1,6 @@
-import { log } from "@utils/Logger";
-
 /**
  * Checks whether Map component children types have changed
- * to determine whether the Map component should rerender
+ * to determine if the Map component should rerender
  */
 const haveMapChildrenChanged = (
   nextChildren: any,

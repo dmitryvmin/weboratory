@@ -1,4 +1,4 @@
-export const SLIDER_MARGIN = 20;
+export const SLIDER_MARGIN = 10;
 
 export const DRAG_STATUS = {
   NONE: "none",

@@ -1,5 +1,5 @@
 // Libs
-import { isWithinInterval } from "date-fns";
+import { getDay, isWithinInterval } from "date-fns";
 import invariant from "invariant";
 
 // App
@@ -8,7 +8,7 @@ import { CalendarEvent } from "@components/Calendar/types";
 /**
  * Returns event data that falls within the [start] - [end] range
  */
-function getSlideData(
+function getIntervalData(
   data: CalendarEvent[],
   start: Date,
   end: Date,
@@ -21,4 +21,4 @@ function getSlideData(
   return data.filter((date) => isWithinInterval(date.time, { start, end }));
 }
 
-export {getSlideData};
+export {getIntervalData};

@@ -36,7 +36,7 @@ function getSegmentsForTimeScale(
   }
 
   // Offset array by 1 so iteration begins on 1
-  return [...Array(segmentCount + 1).keys()]
+  return [...Array(segmentCount).keys()]
     // Convert each number to a string
     .map((s) => s.toString())
     // Remove the leading 0

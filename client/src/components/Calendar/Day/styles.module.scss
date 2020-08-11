@@ -1,0 +1,18 @@
+@import "../../../styles/sizes";
+@import "../../../styles/zIndex";
+@import "../../../styles/radius";
+@import "../../../styles/colors";
+
+.segmentDay {
+  opacity: 1;
+}
+
+.isAbsolute {
+  position: absolute;
+}
+
+.segmentLabel {
+  user-select: none;
+  font-weight: 600;
+  color: $color-neutral-200;
+}

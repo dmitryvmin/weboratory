@@ -1,11 +1,11 @@
 // Libs
 import { useContext, MouseEvent } from "react";
+import { log } from "@dmitrymin/fe-log";
 import invariant from "invariant";
 
 // Store
 import { ActiveEvent, IEventsContext, IEventsState, IUseEvents } from "./types";
 import { EventsContext } from "./EventsContext";
-import { log } from "@utils/Logger";
 import { history } from "../../router";
 import { TEventModal } from "@components/Events/EventModal/types";
 import { useMap } from "@stores/MapStore";
@@ -224,7 +224,7 @@ const useEvents = (): IUseEvents => {
     setIsEventOpen(true);
   };
 
-  log({ labelAs: "Events state" }, state);
+  // log({ labelAs: "Events state" }, state);
 
   /**
    * Return memoized events state and public utilities

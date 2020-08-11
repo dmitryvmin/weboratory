@@ -1,6 +1,5 @@
 // Types
 import { TCoords, TLngLat } from "@common/types";
-import { log } from "@utils/Logger";
 
 /**
  * Compares coordinate props to determine whether Map should rerender
