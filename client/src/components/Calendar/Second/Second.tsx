@@ -21,7 +21,11 @@ import { motion } from "framer-motion";
 /**
  *
  */
-const EventBlob: FC<MyComponentProps> = ({ content, timeScale }) => {
+const EventBlob: FC<MyComponentProps> = ({
+  date,
+  content,
+  timeScale,
+}) => {
 
   /**
    * =============== Hooks ===============
@@ -70,38 +74,6 @@ const EventBlob: FC<MyComponentProps> = ({ content, timeScale }) => {
   /**
    * =============== JSX ===============
    */
-
-  const EventBlob = ({events}) => {
-    return (
-      <div style={getStyles()}>
-        {content && content.map((event: CalendarEvent, idx: number) => {
-          return (
-            <div
-              key={`event-${idx}`}
-              className={classNames.eventContainer}
-              style={{
-                // gridTemplateColumns: `repeat(${segmentColumns}, ${segmentWidth})`,
-                // gridRowStart: idx + 1,
-              }}
-            >
-              <motion.div
-                className={classNames.eventMarker}
-                style={{
-                  backgroundColor: event.color,
-                }}
-              >
-                <div className={classNames.eventTitle}>
-                  Title
-                </div>
-                {/*{format(event.time, "dd-mm:hh")}*/}
-              </motion.div>
-            </div>
-          );
-        })}
-      </div>
-    );
-  };
-
   const renderSeconds = () => {
     return Object.keys(content).map((minute, idx) => {
       const events = content[minute];
