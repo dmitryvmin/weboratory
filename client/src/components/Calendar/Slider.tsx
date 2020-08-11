@@ -11,7 +11,7 @@ import { useSpring, animated } from "react-spring";
 import { useGesture } from "react-use-gesture";
 import invariant from "invariant";
 import { log } from "@dmitrymin/fe-log";
-import { getDay, getDaysInMonth, getHours, getMinutes, getMonth, getYear } from "date-fns";
+import { format, getDay, getDaysInMonth, getHours, getMinutes, getMonth, getYear } from "date-fns";
 
 // Utils
 import { useWindowSize } from "@utils/hooks/useWindowSize";
@@ -40,6 +40,7 @@ import { TimeTable } from "@components/Calendar/utils/TimeTable";
 import { Content } from "@components/Calendar/Content";
 import { getIntervalData } from "@components/Calendar/utils/getIntervalData";
 import { checkProps } from "@utils/react/checkProps";
+import { Text } from "@components/UI/Text";
 
 /**
  * Slider

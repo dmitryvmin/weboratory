@@ -4,7 +4,8 @@ import { motion, AnimatePresence } from "framer-motion";
 
 // Utils
 
-// Components
+// UI
+import {Text} from "@components/UI/Text";
 
 // Store
 
@@ -20,6 +21,7 @@ import { SLIDER_MARGIN } from "@components/Calendar/constants";
 import { format } from "date-fns";
 import { TimeFormatMap } from "@stores/CalendarStore";
 import { start } from "repl";
+import { getDateFromMap } from "@components/Calendar/utils/getDateFromMap";
 
 /**
  *
@@ -91,14 +93,15 @@ const Day: FC<MyComponentProps> = ({
   /**
    * Render Component
    */
-  debugger;
   return (
     <motion.div
       style={getStyles()}
       className={className}
     >
-      <div className={classNames.slideLabel}>
-        {format(getDateFromMap(date), "E co LLL")}
+      <div className={classNames.segmentLabel}>
+        <Text style="label1">
+          {format(getDateFromMap(date), "EEE, eo")}
+        </Text>
       </div>
       {Object.keys(content).map((hour, idx) => {
         const hourContent = content[hour];

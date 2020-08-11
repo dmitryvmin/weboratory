@@ -10,15 +10,14 @@ import { TextProps } from "@components/UI/Text/types";
 const Text: FC<TextProps> = ({
   children,
   style = "p1",
-  brightness = "dark",
+  brightness,
 }) => {
 
   const getStyles = () => {
     return ([
       classNames[style],
-      (brightness === "dark")
-        ? classNames.colorDark
-        : classNames.colorLight,
+      (brightness === "dark") ?? classNames.colorDark,
+      (brightness === "dark") ?? classNames.colorLight,
     ].join(" "));
   };
 

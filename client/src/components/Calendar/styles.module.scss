@@ -1,6 +1,7 @@
 @import "../../styles/sizes";
 @import "../../styles/zIndex";
 @import "../../styles/radius";
+@import "../../styles/colors";
 
 .calendarContainer {
   position: absolute;
@@ -38,4 +39,17 @@
 .dragContainer {
   height: 200px;
   border-radius: $bradius_1;
+}
+
+.calendarLabel {
+  position: absolute;
+  -webkit-user-select: none;
+  user-select: none;
+  font-weight: 600;
+  background-color: #ffffff;
+  padding: 2px 5px;
+  margin: 2px;
+  border-radius: 2px;
+  bottom: 288px;
+  left: 18px;
 }

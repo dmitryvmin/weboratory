@@ -21,7 +21,7 @@ import { Month } from "@components/Calendar/Month";
  *
  */
 const Year: FC<MyComponentProps> = ({
-  year,
+  date,
   content,
   timeScale,
   slideWidth,
@@ -92,7 +92,7 @@ const Year: FC<MyComponentProps> = ({
         return (
           <Month
             date={{
-              ...year,
+              ...date,
               month,
             }}
             key={`month-${idx}`}

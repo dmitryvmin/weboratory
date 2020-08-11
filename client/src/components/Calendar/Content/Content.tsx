@@ -16,6 +16,8 @@ import { CalendarEvent } from "@components/Calendar/types";
 import { motion } from "framer-motion";
 import { Day } from "@components/Calendar/Day";
 import { Year } from "@components/Calendar/Year";
+import { Text } from "@components/UI/Text";
+import { getDateFromMap } from "@components/Calendar/utils/getDateFromMap";
 
 // Types
 

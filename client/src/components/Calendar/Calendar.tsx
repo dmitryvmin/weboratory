@@ -15,18 +15,26 @@ import { useCalendar } from "@stores/CalendarStore";
 // Types
 import { TCalendarProps } from "./types";
 import { CalendarMenu } from "@components/Calendar/CalendarMenu";
+import classNames from "@components/Calendar/styles.module.scss";
+import { Text } from "@components/UI/Text";
+import { format } from "date-fns";
 
 /**
  * Calendar
  */
 const Calendar: FC<TCalendarProps> = ({data}) => {
 
-  const { isOpen } = useCalendar();
+  const { isOpen, calendarMarker } = useCalendar();
 
   return (
-    <AnimatePresence initial={false}>
+    <AnimatePresence>
       {isOpen && (
         <>
+          <div className={classNames.calendarLabel}>
+            <Text style="label2">
+              {format(calendarMarker, "EEE, eo")}
+            </Text>
+          </div>
           <motion.div
             className={styles.calendarContainer}
             initial={{ opacity: 0, y: 200 }}
