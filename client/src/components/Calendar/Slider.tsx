@@ -125,7 +125,7 @@ const Slider: FC<any> = memo(({ data }: { data: CalendarEvent[] }) => {
 
     const _intervalData = getIntervalData(data, timeRangeStart, timeRangeEnd);
     setIntervalData(_intervalData);
-
+debugger;
     const _timeTable = new TimeTable();
     _timeTable.createTable({
       timeScale,

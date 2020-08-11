@@ -2,7 +2,7 @@
 import {
   addDays,
   addHours,
-  addMinutes,
+  addMinutes, addMonths,
   addWeeks,
   addYears, subDays, subHours, subMinutes, subMonths, subYears,
 } from "date-fns";
@@ -39,7 +39,7 @@ function getTimestamp(
         : subDays(start, Math.abs(numOf));
     case "MONTH":
       return (numOf > 0)
-        ? addHours(start, numOf)
+        ? addMonths(start, numOf)
         : subMonths(start, Math.abs(numOf));
     case "YEAR":
       return (numOf > 0)

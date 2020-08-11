@@ -15,8 +15,8 @@ import * as send from "koa-send";
 // App
 import { userAgentHandler } from "../middleware/userAgent.middleware";
 import { errorHandler } from "../middleware/error.middleware";
-import { applyApiMiddleware } from "../api";
 import { config } from "../config";
+import { applyAPIMiddleware } from "../api";
 
 // Constants
 const { isProduction } = config.serverConfig;
@@ -79,7 +79,7 @@ function initKoa() {
   // }
 
   /** API */
-  applyApiMiddleware(serverApp);
+  applyAPIMiddleware(serverApp);
 
   return serverApp;
 }

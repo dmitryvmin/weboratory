@@ -18,7 +18,11 @@ function getIntervalData(
   invariant(start, "Couldn't get slide data. The interval [start] is falsy:", start);
   invariant(end, "Couldn't get slide data. The interval [end] is falsy:", end);
 
-  return data.filter((date) => isWithinInterval(date.time, { start, end }));
+  const intervalDate = data.filter((date) => {
+    return isWithinInterval(date.time, { start, end });
+  });
+
+  return intervalDate;
 }
 
 export {getIntervalData};

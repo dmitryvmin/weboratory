@@ -9,7 +9,7 @@ function getRandomDate(start, end) {
 };
 
 // Make a range one week back to one week forward
-const rangeStart = subYears(new Date(), -1);
+const rangeStart = subYears(new Date(), 1);
 const rangeEnd = addYears(new Date(), 1);
 
 function getRandomString(length: number = 15) {
@@ -39,7 +39,10 @@ function createMockData(
       color,
     });
   }
-
+  var a = getRandomDate;
+  var b = getRandomString;
+  var c = getRandomHEX;
+  debugger;
   return events;
 };
 
