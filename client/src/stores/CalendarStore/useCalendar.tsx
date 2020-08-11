@@ -3,8 +3,9 @@ import { useContext } from "react";
 
 // App
 import { CalendarContext } from "@stores/CalendarStore/CalendarContext";
-import { CalendarContextInterface, CalendarState, UseCalendar } from "@stores/CalendarStore/types";
+import { CalendarContextInterface, CalendarState, TimeScaleValues, UseCalendar } from "@stores/CalendarStore/types";
 import { TimeScaleMap } from "@stores/CalendarStore/constants";
+import { getTimeScaleFrom } from "@stores/CalendarStore/utils/getTimeScaleFrom";
 
 /**
  * Calendar Context Facade
@@ -55,9 +56,7 @@ const useCalendar = (): UseCalendar => {
       return;
     }
 
-    const curTimeScaleIdx = TimeScaleMap.indexOf(state.timeScale);
-    const newTimeScaleIdx = curTimeScaleIdx - 1;
-    const timeScale = TimeScaleMap[newTimeScaleIdx];
+    const timeScale = getTimeScaleFrom(state.timeScale, -1);
 
     setState((s): CalendarState => ({
       ...s,
@@ -72,9 +71,7 @@ const useCalendar = (): UseCalendar => {
       return;
     }
 
-    const curTimeScaleIdx = TimeScaleMap.indexOf(state.timeScale);
-    const newTimeScaleIdx = curTimeScaleIdx + 1;
-    const timeScale = TimeScaleMap[newTimeScaleIdx];
+    const timeScale = getTimeScaleFrom(state.timeScale, 1);
 
     setState((s): CalendarState => ({
       ...s,

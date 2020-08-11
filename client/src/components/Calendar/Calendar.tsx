@@ -37,7 +37,7 @@ const Calendar: FC<TCalendarProps> = ({data}) => {
           {/*</div>*/}
           <motion.div
             className={styles.calendarContainer}
-            initial={{ opacity: 0, y: 200 }}
+            initial={{ opacity: 0 }}
             animate={{ opacity: 1, y: 0, transition: { duration: 0.5 } }}
             exit={{ opacity: 0, y: 200, transition: { duration: 0.5 } }}
           >
@@ -45,7 +45,7 @@ const Calendar: FC<TCalendarProps> = ({data}) => {
           </motion.div>
           <motion.div
             className={styles.calendarMenuContainer}
-            initial={{ opacity: 0, y: 50 }}
+            initial={{ opacity: 0 }}
             animate={{ opacity: 1, y: 0, transition: { duration: 0.5 } }}
             exit={{ opacity: 0, y: 50, transition: { duration: 0.5 } }}
           >
