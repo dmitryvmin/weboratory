@@ -1,7 +1,5 @@
 // Libs
 import React, { FC, useEffect } from "react";
-import IosAdd from "react-ionicons/lib/IosAdd";
-import IosRemove from "react-ionicons/lib/IosRemove";
 
 // Style
 import classNames from "./styles.module.scss";

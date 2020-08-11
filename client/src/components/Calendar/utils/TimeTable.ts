@@ -11,6 +11,7 @@ import { TimeScaleValues } from "@stores/CalendarStore/types";
 import { getMapFromDate } from "@components/Calendar/utils/getMapFromDate";
 import { getDateFromMap } from "@components/Calendar/utils/getDateFromMap";
 import { getBaseDate } from "@components/Calendar/utils/getBaseDate";
+import { getIntervalData } from "@components/Calendar/utils/getIntervalData";
 
 type TimeTableType = {
   [year: number]: {
@@ -57,7 +58,7 @@ class TimeTable {
     }
 
     // Fill Timetable with data
-    // const intervalData = getIntervalData(data, ttStart, ttEnd);
+    // const intervalData = getIntervalData(timeScale, startBase, endBase);
     // this.addEventsToTimetable(intervalData);
   }
 

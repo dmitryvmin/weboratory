@@ -9,6 +9,8 @@ export const CalendarInitState: CalendarState = {
   isOpen: true,
   xPosition: 0,
   calendarMarker: new Date,
+  intervalData: undefined,
+  // sliderRef: null,
 };
 
 export const TimeFormatMap: TimeFormatMapInterface = {

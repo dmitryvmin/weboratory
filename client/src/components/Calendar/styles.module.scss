@@ -13,25 +13,20 @@
   border: 1px solid white;
   border-radius: $bradius_1;
   overflow: hidden;
+
+  > div {
+    cursor: grab;
+  }
 }
 
 .calendarMenuContainer {
   position: absolute;
   display: flex;
   align-items: center;
-  left: $size_2;
+  right: $size_2;
   bottom: 1px;
   z-index: $zi4;
   height: 50px;
-
-  .btn {
-    margin: $size_1 $size_1 $size_1 0;
-    cursor: pointer;
-  }
-
-  .btnDisabled {
-    cursor: none;
-  }
 }
 
 .sliderContainer {}

@@ -8,11 +8,13 @@ import { createTagMapRouter } from "./tagmap";
 import { createTagsRouter } from "./tags";
 import { createEventsRouter } from "./events";
 import { iniGraphQlServer } from "../graphql";
+import { createPhotosRouter } from "./photos";
+import { initAuth } from "../auth";
 
 // Constants
 const { apiVersion } = config.serverConfig.server;
 
-function applyApiMiddleware(app) {
+function applyAPIMiddleware(app) {
 
   const prefix = `/api/${apiVersion}`;
   const router = new Router({});
@@ -22,6 +24,7 @@ function applyApiMiddleware(app) {
     createTagMapRouter,
     createTagsRouter,
     createEventsRouter,
+    createPhotosRouter,
   ].forEach((createRouter) => {
     const api = createRouter(Router, prefix);
     router.use(api.routes());
@@ -32,6 +35,7 @@ function applyApiMiddleware(app) {
     .use(router.allowedMethods());
 
   iniGraphQlServer(app, router);
+  initAuth(app, router);
 }
 
-export { applyApiMiddleware };
+export { applyAPIMiddleware };

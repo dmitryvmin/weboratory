@@ -1,37 +1,66 @@
-import { CalendarEvent } from "@components/Calendar/types";
-import classNames from "@components/Calendar/EventBlob/styles.module.scss";
-import { motion } from "framer-motion";
-import React from "react";
+// Libs
+import React, { CSSProperties } from "react";
+import { createPortal } from "react-dom";
 
-const EventBlob = () => {
-  return(
+import { CalendarEvent } from "@components/Calendar/types";
+import classNames from "@components/Calendar/Second/styles.module.scss";
+import { motion } from "framer-motion";
+import { Dot } from "@components/Calendar/EventDots/Dot";
+import { useCalendar } from "@stores/CalendarStore";
+
+/**
+ * Component hooks
+ */
+const EventDots = ({ date }) => {
+debugger;
+  /**
+   * Context hooks
+   */
+  const {
+    timeScale,
+    intervalData,
+  } = useCalendar();
+
+  /**
+   * Variables
+   */
+  const className = "";
+  const segmentColumns = "60";
+
+  // gridTemplateColumns: `repeat(${segmentColumns}, ${100}px)`,
+
+  const getStyles = (): CSSProperties => {
+    switch (timeScale) {
+      case "MINUTE":
+        return ({});
+      case "HOUR":
+        return ({});
+      case "DAY":
+        return ({});
+      case "MONTH":
+        return ({});
+      case "YEAR":
+        return ({});
+      default:
+        return ({
+          gridTemplateColumns: `repeat(${segmentColumns}, ${1}px)`,
+        });
+    }
+  };
+debugger;
+  return (
     <div style={getStyles()}>
-      {content && content.map((event: CalendarEvent, idx: number) => {
+      {intervalData && intervalData.map((event: CalendarEvent, idx: number) => {
+        debugger;
         return (
-          <div
-            key={`event-${event.time}-${event.title}`}
-            className={classNames.eventContainer}
-            style={{
-              // gridTemplateColumns: `repeat(${segmentColumns}, ${segmentWidth})`,
-              // gridRowStart: idx + 1,
-            }}
-          >
-            <motion.div
-              className={classNames.eventMarker}
-              style={{
-                backgroundColor: event.color,
-              }}
-            >
-              <div className={classNames.eventTitle}>
-                Title
-              </div>
-              {/*{format(event.time, "dd-mm:hh")}*/}
-            </motion.div>
-          </div>
-        );
+            <Dot
+              key={`event-${event.time}-${event.title}`}
+              event={event}
+            />
+          )
       })}
     </div>
-  )
-}
+  );
+};
 
-export {EventBlob};
+export { EventDots };

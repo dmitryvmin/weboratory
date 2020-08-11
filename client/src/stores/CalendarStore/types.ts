@@ -4,6 +4,7 @@ import { Dispatch, ReactNode, SetStateAction } from "react";
 // App
 import { ValueOf } from "@utils/TS";
 import { TimeScaleMap } from "@stores/CalendarStore/constants";
+import { CalendarEvent } from "@components/Calendar/types";
 
 // export type TimeScaleEnumKeys = keyof typeof TimeScaleEnum;
 // export type TimeScaleEnumValues = ValueOf<typeof TimeScaleEnum>;
@@ -32,6 +33,8 @@ export type CalendarState = {
   isOpen: boolean;
   xPosition: number;
   calendarMarker: Date;
+  intervalData: CalendarEvent[] | undefined;
+  // sliderRef: HTMLDivElement | null;
 };
 
 export type CalendarContextInterface = [
@@ -56,6 +59,8 @@ type UseCalendarFunction = {
   moveLeft: any;
   moveRight: any;
   setCalendarMarker: any;
+  setIntervalData: any;
+  // setSliderRef: any;
 }
 
 export type UseCalendar = CalendarState & UseCalendarFunction;

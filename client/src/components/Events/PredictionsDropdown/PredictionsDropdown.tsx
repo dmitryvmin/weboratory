@@ -1,8 +1,6 @@
 // Libs
 import React, { FC, useEffect, useRef, MouseEvent } from "react";
 import { motion, Variants } from "framer-motion";
-import MdAdd from "react-ionicons/lib/MdAdd";
-import invariant from "invariant";
 
 // Styles
 import styles from "./styles.module.scss";

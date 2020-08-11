@@ -2,13 +2,15 @@
 import React from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
-import IosContact from "react-ionicons/lib/IosContact";
+
+// Components
+import {User} from "@components/UI/Icon";
 
 // Utils
 import { useAuth0 } from "../../../utils/hooks/useAuth0";
 
 // Styles
-import styles from "./styles.module.scss";
+import classnames from "./styles.module.scss";
 import { Button } from "@components/UI/Button";
 import { useWindowSize } from "@utils/hooks/useWindowSize";
 import { NavigationMenu } from "@components/Navigation/NavigationMenu";
@@ -39,7 +41,7 @@ const items: INavItem[] = [
   // { icon: null, to: "/projects", label: "Projects" },
   { icon: null, to: "/events", label: "Events" },
   {
-    icon: <IosContact />,
+    icon: <User />,
     to: "/profile",
     label: "Profile",
   },
@@ -52,9 +54,9 @@ const Nav = () => {
 
   const renderDesktop = () => {
     return (
-      <div className={styles.navigationContainer}>
+      <div className={classnames.navigationContainer}>
         <motion.div
-          className={styles.desktopNav}
+          className={classnames.desktopNav}
           // animate={location.pathname.includes("/posts/") ? "closed" : "open"}
         >
           {/*{isAuthenticated &&*/}
@@ -69,9 +71,21 @@ const Nav = () => {
             );
           })}
           {!isAuthenticated && (
-            <Button onClick={() => loginWithPopup({})}>Log in</Button>
+            <Button
+              className={classnames.logInBtn}
+              onClick={() => loginWithPopup({})}
+            >
+              Log in
+            </Button>
           )}
-          {isAuthenticated && <Button onClick={() => logout()}>Log out</Button>}
+          {isAuthenticated &&
+          <Button
+            className={classnames.logInBtn}
+            onClick={() => logout()}
+          >
+            Log out
+          </Button>
+          }
         </motion.div>
       </div>
     );

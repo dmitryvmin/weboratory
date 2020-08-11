@@ -1,8 +1,6 @@
 // Libs
 import React, { FC, useRef, ChangeEvent, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import IosClose from "react-ionicons/lib/IosClose";
-import MdAdd from "react-ionicons/lib/MdAdd";
 
 // Utils
 import { useWindowSize } from "@utils/hooks/useWindowSize";
@@ -17,6 +15,7 @@ import { useEvents } from "@stores/EventStore";
 
 // Components
 import { useMutationObserver } from "@utils/hooks/useMutationObserver";
+import { Close, Plus } from "@components/UI/Icon";
 
 // Constants
 import { MENU_SIZE, PADDING_1, TIMELINE_HEIGHT } from "@common/constants";
@@ -256,7 +255,7 @@ const MapSearch: FC<any> = ({ menuNode }) => {
           variants={buttonVariants}
           className={classNames.addBtn}
         >
-          <MdAdd/>
+          <Plus/>
         </motion.div>
         <motion.input
           ref={inputRef}
@@ -270,7 +269,7 @@ const MapSearch: FC<any> = ({ menuNode }) => {
           variants={inputVariants}
           onClick={closeSearch}
         >
-          <IosClose
+          <Close
             fontSize="40"
             className={classNames.closeBtn}
           />

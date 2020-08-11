@@ -4,6 +4,8 @@ type TextStyle =
   | "util1"
   | "header1"
   | "p1"
+  | "p2"
+  | "p3"
   | "label1"
   | "label2"
   ;

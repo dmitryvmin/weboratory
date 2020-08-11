@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
-    "@dmitrymin/fe-log": "^1.0.1",
+    "@svgr/cli": "^5.4.0",
     "@types/googlemaps": "^3.39.11",
     "@types/styled-components": "^4.4.3"
   },
@@ -12,6 +12,7 @@
     "@auth0/auth0-react": "^1.0.0",
     "@auth0/auth0-spa-js": "^1.8.1",
     "@craco/craco": "^5.6.4",
+    "@dmitrymin/fe-log": "^1.0.1",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
@@ -37,7 +38,6 @@
     "react": "^16.13.0",
     "react-dependent-script": "^1.1.2",
     "react-dom": "^16.13.0",
-    "react-ionicons": "^3.1.4",
     "react-mapbox-gl": "^4.8.6",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.0",
@@ -51,7 +51,8 @@
     "build": "craco build",
     "test": "craco test",
     "eject": "react-scripts eject",
-    "clean": "rm -rf package-lock.json ./node_modules"
+    "clean": "rm -rf package-lock.json ./node_modules",
+    "svgr": "svgr -d src/icons/ assets/"
   },
   "husky": {
     "hooks": {

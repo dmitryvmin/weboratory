@@ -1,7 +1,7 @@
 // Libs
 import React, { FC, useRef } from "react";
 import { motion, motionValue, useAnimation, useMotionValue } from "framer-motion";
-import IosMove from "react-ionicons/lib/IosMove";
+import { Move } from "@components/UI/Icon";
 
 // Styles
 import styles from "./styles.module.scss";
@@ -155,7 +155,7 @@ const Timeline: FC<ITimeline> = () => {
         // onDragEnd={handleDragEnd}
         onClick={() => setIsMenuOpenTo(!isMenuOpen)}
       >
-        <IosMove fontSize="40"/>
+        <Move fontSize="40"/>
       </motion.div>
     </motion.div>
   );

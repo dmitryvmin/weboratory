@@ -1,9 +1,9 @@
 // Libs
 import React, { FC, useRef, ChangeEvent, useEffect } from "react";
 import { AnimatePresence, motion, useAnimation } from "framer-motion";
-import MdAdd from "react-ionicons/lib/MdAdd";
-import MdPerson from "react-ionicons/lib/MdPerson";
-import IosSearchOutline from "react-ionicons/lib/IosSearchOutline";
+
+// Components
+import { Search, Plus, User } from "@components/UI/Icon";
 
 // Utils
 import { useWindowSize } from "@utils/hooks/useWindowSize";
@@ -99,21 +99,21 @@ const EventsMenu: FC<any> = ({menuRefs}) => {
   const menuItems = [
     {
       label: "Create",
-      icon: <MdAdd/>,
+      icon: <Plus/>,
       position: { x: -70, y: -40 },
       onClick: () => startNewEvent(),
       ref: menuRef1,
     },
     {
       label: "Explore",
-      icon: <IosSearchOutline/>,
+      icon: <Search/>,
       position: { x: 0, y: -80 },
       onClick: () => setIsSearchOpen(true),
       ref: menuRef2,
     },
     {
       label: "Manage",
-      icon: <MdPerson/>,
+      icon: <User/>,
       position: { x: 70, y: -40 },
     },
   ];
@@ -149,7 +149,7 @@ const EventsMenu: FC<any> = ({menuRefs}) => {
   };
 
   const getMenuIcon = () => {
-    return <MdAdd/>;
+    return <Plus/>;
   };
 
   const styles = {

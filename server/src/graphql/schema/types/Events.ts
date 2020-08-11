@@ -9,9 +9,9 @@ const {
 } = require("graphql");
 
 // App
-import { queryUpdateEvent } from "../../../../api/events/services/queryUpdateEvent";
-import { queryCreateEvent } from "../../../../api/events/services/queryCreateEvent";
-import { queryEventsByVisibility } from "../../../../api/events/services/queryEventsByVisibility";
+import { queryUpdateEvent } from "../../../api/events/services/queryUpdateEvent";
+import { queryCreateEvent } from "../../../api/events/services/queryCreateEvent";
+import { queryEventsByVisibility } from "../../../api/events/services/queryEventsByVisibility";
 
 const Coordinates = new GraphQLInputObjectType({
   name: "Coordinates",

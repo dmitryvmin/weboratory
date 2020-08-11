@@ -21,7 +21,7 @@ server/npm-debug.log*
 pids
 *.seed
 
-# dotenv environment variables file
+# Environment variables files
 .env
 client/.env
 server/.env

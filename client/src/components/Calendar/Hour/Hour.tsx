@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 // Utils
 
 // Components
+import { Second } from "@components/Calendar/Second";
 
 // Store
 
@@ -15,14 +16,12 @@ import classNames from "./styles.module.scss";
 
 // Types
 import { MyComponentProps } from "./types";
-import { EventBlob } from "@components/Calendar/EventBlob";
-import { Day } from "@components/Calendar/Day";
-import { SLIDER_MARGIN } from "@components/Calendar/constants";
 
 /**
  *
  */
 const Hour:FC<MyComponentProps> = ({
+  date,
   content,
   timeScale,
   slideWidth,
@@ -83,8 +82,12 @@ const Hour:FC<MyComponentProps> = ({
       {Object.keys(content).map((minute, idx) => {
         const minuteContent = content[minute];
         return (
-          <EventBlob
+          <Second
             key={`minute-${idx}`}
+            date={{
+              ...date,
+              minute,
+            }}
             content={minuteContent}
             timeScale={timeScale}
           />

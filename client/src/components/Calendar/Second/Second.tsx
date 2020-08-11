@@ -8,20 +8,18 @@ import React, { CSSProperties, FC } from "react";
 // Store
 
 // Constants
+import { EventDots } from "@components/Calendar/EventDots/EventDots";
 
 // Styles
 import classNames from "./styles.module.scss";
 
 // Types
 import { MyComponentProps } from "./types";
-import { Hour } from "@components/Calendar/Hour";
-import { CalendarEvent } from "@components/Calendar/types";
-import { motion } from "framer-motion";
 
 /**
  *
  */
-const EventBlob: FC<MyComponentProps> = ({
+const Second: FC<MyComponentProps> = ({
   date,
   content,
   timeScale,
@@ -35,34 +33,6 @@ const EventBlob: FC<MyComponentProps> = ({
    * Component hooks
    */
 
-
-  /**
-   * Variables
-   */
-  const className = "";
-  const segmentColumns = "60";
-
-  // gridTemplateColumns: `repeat(${segmentColumns}, ${100}px)`,
-
-  const getStyles = (): CSSProperties => {
-    switch (timeScale) {
-      case "MINUTE":
-        return ({});
-      case "HOUR":
-        return ({});
-      case "DAY":
-        return ({});
-      case "MONTH":
-        return ({});
-      case "YEAR":
-        return ({});
-      default:
-        return ({
-          gridTemplateColumns: `repeat(${segmentColumns}, ${1}px)`,
-        });
-    }
-  };
-
   /**
    * Utils
    */
@@ -72,29 +42,38 @@ const EventBlob: FC<MyComponentProps> = ({
    */
 
   /**
-   * =============== JSX ===============
+   * Render fns
    */
   const renderSeconds = () => {
     return Object.keys(content).map((minute, idx) => {
-      const events = content[minute];
+      const second = content[minute];
+      // const event = content[minute];
       return (
-        <EventBlob
-          key={`hour-${idx}`}
-          events={events}
+        <EventDots
+          key={`second-${idx}`}
+          // event={event}
+          date={{
+            ...date,
+            second,
+          }}
         />
       );
     });
   };
+
+
   /**
-   * Render Component
+   * =============== JSX ===============
    */
+
   return (
     <>
-      {}
+      {renderSeconds()}
     </>
   );
+
 };
 
-EventBlob.displayName = "EventBlob";
+Second.displayName = "Second";
 
-export { EventBlob };
+export { Second };

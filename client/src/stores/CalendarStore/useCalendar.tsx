@@ -83,16 +83,30 @@ const useCalendar = (): UseCalendar => {
   }
 
   function moveLeft(xPosition: number) {
-    setState((s) => ({
+    setState((s): CalendarState => ({
       ...s,
       xPosition,
     }));
   }
 
   function moveRight(xPosition: number) {
-    setState((s) => ({
+    setState((s): CalendarState => ({
       ...s,
       xPosition,
+    }));
+  }
+
+  // function setSliderRef(sliderRef) {
+  //   setState((s): CalendarState => ({
+  //     ...s,
+  //     sliderRef,
+  //   }));
+  // }
+
+  function setIntervalData(intervalData) {
+    setState((s): CalendarState => ({
+      ...s,
+      intervalData,
     }));
   }
 
@@ -104,6 +118,8 @@ const useCalendar = (): UseCalendar => {
     timeScale: state.timeScale,
     calendarMarker: state.calendarMarker,
     xPosition: state.xPosition,
+    intervalData: state.intervalData,
+    // sliderRef: state.sliderRef,
     setCalendarIsOpen,
     zoomIn,
     zoomOut,
@@ -112,6 +128,8 @@ const useCalendar = (): UseCalendar => {
     moveLeft,
     moveRight,
     setCalendarMarker,
+    setIntervalData,
+    // setSliderRef,
   };
 };
 

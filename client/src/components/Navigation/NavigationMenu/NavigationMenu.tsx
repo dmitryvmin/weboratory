@@ -2,7 +2,9 @@
 import React, { FC, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { NavLink } from "react-router-dom";
-import IosMenu from "react-ionicons/lib/IosMenu";
+
+// Components
+import {Menu} from "@components/UI/Icon";
 
 // App
 import { INavItem } from "@components/Navigation/Nav/Nav";
@@ -85,7 +87,7 @@ const MenuButton = ({ isOpen, toggleMenu }) => {
       initial="open"
       animate={isOpen ? "open" : "closed"}
     >
-      <IosMenu onClick={() => toggleMenu()}/>
+      <Menu onClick={() => toggleMenu()}/>
     </motion.div>
   );
 };

@@ -54,6 +54,8 @@ const Slider: FC<any> = memo(({ data }: { data: CalendarEvent[] }) => {
     timeScale,
     xPosition,
     calendarMarker,
+    intervalData,
+    setIntervalData,
   } = useCalendar();
 
   // @ts-ignore
@@ -71,12 +73,17 @@ const Slider: FC<any> = memo(({ data }: { data: CalendarEvent[] }) => {
 
   const [timeTable, setTimeTable] = useState<any>();
 
-  const [intervalData, setIntervalData] = useState<any>();
-
   const { windowWidth, windowHeight } = useWindowSize();
 
   const [slideWidth, setSlideWidth] = useState<number>(400);
+
   const [slideCount, setSlideCount] = useState<number>(1);
+
+  const sliderRef = (node: HTMLDivElement) => {
+    if (node === null) {
+      return;
+    }
+  };
 
   /**
    * Effects
@@ -322,6 +329,7 @@ const Slider: FC<any> = memo(({ data }: { data: CalendarEvent[] }) => {
     <div
       className={classNames.sliderContainer}
       {...dragBind()}
+      ref={sliderRef}
       // onDragStart={handleDragStart}
       // onDragEnd={handleDragEnd}
       // onDrag={handleDrag}

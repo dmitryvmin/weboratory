@@ -13,9 +13,8 @@ import * as path from "path";
 // App
 import { userAgentHandler } from "../middleware/userAgent.middleware";
 import { errorHandler } from "../middleware/error.middleware";
-import { applyApiMiddleware } from "../api";
+import { applyAPIMiddleware } from "../api";
 import { config } from "../config";
-import { iniGraphQlServer } from "../graphql";
 
 // Constants
 const { isProduction } = config.serverConfig;
@@ -25,7 +24,7 @@ function initKoa() {
   const serverApp = new Koa();
 
   /**
-   * Koa Middleware
+   * Middleware
    */
   serverApp
     .use(errorHandler)
@@ -37,16 +36,12 @@ function initKoa() {
     // .use(graphQl())
     .use(bodyParser());
 
-  /**
-   * Development middleware
-   */
+  /** Development-only middleware */
   if (isDevelopment) {
     serverApp.use(logger());
   }
 
-  /**
-   * Production middleware
-   */
+  /** Production-only middleware */
   // Serve FE build bundle
   if (isProduction) {
     const FE_APP_BUILD_PATH = path.resolve(__dirname + "../../../../client/build/");
@@ -55,8 +50,8 @@ function initKoa() {
     serverApp.use(mount("/", webApp));
   }
 
-  /** API */
-  applyApiMiddleware(serverApp);
+  /** API + Routing */
+  applyAPIMiddleware(serverApp);
 
   return serverApp;
 }

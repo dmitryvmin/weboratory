@@ -1,11 +1,12 @@
 // Libs
 import * as Koa from "koa";
+import * as Router from "koa-router";
 import * as koaSession from "koa-session";
 import * as passport from "koa-passport";
 import * as Auth0Strategy from "passport-auth0";
 
 // App
-import { config } from "../../config";
+import { config } from "../config";
 
 // Constants
 const { isProduction } = config.serverConfig;
@@ -13,7 +14,7 @@ const { isProduction } = config.serverConfig;
 /**
  * Auth Middleware
  */
-function applyAuthMiddleware(app: Koa) {
+function initAuth(app: Koa, router: Router) {
 
   /**
    * Session Configuration
@@ -76,6 +77,7 @@ function applyAuthMiddleware(app: Koa) {
   app.use(koaSession(CONFIG, app));
 
   passport.use(strategy);
+
   app.use(passport.initialize());
   app.use(passport.session());
 
@@ -89,4 +91,4 @@ function applyAuthMiddleware(app: Koa) {
 
 }
 
-export { applyAuthMiddleware };
+export { initAuth };

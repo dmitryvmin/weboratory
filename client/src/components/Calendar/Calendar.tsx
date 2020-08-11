@@ -30,11 +30,11 @@ const Calendar: FC<TCalendarProps> = ({data}) => {
     <AnimatePresence>
       {isOpen && (
         <>
-          <div className={classNames.calendarLabel}>
-            <Text style="label2">
-              {format(calendarMarker, "EEE, eo")}
-            </Text>
-          </div>
+          {/*<div className={classNames.calendarLabel}>*/}
+          {/*  <Text style="label2">*/}
+          {/*    {format(calendarMarker, "EEE, eo")}*/}
+          {/*  </Text>*/}
+          {/*</div>*/}
           <motion.div
             className={styles.calendarContainer}
             initial={{ opacity: 0, y: 200 }}

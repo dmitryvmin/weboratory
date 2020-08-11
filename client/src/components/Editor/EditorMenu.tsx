@@ -1,7 +1,5 @@
 // Libs
 import React, { useContext } from "react";
-import MdUndo from "react-ionicons/lib/MdUndo";
-import MdRedo from "react-ionicons/lib/MdRedo";
 
 // Styles
 import classNames from "@components/Editor/styles.module.scss";
@@ -11,6 +9,7 @@ import { Button } from "@components/UI/Button";
 import { convertSelectionTo } from "@components/Editor/utils/convertSelectionTo";
 import { insertCodeBlock } from "@components/Editor/utils/insertCodeBlock";
 import { useEditor } from "@stores/EditorStore";
+import { ChevronLeft, ChevronRight } from "@components/UI/Icon";
 
 /**
  * Render
@@ -30,14 +29,14 @@ const EditorMenu = () => {
         disabled={contentHistory.length < 2}
         onClick={setRecordIdx(-1)}
       >
-        <MdUndo/>
+        <ChevronLeft/>
       </Button>
       <Button
         color="secondary"
         disabled={activeRecordIdx > -1}
         onClick={setRecordIdx(1)}
       >
-        <MdRedo/>
+        <ChevronRight/>
       </Button>
       {/*<Button onClick={toggleEditMenu}>*/}
       {/*  Edit Menu {isEditMenuVisible ? "on" : "off"}*/}

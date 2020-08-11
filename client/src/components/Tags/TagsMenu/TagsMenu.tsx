@@ -1,7 +1,5 @@
 // Libs
 import React, { FC, SyntheticEvent, useRef, useEffect, useState, memo } from "react";
-import IosAdd from "react-ionicons/lib/IosAdd";
-import IosRemove from "react-ionicons/lib/IosRemove";
 
 // Hooks
 import { useEventListener } from "@utils/hooks/useEventListener";
@@ -13,6 +11,7 @@ import { tagsServiceSingleton } from "@api/services/tagService/tagService";
 // Components
 import { Tag } from "@components/Tags/Tag";
 import { Button } from "@components/UI/Button";
+import {Plus, Close} from "@components/UI/Icon";
 
 // Style
 import classNames from "./styles.module.scss";
@@ -108,7 +107,7 @@ const TagsMenu: FC<TagMenuProps> = memo(({ post, tagMapSingleton }) => {
       return (
         <div className={classNames.newTagInput}>
           <input value={tagTitle} onChange={handleInput} type="text"/>
-          <IosAdd onClick={handleAddNewTagToPost}/>
+          <Plus onClick={handleAddNewTagToPost}/>
         </div>
       );
     }
@@ -130,8 +129,8 @@ const TagsMenu: FC<TagMenuProps> = memo(({ post, tagMapSingleton }) => {
                   actionable
                 >
                   <>
-                    {/*<IosRemove onClick={handleDeleteTagFromAll(id)}/>*/}
-                    <IosAdd onClick={handleAddTagToPost(id)}/>
+                    {/*<X onClick={handleDeleteTagFromAll(id)}/>*/}
+                    <Plus onClick={handleAddTagToPost(id)}/>
                   </>
                 </Tag>
               );

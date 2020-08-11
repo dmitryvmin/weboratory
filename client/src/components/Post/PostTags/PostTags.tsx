@@ -1,12 +1,12 @@
 // Libs
 import React, { FC, useEffect, useRef } from "react";
-import IosClose from "react-ionicons/lib/IosClose";
 
 // API
 import { tagMapService } from "@api/services/tagMapService/tagMapService";
 
 // Components
 import { Tag } from "@components/Tags/Tag";
+import { Close } from "@components/UI/Icon";
 
 // Styles
 import styles from "./styles.module.scss";
@@ -48,7 +48,7 @@ const PostTags: FC<PostTagsProps> = ({ post, tagMapSingleton }) => {
         return (
           <Tag key={`tag-${title}-${idx}`} title={title}>
             <div onClick={handleRemovePostTag(id)} className={styles.deleteTag}>
-              <IosClose/>
+              <Close/>
             </div>
           </Tag>
         );

@@ -10,6 +10,8 @@ import { useCalendar } from "@stores/CalendarStore";
 
 // Styles
 import styles from "./styles.module.scss";
+import { format } from "date-fns";
+import { getDateFromMap } from "@components/Calendar/utils/getDateFromMap";
 
 /**
  * Controls Calendar zoom
@@ -25,6 +27,7 @@ const CalendarMenu: FC<{}> = ({}) => {
     timeScale,
     isFirstPeriod,
     isLastPeriod,
+    calendarMarker,
   } = useCalendar();
 
   /**
@@ -32,21 +35,22 @@ const CalendarMenu: FC<{}> = ({}) => {
    */
   return (
     <>
-      <div className={styles.period}>
+      <div className={styles.calendarLabel}>
+        {/*{format(calendarMarker, "EEE, eo")}*/}
         <Text style="p3">{timeScale}</Text>
       </div>
       <ZoomOut
         className={[
-          styles.btn,
-          isFirstPeriod() && styles.btnDisabled,
+          styles.zoomnBtn,
+          isFirstPeriod() && styles.zoomnBtnDisabled,
         ].join(" ")}
         fontSize="40px"
         onClick={zoomOut}
       />
       <ZoomIn
         className={[
-          styles.btn,
-          isLastPeriod() && styles.btnDisabled,
+          styles.zoomnBtn,
+          isLastPeriod() && styles.zoomnBtnDisabled,
         ].join(" ")}
         fontSize="40px"
         onClick={zoomIn}

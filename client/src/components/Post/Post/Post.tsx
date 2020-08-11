@@ -3,8 +3,6 @@ import React, { FC, SyntheticEvent, useEffect, useRef, useState } from "react";
 import { useHistory, Link, match as Imatch } from "react-router-dom";
 import { useRouteMatch } from "react-router";
 import { motion, useAnimation } from "framer-motion";
-import IosAdd from "react-ionicons/lib/IosAdd";
-import IosClose from "react-ionicons/lib/IosClose";
 
 // API
 import { editorService, postService, tagMapService } from "@api/services";
@@ -12,6 +10,7 @@ import { editorService, postService, tagMapService } from "@api/services";
 // Components
 import { PostMenu } from "@components/Post/PostMenu";
 import { Editor } from "@components/Editor/Editor";
+import {Plus, Close} from "@components/UI/Icon";
 
 // Styles
 import classNames from "./styles.module.scss";
@@ -246,7 +245,7 @@ const Post: FC<PostProps> = ({
         <>
           {(!title && !isSelected) &&
           <div className={classNames.addNewBtn}>
-            <IosAdd fontSize="40"/>
+            <Plus fontSize="40"/>
           </div>
           }
 
@@ -261,7 +260,7 @@ const Post: FC<PostProps> = ({
 
               <motion.div className={classNames.close} variants={closeVariants}>
                 <Link to="/posts">
-                  <IosClose fontSize="40"/>
+                  <Close fontSize="40"/>
                 </Link>
               </motion.div>
             </div>

@@ -13,10 +13,14 @@
 
 .segmentLabel {
   position: absolute;
-  user-select: none;
   font-weight: 600;
-  background-color: $color-neutral-40;
+  //background-color: $color-neutral-40;
+  background-color: $color-neutral-0;
   padding: 2px 5px;
   margin: 2px;
   border-radius: $bradius_1;
+
+  > div {
+    user-select: none;
+  }
 }

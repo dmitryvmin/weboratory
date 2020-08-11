@@ -1,10 +1,6 @@
 // Libs
 import React, { ChangeEvent, FC, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion, useAnimation } from "framer-motion";
-import IosClose from "react-ionicons/lib/IosClose";
-import IosMapOutline from "react-ionicons/lib/IosMapOutline";
-import IosMap from "react-ionicons/lib/IosMap";
-import IosCalendarOutline from "react-ionicons/lib/IosCalendarOutline";
 import { useParams } from "react-router-dom";
 import { format } from "date-fns";
 
@@ -18,6 +14,7 @@ import { useWindowSize } from "@utils/hooks/useWindowSize";
 import { Button } from "@components/UI/Button";
 import { getLngLatTuple } from "@components/Events/utils/getLngLatTuple";
 import { getPositionFromTarget } from "@components/Events/utils/getPositionFromTarget";
+import { Close, Calendar, Map, MapPin } from "@components/UI/Icon";
 
 // Services
 import { eventsService } from "@api/services/eventsService";
@@ -132,13 +129,13 @@ const ModalContent: any = ({ centerModalOn }) => {
         <div className={styles.addressInput}>
           {addressSearchOn
             ? (
-              <IosMap
+              <Map
                 className={styles.addressBtn}
                 onClick={toggleAddressSearchTo(false)}
               />
             )
             : (
-              <IosMapOutline
+              <MapPin
                 className={styles.addressBtn}
                 onClick={toggleAddressSearchTo(true)}
               />
@@ -151,7 +148,7 @@ const ModalContent: any = ({ centerModalOn }) => {
         </div>
 
         <div className={styles.timeInput}>
-          <IosCalendarOutline className={styles.timeBtn}/>
+          <Calendar className={styles.timeBtn}/>
           <input
             value={activeEvent?.time ?? ""}
             onChange={handleTime}
@@ -178,7 +175,7 @@ const ModalContent: any = ({ centerModalOn }) => {
       animate={isEventOpen ? "open" : "closed"}
       className={styles.modalContent}
     >
-      <IosClose
+      <Close
         onClick={closeEvent}
         className={styles.closeBtn}
         fontSize="40"
