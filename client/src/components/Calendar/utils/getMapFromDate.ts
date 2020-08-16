@@ -4,20 +4,19 @@ import {
   getHours,
   getMinutes,
   getMonth,
-  getSeconds,
 } from "date-fns";
+import { DateMap } from "@stores/CalendarStore/types";
 
 /**
  * Returns a timeMarker of [timeScale] duration starting at current time
  */
-function getMapFromDate(date: Date) {
+function getMapFromDate(date: Date): DateMap {
   const dateMap = ({
-    year: getYear(date),
-    month: getMonth(date),
-    day: getDate(date),
-    hour: getHours(date),
-    minute: getMinutes(date),
-    // second: getSeconds(date),
+    YEAR: getYear(date),
+    MONTH: getMonth(date),
+    DAY: getDate(date),
+    HOUR: getHours(date),
+    MINUTE: getMinutes(date),
   });
 
   return dateMap;

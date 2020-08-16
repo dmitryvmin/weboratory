@@ -14,31 +14,29 @@ import { motion, AnimatePresence } from "framer-motion";
 import classNames from "./styles.module.scss";
 
 // Types
-import { MyComponentProps } from "./types";
+import { YearProps } from "./types";
 import { Month } from "@components/Calendar/Month";
+import { useCalendar } from "@stores/CalendarStore";
 
 /**
  *
  */
-const Year: FC<MyComponentProps> = ({
+const Year: FC<YearProps> = ({
   date,
   content,
-  timeScale,
-  slideWidth,
 }) => {
 
   /**
-   * =============== Hooks ===============
+   * Context hooks
    */
-
-  /**
-   * Component hooks
-   */
+  const {
+    timePeriod,
+  } = useCalendar();
 
   /**
    * Variables
    */
-  const isActive = timeScale === "YEAR";
+  const isActive = timePeriod === "YEAR";
   const className = classNames.segmentYear;
 
   // const segmentColumns = Object.keys(yearContent).length;
@@ -55,7 +53,7 @@ const Year: FC<MyComponentProps> = ({
    * Utils
    */
   const getStyles = (): CSSProperties => {
-    switch (timeScale) {
+    switch (timePeriod) {
       case "MINUTE":
         return ({});
       case "HOUR":
@@ -78,6 +76,26 @@ const Year: FC<MyComponentProps> = ({
   /**
    * =============== JSX ===============
    */
+  const renderYear = () => {
+    if (!content) {
+      return;
+    }
+    return content.map((month, idx) => {
+      if (!month) {
+        return null;
+      }
+      return (
+        <Month
+          key={`month-${idx}`}
+          date={{
+            ...date,
+            month: idx,
+          }}
+          content={month}
+        />
+      );
+    });
+  };
 
   /**
    * Render Component
@@ -87,24 +105,10 @@ const Year: FC<MyComponentProps> = ({
       style={getStyles()}
       className={className}
     >
-      {Object.keys(content).map((month, idx) => {
-        const monthContent = content[month];
-        return (
-          <Month
-            date={{
-              ...date,
-              month,
-            }}
-            key={`month-${idx}`}
-            content={monthContent}
-            timeScale={timeScale}
-            slideWidth={slideWidth}
-          />
-        );
-      })}
+      {renderYear()}
     </div>
   );
-}
+};
 
 Year.displayName = "Year";
 

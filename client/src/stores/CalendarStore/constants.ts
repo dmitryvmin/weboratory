@@ -1,45 +1,31 @@
 import {
   CalendarState,
-  TimeFormatMapInterface,
-  TimeSegmentMapInterface,
+  TimePeriod,
 } from "@stores/CalendarStore/types";
 
 export const CalendarInitState: CalendarState = {
-  timeScale: "DAY",
+  timePeriod: "DAY",
   isOpen: true,
   xPosition: 0,
   calendarMarker: new Date,
   intervalData: undefined,
-  // sliderRef: null,
+  slideCount: 1,
 };
 
-export const TimeFormatMap: TimeFormatMapInterface = {
+export const TimeFormatMap: {[key in TimePeriod]: string} = {
+  "SECOND": "ss",
   "MINUTE": "mm",
   "HOUR": "hh",
   "DAY": "dd",
-  // "WEEK": "ww",
   "MONTH": "mm",
   "YEAR": "yyyy",
-  "ALL": "",
 };
 
-export const TimeScaleMap = [
+export const TimePeriodMap: TimePeriod[] = [
   "SECOND",
   "MINUTE",
   "HOUR",
   "DAY",
-  // "WEEK",
   "MONTH",
   "YEAR",
-  "ALL",
-] as const;
-
-export const TimeScaleSegmentMap: TimeSegmentMapInterface = {
-  "MINUTE": "SECOND",
-  "HOUR": "MINUTE",
-  "DAY": "HOUR",
-  // "WEEK": "DAY",
-  "MONTH": "DAY",
-  "YEAR": "MONTH",
-  "ALL": "YEAR",
-} as const;
+];

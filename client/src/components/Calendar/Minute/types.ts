@@ -1,7 +1,6 @@
 import { DateMap } from "@stores/CalendarStore/types";
 
-export type MyComponentProps = {
+export type MinuteProps = {
   date: DateMap;
   content: any;
-  timeScale: any;
 };

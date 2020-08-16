@@ -2,13 +2,13 @@
 import { getDaysInMonth } from "date-fns";
 
 // App
-import { TimeScaleValues } from "@stores/CalendarStore/types";
+import { TimePeriod } from "@stores/CalendarStore/types";
 
 /**
  * Returns [timeScale] segments
  */
 function getSegmentsForTimeScale(
-  timeScale: TimeScaleValues,
+  timeScale: TimePeriod,
   start: Date,
 ): string[] {
 

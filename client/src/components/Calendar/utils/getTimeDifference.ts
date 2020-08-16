@@ -4,12 +4,11 @@ import {
   differenceInHours,
   differenceInMinutes,
   differenceInMonths,
-  differenceInWeeks,
   differenceInYears,
 } from "date-fns";
 
 // App
-import { TimeScaleValues } from "@stores/CalendarStore/types";
+import { TimePeriod } from "@stores/CalendarStore/types";
 
 /**
  * Returns the [timeScale] difference between the [start] and [end] dates
@@ -17,7 +16,7 @@ import { TimeScaleValues } from "@stores/CalendarStore/types";
 function getTimeDifference(
   start: Date,
   end: Date,
-  timeScale: TimeScaleValues,
+  timeScale: TimePeriod,
 ): number {
 
   switch (timeScale) {

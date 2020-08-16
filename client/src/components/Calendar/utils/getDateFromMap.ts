@@ -1,38 +1,35 @@
 /**
  * Return a Date from a json date object
  */
+import { log } from "@dmitrymin/fe-log";
+import { DateMap } from "@stores/CalendarStore/types";
+
 function getDateFromMap({
-  year,
-  month,
-  day,
-  hour,
-  minute,
-}: {
-  year: number,
-  month: number,
-  day?: number,
-  hour?: number,
-  minute?: number,
-}): Date {
+  YEAR,
+  MONTH,
+  DAY,
+  HOUR,
+  MINUTE,
+}: DateMap): Date {
 
   let dateString: string = "";
 
-  if (year) {
-    dateString = `${year}`;
-    if (month) {
-      dateString += `-${month}`;
-      if (day) {
-        dateString += `-${day}`;
-        if (hour) {
-          dateString += ` ${hour}:`;
-          if (minute) {
-            dateString += `${minute}`
+  if (YEAR) {
+    dateString = `${YEAR}`;
+    if (MONTH) {
+      dateString += `-${MONTH}`;
+      if (DAY) {
+        dateString += `-${DAY}`;
+        if (HOUR) {
+          dateString += ` ${HOUR}:`;
+          if (MINUTE) {
+            dateString += `${MINUTE}`
           }
         }
       }
     }
   }
-
+debugger;
   return new Date(dateString);
 }
 

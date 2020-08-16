@@ -1,15 +1,15 @@
-import { TimeScaleValues } from "@stores/CalendarStore/types";
-import { TimeScaleMap } from "@stores/CalendarStore";
+import { TimePeriod } from "@stores/CalendarStore/types";
+import { TimePeriodMap } from "@stores/CalendarStore";
 
 function getTimeScaleFrom(
-  timeScale: TimeScaleValues,
+  timeScale: TimePeriod,
   increment: number,
-): TimeScaleValues {
+): TimePeriod {
 
-  const curTimeScaleIdx = TimeScaleMap.indexOf(timeScale);
+  const curTimeScaleIdx = TimePeriodMap.indexOf(timeScale);
   const newTimeScaleIdx = curTimeScaleIdx + increment;
 
-  return TimeScaleMap[newTimeScaleIdx];
+  return TimePeriodMap[newTimeScaleIdx];
 }
 
 export {getTimeScaleFrom};

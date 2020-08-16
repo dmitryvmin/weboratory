@@ -5,18 +5,13 @@ import React, {
   useState,
   memo,
   useEffect,
-  createRef, useCallback, useMemo, ReactNode, ReactElement,
 } from "react";
 import { useSpring, animated } from "react-spring";
 import { useGesture } from "react-use-gesture";
-import invariant from "invariant";
 import { log } from "@dmitrymin/fe-log";
-import { format, getDay, getDaysInMonth, getHours, getMinutes, getMonth, getYear } from "date-fns";
 
 // Utils
 import { useWindowSize } from "@utils/hooks/useWindowSize";
-import { createMockData } from "@components/Calendar/__tests__/utils";
-import { useIntersectionObserver } from "@utils/hooks/useIntersectionObserver";
 
 // Styles
 import classNames from "./styles.module.scss";
@@ -25,59 +20,56 @@ import classNames from "./styles.module.scss";
 import { useCalendar } from "@stores/CalendarStore";
 
 // Constants
-import { DRAG_STATUS, SLIDER_MARGIN } from "@components/Calendar/constants";
+import { DRAG_STATUS, SLIDER_BUFFER } from "@components/Calendar/constants";
 
 // Components
-import { Slide } from "@components/Calendar/Slide/Slide";
-
-import { TimeMarker } from "@stores/CalendarStore/types";
-import { getCurrentTimeMarker } from "@components/Calendar/utils/getCurrentTimeMarker";
 import { getTimestamp } from "@components/Calendar/utils/getTimestamp";
-import { getTimeMarker } from "@components/Calendar/utils/getTimeMarker";
-import { CalendarEvent } from "@components/Calendar/types";
-import { useCallbackRef } from "@utils/hooks/useCallbackRef";
-import { TimeTable } from "@components/Calendar/utils/TimeTable";
-import { Content } from "@components/Calendar/Content";
-import { getIntervalData } from "@components/Calendar/utils/getIntervalData";
+import { getTimeTable } from "@components/Calendar/utils/getTimeTable";
+import { getBaseDate } from "@components/Calendar/utils/getBaseDate";
 import { checkProps } from "@utils/react/checkProps";
-import { Text } from "@components/UI/Text";
+import { Content } from "@components/Calendar/Content/Content";
+import {
+  EventsDataMap,
+  getEventsAtTimeScaleForInterval,
+} from "@components/Calendar/utils/getEventsAtTimeScaleForInterval";
+
+type SliderProps = {
+  eventsData: EventsDataMap;
+};
 
 /**
  * Slider
  */
-const Slider: FC<any> = memo(({ data }: { data: CalendarEvent[] }) => {
+const Slider: FC<SliderProps> = memo(({
+  eventsData,
+}) => {
 
   /**
-   * Hooks
+   * =============== Hooks ===============
+   */
+
+  /**
+   * Context hooks
    */
   const {
-    timeScale,
+    slideCount,
+    timePeriod,
     xPosition,
     calendarMarker,
-    intervalData,
-    setIntervalData,
+    // intervalData,
+    setSlideCount,
   } = useCalendar();
 
-  // @ts-ignore
-  const [{ x }, setSpring] = useSpring(() => ({ x: 0 }));
-
-  const dragContainerRef = useRef<HTMLDivElement>(null);
-
-  const centerSlideRef = useRef<HTMLDivElement>(null);
+  /**
+   * Component hooks
+   */
+  const [timeTable, setTimeTable] = useState<any>();
 
   const [dragStatus, setDragStatus] = useState(DRAG_STATUS.NONE);
 
   const isDragging = useRef<boolean>(false);
 
-  const [slides, setSlides] = useState<TimeMarker[]>([]);
-
-  const [timeTable, setTimeTable] = useState<any>();
-
-  const { windowWidth, windowHeight } = useWindowSize();
-
-  const [slideWidth, setSlideWidth] = useState<number>(400);
-
-  const [slideCount, setSlideCount] = useState<number>(1);
+  const dragContainerRef = useRef<HTMLDivElement>(null);
 
   const sliderRef = (node: HTMLDivElement) => {
     if (node === null) {
@@ -86,59 +78,69 @@ const Slider: FC<any> = memo(({ data }: { data: CalendarEvent[] }) => {
   };
 
   /**
+   * Util hooks
+   */
+  // @ts-ignore
+  const [{ x }, setSpring] = useSpring(() => ({ x: 0 }));
+
+  const { windowWidth } = useWindowSize();
+
+  /**
    * Effects
    */
   useEffect(() => {
 
     // 1 Slide
-    if (windowWidth < 400) {
-      setSlideCount(3);
-      const _slideWidth = (windowWidth - (4 * SLIDER_MARGIN));
-      setSlideWidth(slideWidth);
+    if (windowWidth < 600) {
+      setSlideCount(1);
     }
     // 2 Slides
-    else if (windowWidth < 840) {
-      setSlideCount(4);
-      const _slideWidth = (windowWidth - (4 * SLIDER_MARGIN)) / 2;
-      setSlideWidth(slideWidth);
+    else if (windowWidth < 1000) {
+      setSlideCount(2);
     }
     // 3 slides - max 1140
     else {
-      setSlideCount(5);
-      const _slideWidth = (windowWidth - (4 * SLIDER_MARGIN)) / 3;
-      setSlideWidth(slideWidth);
+      setSlideCount(3);
     }
 
   }, [
     windowWidth,
   ]);
 
-
   useEffect(() => {
 
-    if (!calendarMarker || !timeScale) {
+    if (!calendarMarker || !timePeriod || slideCount === undefined) {
       return;
     }
 
-    const timeRangeStart = getTimestamp(calendarMarker, timeScale, -slideCount);
-    const timeRangeEnd = getTimestamp(calendarMarker, timeScale, slideCount);
+    const timeRangeStart = getTimestamp(calendarMarker, timePeriod, -SLIDER_BUFFER);
+    const timeTableFloor = getBaseDate(timeRangeStart, timePeriod, "floor");
 
-    const _intervalData = getIntervalData(data, timeRangeStart, timeRangeEnd);
-    setIntervalData(_intervalData);
-debugger;
-    const _timeTable = new TimeTable();
-    _timeTable.createTable({
-      timeScale,
-      timeRangeStart,
-      timeRangeEnd
+    const timeRangeEnd = getTimestamp(calendarMarker, timePeriod, slideCount + SLIDER_BUFFER);
+    const timeTableCeiling = getBaseDate(timeRangeEnd, timePeriod, "ceiling");
+
+    const eventsDataMap = getEventsAtTimeScaleForInterval({
+      eventsData,
+      intervalStart: timeTableFloor,
+      intervalEnd: timeTableCeiling,
     });
-    setTimeTable(_timeTable.timetable);
+
+    const _timetable = getTimeTable({
+      eventsDataMap,
+      timeTableFloor,
+      timeTableCeiling,
+    });
+
+    setTimeTable(_timetable);
 
   }, [
-    calendarMarker,
-    timeScale,
-    slideCount
+    slideCount,
+    // calendarMarker,
+    // timeScale,
+    // slideCount,
   ]);
+
+
 
   // Set up slides based on the timeScale
   // useEffect(() => {
@@ -215,9 +217,10 @@ debugger;
   useEffect(() => {
     const dragEl = dragContainerRef.current;
 
-    if (!dragEl) {
+    if (!dragEl || dragEl) {
       return;
     }
+
     const observer = new MutationObserver(onDragContainerUpdate);
 
     // Start observing the target node for configured mutations
@@ -313,10 +316,7 @@ debugger;
       checkProps(
         <Content
           timeTable={timeTable}
-          data={intervalData}
-          timeScale={timeScale}
-          calendarMarker={calendarMarker}
-          slideWidth={slideWidth}
+          // data={intervalData}
         />,
       )
     );

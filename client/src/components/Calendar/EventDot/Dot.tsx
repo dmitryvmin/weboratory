@@ -53,8 +53,6 @@ const Dot: FC<MyComponentProps> = ({ event }) => {
     if (dotRef === null) {
       return;
     }
-
-    debugger;
   }, [
     dotRef,
   ]);

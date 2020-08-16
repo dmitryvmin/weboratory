@@ -1,8 +1,8 @@
-import { TimeMarker, TimeScaleValues } from "@stores/CalendarStore/types";
+import { TimeMarker, TimePeriod } from "@stores/CalendarStore/types";
 import { CalendarEvent } from "@components/Calendar/types";
 
 export type SlideProps = {
-  timeScale: TimeScaleValues;
+  timeScale: TimePeriod;
   data: CalendarEvent[];
   marker: TimeMarker;
 };

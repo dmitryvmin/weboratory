@@ -7,9 +7,6 @@ import { log } from "@dmitrymin/fe-log";
 import { BaseRequestModel } from "@api/utils/BaseRequestModel";
 import { getCreateEventURI, getEventsByUserId, getEventsByVisibility, updateEventContent } from "@api/routes/events";
 
-// Utils
-import { parseJSON } from "@utils/parseJSON";
-
 // Types
 import { IEvent } from "@common/types";
 

@@ -1,11 +1,11 @@
 // Libs
-import React, { FC} from "react";
+import React, { FC } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 // Utils
 
 // Components
-import { Second } from "@components/Calendar/Second";
+import { Minute } from "@components/Calendar/Minute";
 
 // Store
 
@@ -16,15 +16,14 @@ import classNames from "./styles.module.scss";
 
 // Types
 import { MyComponentProps } from "./types";
+import { useCalendar } from "@stores/CalendarStore";
 
 /**
  *
  */
-const Hour:FC<MyComponentProps> = ({
+const Hour: FC<MyComponentProps> = ({
   date,
   content,
-  timeScale,
-  slideWidth,
 }) => {
 
   /**
@@ -32,8 +31,11 @@ const Hour:FC<MyComponentProps> = ({
    */
 
   /**
-   * Component hooks
+   * Context hooks
    */
+  const {
+    timePeriod,
+  } = useCalendar();
 
   /**
    * Variables
@@ -44,7 +46,7 @@ const Hour:FC<MyComponentProps> = ({
    * Utils
    */
   const getStyles = () => {
-    switch (timeScale) {
+    switch (timePeriod) {
       case "MINUTE":
         return ({});
       case "HOUR":
@@ -70,6 +72,24 @@ const Hour:FC<MyComponentProps> = ({
   /**
    * =============== JSX ===============
    */
+  const renderMinute = () => {
+    debugger;
+    if (!content) {
+      return null;
+    }
+    return content.map((minute, idx) => {
+      return (
+        <Minute
+          key={`minute-${idx}`}
+          content={minute}
+          date={{
+            ...date,
+            minute: idx,
+          }}
+        />
+      );
+    });
+  };
 
   /**
    * Render Component
@@ -79,20 +99,7 @@ const Hour:FC<MyComponentProps> = ({
       className={className}
       style={getStyles()}
     >
-      {Object.keys(content).map((minute, idx) => {
-        const minuteContent = content[minute];
-        return (
-          <Second
-            key={`minute-${idx}`}
-            date={{
-              ...date,
-              minute,
-            }}
-            content={minuteContent}
-            timeScale={timeScale}
-          />
-        );
-      })}
+      {renderMinute()}
     </motion.div>
   );
 };

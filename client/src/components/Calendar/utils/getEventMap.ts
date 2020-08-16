@@ -1,7 +1,7 @@
 // App
-import { TimeScaleValues } from "@stores/CalendarStore/types";
 import { getTimeDifference } from "@components/Calendar/utils/getTimeDifference";
 import { CalendarEvent } from "@components/Calendar/types";
+import { TimePeriod } from "@stores/CalendarStore/types";
 
 type GetEventMap = {
   eventMap: any[];
@@ -14,7 +14,7 @@ type GetEventMap = {
 function getEventMap(
   data: CalendarEvent[],
   markerStart: Date,
-  segmentPeriod: TimeScaleValues,
+  segmentPeriod: TimePeriod,
 ): GetEventMap | undefined {
 
   // If not data, return empty map

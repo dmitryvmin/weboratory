@@ -19,7 +19,7 @@ import { getEventMap } from "@components/Calendar/utils/getEventMap";
 import { getSegmentsForTimeScale } from "@components/Calendar/utils/getSegmentsForTimeScale";
 
 // Store
-import { TimeScaleSegmentMap, TimeFormatMap } from "@stores/CalendarStore";
+import { TimeFormatMap } from "@stores/CalendarStore";
 
 // Types
 import { SlideProps } from "@components/Calendar/Slide/types";
@@ -56,11 +56,11 @@ const Slide = forwardRef(
      */
     const slideWidth = windowWidth - (SLIDER_MARGIN * 2);
 
-    const segmentScale = TimeScaleSegmentMap[timeScale];
-
-    const segments = getSegmentsForTimeScale(timeScale, start);
-
-    const { eventMap, mapHeight } = getEventMap(data, start, segmentScale) || {};
+    // const segmentScale = TimeScaleSegmentMap[timeScale];
+    //
+    // const segments = getSegmentsForTimeScale(timeScale, start);
+    //
+    // const { eventMap, mapHeight } = getEventMap(data, start, segmentScale) || {};
 
     /**
      * Utils - move out of the component
@@ -81,34 +81,34 @@ const Slide = forwardRef(
     /**
      * Render Segment Events
      */
-    const renderSegmentEvents = (segment, events) => {
-      if (!events || !events.length) {
-        return;
-      }
-      return events.map((event, eventIdxAtSegment) => {
-        return (
-          <div
-            key={`instant-${segmentScale}-${event.time.toString()}`}
-            style={{
-              gridRowStart: eventIdxAtSegment,
-            }}
-            className={classNames.segmentInstant}
-          >
-            <div className={classNames.segmentInstantTitle}>
-              Title
-            </div>
-            <motion.div
-              className={classNames.segmentInstantBlob}
-              style={{
-                backgroundColor: event.color,
-              }}
-            >
-              {/*{format(date, "dd-mm:hh")}*/}
-            </motion.div>
-          </div>
-        );
-      });
-    };
+    // const renderSegmentEvents = (segment, events) => {
+    //   if (!events || !events.length) {
+    //     return;
+    //   }
+    //   return events.map((event, eventIdxAtSegment) => {
+    //     return (
+    //       <div
+    //         key={`instant-${segmentScale}-${event.time.toString()}`}
+    //         style={{
+    //           gridRowStart: eventIdxAtSegment,
+    //         }}
+    //         className={classNames.segmentInstant}
+    //       >
+    //         <div className={classNames.segmentInstantTitle}>
+    //           Title
+    //         </div>
+    //         <motion.div
+    //           className={classNames.segmentInstantBlob}
+    //           style={{
+    //             backgroundColor: event.color,
+    //           }}
+    //         >
+    //           {/*{format(date, "dd-mm:hh")}*/}
+    //         </motion.div>
+    //       </div>
+    //     );
+    //   });
+    // };
 
     /**
      * Render Component
@@ -129,33 +129,33 @@ const Slide = forwardRef(
         <div
           className={classNames.slideContent}
           style={{
-            gridTemplateColumns: `repeat(${segments.length}, 1fr)`,
+            // gridTemplateColumns: `repeat(${segments.length}, 1fr)`,
           }}
         >
-          {segments.map((segment) => {
-            const eventsAtSegment = eventMap ? eventMap[segment] : undefined;
-            return (
-              <div
-                key={`segment-${segment}`}
-                style={{
-                  gridColumnStart: segment,
-                }}
-                className={classNames.segment}
-              >
-                <div className={classNames.segmentLabel}>
-                  <Text>{segment}</Text>
-                </div>
-                <div
-                  style={{
-                    gridTemplateRows: `repeat(${mapHeight}, 50px)`,
-                  }}
-                  className={classNames.segmentContent}
-                >
-                  {renderSegmentEvents(segment, eventsAtSegment)}
-                </div>
-              </div>
-            );
-          })}
+          {/*{segments.map((segment) => {*/}
+          {/*  const eventsAtSegment = eventMap ? eventMap[segment] : undefined;*/}
+          {/*  return (*/}
+          {/*    <div*/}
+          {/*      key={`segment-${segment}`}*/}
+          {/*      style={{*/}
+          {/*        gridColumnStart: segment,*/}
+          {/*      }}*/}
+          {/*      className={classNames.segment}*/}
+          {/*    >*/}
+          {/*      <div className={classNames.segmentLabel}>*/}
+          {/*        <Text>{segment}</Text>*/}
+          {/*      </div>*/}
+          {/*      <div*/}
+          {/*        style={{*/}
+          {/*          gridTemplateRows: `repeat(${mapHeight}, 50px)`,*/}
+          {/*        }}*/}
+          {/*        className={classNames.segmentContent}*/}
+          {/*      >*/}
+          {/*        {renderSegmentEvents(segment, eventsAtSegment)}*/}
+          {/*      </div>*/}
+          {/*    </div>*/}
+          {/*  );*/}
+          {/*})}*/}
         </div>
       </div>
     );

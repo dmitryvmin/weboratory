@@ -24,7 +24,7 @@ const CalendarMenu: FC<{}> = ({}) => {
   const {
     zoomIn,
     zoomOut,
-    timeScale,
+    timePeriod,
     isFirstPeriod,
     isLastPeriod,
     calendarMarker,
@@ -37,12 +37,12 @@ const CalendarMenu: FC<{}> = ({}) => {
     <>
       <div className={styles.calendarLabel}>
         {/*{format(calendarMarker, "EEE, eo")}*/}
-        <Text style="p3">{timeScale}</Text>
+        <Text style="p3">{timePeriod}</Text>
       </div>
       <ZoomOut
         className={[
           styles.zoomnBtn,
-          isFirstPeriod() && styles.zoomnBtnDisabled,
+          isLastPeriod() && styles.zoomnBtnDisabled,
         ].join(" ")}
         fontSize="40px"
         onClick={zoomOut}
@@ -50,7 +50,7 @@ const CalendarMenu: FC<{}> = ({}) => {
       <ZoomIn
         className={[
           styles.zoomnBtn,
-          isLastPeriod() && styles.zoomnBtnDisabled,
+          isFirstPeriod() && styles.zoomnBtnDisabled,
         ].join(" ")}
         fontSize="40px"
         onClick={zoomIn}

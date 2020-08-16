@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 // Utils
 
 // UI
-import {Text} from "@components/UI/Text";
+import { Text } from "@components/UI/Text";
 
 // Store
 
@@ -19,19 +19,18 @@ import { MyComponentProps } from "./types";
 import { Hour } from "@components/Calendar/Hour";
 import { SLIDER_MARGIN } from "@components/Calendar/constants";
 import { format } from "date-fns";
-import { TimeFormatMap } from "@stores/CalendarStore";
+import { TimeFormatMap, useCalendar } from "@stores/CalendarStore";
 import { start } from "repl";
 import { getDateFromMap } from "@components/Calendar/utils/getDateFromMap";
+import { useWindowSize } from "@utils/hooks/useWindowSize";
 
 /**
  *
  */
 const Day: FC<MyComponentProps> = ({
-  idx,
   date,
   content,
-  timeScale,
-  slideWidth,
+  idx,
 }) => {
 
   /**
@@ -39,13 +38,22 @@ const Day: FC<MyComponentProps> = ({
    */
 
   /**
-   * Component hooks
+   * Context hooks
    */
+  const {
+    timePeriod,
+    slideCount,
+  } = useCalendar();
+
+  /**
+   * Util hooks
+   */
+  const { windowWidth } = useWindowSize();
 
   /**
    * Variables
    */
-  const isActive = timeScale === "DAY";
+  const isActive = timePeriod === "DAY";
   const className = [
     classNames.segmentDay,
     isActive && classNames.isAbsolute,
@@ -55,7 +63,11 @@ const Day: FC<MyComponentProps> = ({
    * Utils
    */
   const getStyles = () => {
-    switch (timeScale) {
+
+    const slideWidth = (windowWidth - (2 * SLIDER_MARGIN)) / slideCount;
+    const slideX = idx * slideWidth + (idx * SLIDER_MARGIN);
+
+    switch (timePeriod) {
       case "MINUTE":
         return ({});
       case "HOUR":
@@ -64,7 +76,7 @@ const Day: FC<MyComponentProps> = ({
         });
       case "DAY":
         return ({
-          x: idx * slideWidth + (idx * SLIDER_MARGIN),
+          x: slideX,
           y: 8,
           width: `${slideWidth}px`,
           height: "180px",
@@ -90,6 +102,28 @@ const Day: FC<MyComponentProps> = ({
   /**
    * =============== JSX ===============
    */
+  const renderDay = () => {
+    if (!content) {
+      return null;
+    }
+    debugger;
+    return content.map((hour, idx) => {
+      if (!hour) {
+        return null;
+      }
+      return null;
+      // return (
+      //   <Hour
+      //     key={`hour-${idx}`}
+      //     date={{
+      //       ...date,
+      //       hour: idx,
+      //     }}
+      //     content={hour}
+      //   />
+      // );
+    });
+  };
 
   /**
    * Render Component
@@ -99,26 +133,13 @@ const Day: FC<MyComponentProps> = ({
       style={getStyles()}
       className={className}
     >
+      {date &&
       <div className={classNames.segmentLabel}>
         <Text style="label1">
           {format(getDateFromMap(date), "EEE, eo")}
         </Text>
-      </div>
-      {Object.keys(content).map((hour, idx) => {
-        const hourContent = content[hour];
-        return (
-          <Hour
-            key={`hour-${idx}`}
-            date={{
-              ...date,
-              hour,
-            }}
-            content={hourContent}
-            timeScale={timeScale}
-            slideWidth={slideWidth}
-          />
-        );
-      })}
+      </div>}
+      {renderDay()}
     </motion.div>
   );
 };

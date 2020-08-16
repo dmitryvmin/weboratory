@@ -2,17 +2,9 @@
 import { Dispatch, ReactNode, SetStateAction } from "react";
 
 // App
-import { ValueOf } from "@utils/TS";
-import { TimeScaleMap } from "@stores/CalendarStore/constants";
 import { CalendarEvent } from "@components/Calendar/types";
 
-// export type TimeScaleEnumKeys = keyof typeof TimeScaleEnum;
-// export type TimeScaleEnumValues = ValueOf<typeof TimeScaleEnum>;
-
-export type TimeScaleKeys = typeof TimeScaleMap;
-export type TimeScaleValues = TimeScaleKeys[number];
-export type TimeSegmentMapInterface = { [arg: string]: TimeScaleValues };
-export type TimeFormatMapInterface = { [arg: string]: string };
+export type TimePeriod = "SECOND" | "MINUTE" | "HOUR" | "DAY" | "MONTH" | "YEAR";
 
 export type TimeMarker = {
   start: Date;
@@ -20,21 +12,20 @@ export type TimeMarker = {
 }
 
 export type DateMap = {
-  year: number;
-  month: number;
-  day: number;
-  hour: number;
-  minute: number;
-  // second: number;
+  YEAR: number;
+  MONTH: number;
+  DAY?: number;
+  HOUR?: number;
+  MINUTE?: number;
 }
 
 export type CalendarState = {
-  timeScale: TimeScaleValues;
+  timePeriod: TimePeriod;
   isOpen: boolean;
   xPosition: number;
   calendarMarker: Date;
   intervalData: CalendarEvent[] | undefined;
-  // sliderRef: HTMLDivElement | null;
+  slideCount: number;
 };
 
 export type CalendarContextInterface = [
@@ -46,10 +37,6 @@ export type CalendarProviderInterface = {
   children: ReactNode;
 }
 
-export type TimeSegmentInfo = {
-  segmentPeriod: TimeScaleValues;
-};
-
 type UseCalendarFunction = {
   setCalendarIsOpen: any;
   zoomIn: any;
@@ -60,9 +47,7 @@ type UseCalendarFunction = {
   moveRight: any;
   setCalendarMarker: any;
   setIntervalData: any;
-  // setSliderRef: any;
+  setSlideCount(slideCount: number): void;
 }
 
 export type UseCalendar = CalendarState & UseCalendarFunction;
-
-export type TimeSegments = { [k: string]: string};

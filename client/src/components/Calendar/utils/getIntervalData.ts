@@ -1,5 +1,5 @@
 // Libs
-import { getDay, isWithinInterval } from "date-fns";
+import { isWithinInterval } from "date-fns";
 import invariant from "invariant";
 
 // App

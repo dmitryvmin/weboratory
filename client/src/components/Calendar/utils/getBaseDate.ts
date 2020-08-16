@@ -2,10 +2,11 @@
 import { log } from "@dmitrymin/fe-log";
 
 // App
-import { TimeScaleValues } from "@stores/CalendarStore/types";
 import { getMapFromDate } from "@components/Calendar/utils/getMapFromDate";
 import { getDateFromMap } from "@components/Calendar/utils/getDateFromMap";
 import { getTimestamp } from "@components/Calendar/utils/getTimestamp";
+import { lastDayOfMonth } from "date-fns";
+import { TimePeriod } from "@stores/CalendarStore/types";
 
 /**
  * Return a date which start at the [date]'s [timeScale]
@@ -13,38 +14,65 @@ import { getTimestamp } from "@components/Calendar/utils/getTimestamp";
  */
 function getBaseDate(
   date: Date,
-  timeScale: TimeScaleValues,
+  timeScale: TimePeriod,
   direction: "floor" | "ceiling",
-  ): Date {
+): Date {
 
-  let _date: Date;
+  const { YEAR, MONTH, DAY, HOUR, MINUTE } = getMapFromDate(date);
+  let baseDate;
 
   if (direction === "floor") {
-    _date = date;
+    switch (timeScale) {
+      case "MINUTE":
+        baseDate = new Date(YEAR, MONTH, DAY, HOUR, MINUTE);
+        break;
+      case "HOUR":
+        baseDate = new Date(YEAR, MONTH, DAY, HOUR, 0);
+        break;
+      case "DAY":
+        baseDate = new Date(YEAR, MONTH, DAY, 0, 0);
+        break;
+      case "MONTH":
+        baseDate = new Date(YEAR, MONTH, 1, 0, 0);
+        break;
+      case "YEAR":
+        baseDate = new Date(YEAR, 0, 1, 0, 0);
+        break;
+      default:
+        log({ logLevel: "error" }, `Couldn't get BaseStartDate for ${date} of timeScale ${timeScale}`);
+        baseDate = date;
+        break;
+    }
   }
+  // Get the date ceiling
   else {
-    // Bump the date by 1 so we're getting the ceiling of the date (sort of)
-    _date = getTimestamp(date, timeScale, 1);
+    const endDate = lastDayOfMonth(date);
+    const lastDay = endDate.getDay();
+
+    switch (timeScale) {
+      case "MINUTE":
+        baseDate = new Date(YEAR, MONTH, DAY, HOUR, MINUTE);
+        break;
+      case "HOUR":
+        baseDate = new Date(YEAR, MONTH, DAY, HOUR, 59);
+        break;
+      case "DAY":
+        baseDate = new Date(YEAR, MONTH, DAY, 23, 59);
+        break;
+      case "MONTH":
+        baseDate = new Date(YEAR, MONTH, lastDay, 23, 59);
+        break;
+      case "YEAR":
+        baseDate = new Date(YEAR, 11, lastDay, 23, 59);
+        break;
+      default:
+        log({ logLevel: "error" }, `Couldn't get BaseStartDate for ${date} of timeScale ${timeScale}`);
+        baseDate = date;
+        break;
+    }
   }
 
-  const dateMap = getMapFromDate(_date);
-  const { year, month, day, hour, minute } = dateMap;
-
-  switch (timeScale) {
-    case "MINUTE":
-      return getDateFromMap({ year, month, day, hour, minute });
-    case "HOUR":
-      return getDateFromMap({ year, month, day, hour, minute: 0 });
-    case "DAY":
-      return getDateFromMap({ year, month, day, hour: 0,  minute: 0 });
-    case "MONTH":
-      return getDateFromMap({ year, month, day: 0, hour: 0, minute: 0 });
-    case "YEAR":
-      return getDateFromMap({ year, month: 0, day: 0, hour: 0, minute: 0 });
-    default:
-      log(`Couldn't get BaseStartDate for ${date} of timeScale ${timeScale}`);
-      return date;
-  }
+  return baseDate;
 }
 
 export { getBaseDate };

@@ -67,6 +67,7 @@ const Timeline: FC<ITimeline> = () => {
   const {isMenuOpen, setIsMenuOpenTo} = useEvents();
 
   const dragYValue = useMotionValue(0);
+
   const scaleValue = useMotionValue(0);
 
   const animate = useAnimation();
@@ -153,7 +154,7 @@ const Timeline: FC<ITimeline> = () => {
         // }}
         onDrag={handleDrag}
         // onDragEnd={handleDragEnd}
-        onClick={() => setIsMenuOpenTo(!isMenuOpen)}
+        onDoubleClick={() => setIsMenuOpenTo(!isMenuOpen)}
       >
         <Move fontSize="40"/>
       </motion.div>

@@ -14,30 +14,37 @@ import { motion, AnimatePresence } from "framer-motion";
 import classNames from "./styles.module.scss";
 
 // Types
-import { MyComponentProps } from "./types";
+import { MonthProps } from "./types";
 import { Day } from "@components/Calendar/Day";
+import { useCalendar } from "@stores/CalendarStore";
+import { useWindowSize } from "@utils/hooks/useWindowSize";
 
 /**
  *
  */
-const Month: FC<MyComponentProps> = ({ date, content, timeScale, slideWidth }) => {
+const Month: FC<MonthProps> = ({
+  date,
+  content,
+}) => {
 
   /**
    * =============== Hooks ===============
    */
 
   /**
-   * Component hooks
+   * Context hooks
    */
-
+  const {
+    timePeriod,
+  } = useCalendar();
 
   /**
    * Variables
    */
-  const isActive = timeScale === "MONTH";
+  const isActive = timePeriod === "MONTH";
   const className = [
     classNames.segmentMonth,
-    timeScale === "DAY" && classNames.isRelative,
+    timePeriod === "DAY" && classNames.isRelative,
   ].join(" ");
 
   // const timeScaleActive = timeScale === "MONTH";
@@ -55,7 +62,7 @@ const Month: FC<MyComponentProps> = ({ date, content, timeScale, slideWidth }) =
    * Utils
    */
   const getStyles = (): CSSProperties => {
-    switch (timeScale) {
+    switch (timePeriod) {
       case "MINUTE":
         return ({});
       case "HOUR":
@@ -79,12 +86,31 @@ const Month: FC<MyComponentProps> = ({ date, content, timeScale, slideWidth }) =
   };
 
   /**
-   * Effects
-   */
-
-  /**
    * =============== JSX ===============
    */
+  const renderMonth = () => {
+    if (!content) {
+      return null;
+    }
+    let idx = -1;
+    return content?.map((day) => {
+      if (!day) {
+        return null;
+      }
+      idx++;
+      return (
+        <Day
+          key={`day-${idx}`}
+          idx={idx}
+          date={{
+            ...date,
+            day: idx,
+          }}
+          content={day}
+        />
+      );
+    });
+  };
 
   /**
    * Render Component
@@ -94,22 +120,7 @@ const Month: FC<MyComponentProps> = ({ date, content, timeScale, slideWidth }) =
       className={className}
       style={getStyles()}
     >
-      {Object.keys(content).map((day, idx) => {
-        const dayContent = content[day];
-        return (
-          <Day
-            idx={idx}
-            date={{
-              ...date,
-              day,
-            }}
-            key={`day-${idx}`}
-            content={dayContent}
-            timeScale={timeScale}
-            slideWidth={slideWidth}
-          />
-        );
-      })}
+      {renderMonth()}
     </div>
   );
 };

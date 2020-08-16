@@ -2,9 +2,6 @@
 import React, { FC } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-// Utils
-import { createMockData } from "@components/Calendar/__tests__/utils";
-
 // Styles
 import styles from "./styles.module.scss";
 
@@ -22,7 +19,7 @@ import { format } from "date-fns";
 /**
  * Calendar
  */
-const Calendar: FC<TCalendarProps> = ({data}) => {
+const Calendar: FC<TCalendarProps> = ({eventsData}) => {
 
   const { isOpen, calendarMarker } = useCalendar();
 
@@ -30,18 +27,18 @@ const Calendar: FC<TCalendarProps> = ({data}) => {
     <AnimatePresence>
       {isOpen && (
         <>
-          {/*<div className={classNames.calendarLabel}>*/}
-          {/*  <Text style="label2">*/}
-          {/*    {format(calendarMarker, "EEE, eo")}*/}
-          {/*  </Text>*/}
-          {/*</div>*/}
+          <div className={classNames.calendarLabel}>
+            <Text style="label2">
+              {format(calendarMarker, "EEE, eo")}
+            </Text>
+          </div>
           <motion.div
             className={styles.calendarContainer}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1, y: 0, transition: { duration: 0.5 } }}
             exit={{ opacity: 0, y: 200, transition: { duration: 0.5 } }}
           >
-            <Slider data={data}/>
+            <Slider eventsData={eventsData}/>
           </motion.div>
           <motion.div
             className={styles.calendarMenuContainer}

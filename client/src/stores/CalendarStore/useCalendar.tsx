@@ -1,11 +1,11 @@
 // Libs
-import { useContext } from "react";
+import { useContext, useState } from "react";
 
 // App
 import { CalendarContext } from "@stores/CalendarStore/CalendarContext";
-import { CalendarContextInterface, CalendarState, TimeScaleValues, UseCalendar } from "@stores/CalendarStore/types";
-import { TimeScaleMap } from "@stores/CalendarStore/constants";
+import { CalendarContextInterface, CalendarState, UseCalendar } from "@stores/CalendarStore/types";
 import { getTimeScaleFrom } from "@stores/CalendarStore/utils/getTimeScaleFrom";
+import { TimePeriodMap } from "@stores/CalendarStore/constants";
 
 /**
  * Calendar Context Facade
@@ -42,11 +42,11 @@ const useCalendar = (): UseCalendar => {
   };
 
   function isFirstPeriod() {
-    return TimeScaleMap.indexOf(state.timeScale) === 0;
+    return TimePeriodMap.indexOf(state.timePeriod) === 0;
   }
 
   function isLastPeriod() {
-    return TimeScaleMap.indexOf(state.timeScale) === (TimeScaleMap.length - 1);
+    return TimePeriodMap.indexOf(state.timePeriod) === (TimePeriodMap.length - 1);
   }
 
   function zoomIn() {
@@ -56,11 +56,11 @@ const useCalendar = (): UseCalendar => {
       return;
     }
 
-    const timeScale = getTimeScaleFrom(state.timeScale, -1);
+    const timePeriod = getTimeScaleFrom(state.timePeriod, -1);
 
     setState((s): CalendarState => ({
       ...s,
-      timeScale,
+      timePeriod,
     }));
   }
 
@@ -71,11 +71,11 @@ const useCalendar = (): UseCalendar => {
       return;
     }
 
-    const timeScale = getTimeScaleFrom(state.timeScale, 1);
+    const timePeriod = getTimeScaleFrom(state.timePeriod, 1);
 
     setState((s): CalendarState => ({
       ...s,
-      timeScale,
+      timePeriod,
     }));
   }
 
@@ -107,16 +107,24 @@ const useCalendar = (): UseCalendar => {
     }));
   }
 
+  // Number of slides to display in viewport
+  function setSlideCount(slideCount) {
+    setState((s): CalendarState => ({
+      ...s,
+      slideCount,
+    }));
+  }
+
   /**
    * useCalendar hook state and functions
    */
   return {
     isOpen: state.isOpen,
-    timeScale: state.timeScale,
+    timePeriod: state.timePeriod,
     calendarMarker: state.calendarMarker,
     xPosition: state.xPosition,
     intervalData: state.intervalData,
-    // sliderRef: state.sliderRef,
+    slideCount: state.slideCount,
     setCalendarIsOpen,
     zoomIn,
     zoomOut,
@@ -126,7 +134,7 @@ const useCalendar = (): UseCalendar => {
     moveRight,
     setCalendarMarker,
     setIntervalData,
-    // setSliderRef,
+    setSlideCount,
   };
 };
 

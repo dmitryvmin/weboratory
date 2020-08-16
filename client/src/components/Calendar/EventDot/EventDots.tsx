@@ -3,22 +3,21 @@ import React, { CSSProperties } from "react";
 import { createPortal } from "react-dom";
 
 import { CalendarEvent } from "@components/Calendar/types";
-import classNames from "@components/Calendar/Second/styles.module.scss";
+import classNames from "@components/Calendar/Minute/styles.module.scss";
 import { motion } from "framer-motion";
-import { Dot } from "@components/Calendar/EventDots/Dot";
+import { Dot } from "@components/Calendar/EventDot/Dot";
 import { useCalendar } from "@stores/CalendarStore";
 
 /**
  * Component hooks
  */
-const EventDots = ({ date }) => {
-debugger;
+const EventDots = ({ events }) => {
+
   /**
    * Context hooks
    */
   const {
-    timeScale,
-    intervalData,
+    timePeriod,
   } = useCalendar();
 
   /**
@@ -30,7 +29,7 @@ debugger;
   // gridTemplateColumns: `repeat(${segmentColumns}, ${100}px)`,
 
   const getStyles = (): CSSProperties => {
-    switch (timeScale) {
+    switch (timePeriod) {
       case "MINUTE":
         return ({});
       case "HOUR":
@@ -47,10 +46,10 @@ debugger;
         });
     }
   };
-debugger;
+
   return (
     <div style={getStyles()}>
-      {intervalData && intervalData.map((event: CalendarEvent, idx: number) => {
+      {events.map((event: CalendarEvent, idx: number) => {
         debugger;
         return (
             <Dot
