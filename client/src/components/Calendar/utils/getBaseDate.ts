@@ -6,7 +6,7 @@ import { getMapFromDate } from "@components/Calendar/utils/getMapFromDate";
 import { getDateFromMap } from "@components/Calendar/utils/getDateFromMap";
 import { getTimestamp } from "@components/Calendar/utils/getTimestamp";
 import { lastDayOfMonth } from "date-fns";
-import { TimePeriod } from "@stores/CalendarStore/types";
+import { TimePeriod } from "@components/Calendar/store/types";
 
 /**
  * Return a date which start at the [date]'s [timeScale]

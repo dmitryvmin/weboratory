@@ -16,8 +16,9 @@ import classNames from "./styles.module.scss";
 // Types
 import { MonthProps } from "./types";
 import { Day } from "@components/Calendar/Day";
-import { useCalendar } from "@stores/CalendarStore";
 import { useWindowSize } from "@utils/hooks/useWindowSize";
+import { useCalendar } from "@components/Calendar/store";
+import { getDateFromMap } from "@components/Calendar/utils/getDateFromMap";
 
 /**
  *
@@ -25,6 +26,9 @@ import { useWindowSize } from "@utils/hooks/useWindowSize";
 const Month: FC<MonthProps> = ({
   date,
   content,
+  timePeriod,
+  calendarMarker,
+  slideWidth,
 }) => {
 
   /**
@@ -32,31 +36,22 @@ const Month: FC<MonthProps> = ({
    */
 
   /**
-   * Context hooks
-   */
-  const {
-    timePeriod,
-  } = useCalendar();
-
-  /**
    * Variables
    */
-  const isActive = timePeriod === "MONTH";
+
+    // const timeScaleActive = timeScale === "MONTH";
+    // const segmentColumns = Object.keys(monthContent).length;
+    // const style = {
+    //   gridTemplateColumns: `repeat(${segmentColumns}, ${320}px)`,
+    // };
+
+
+  const isContainer = timePeriod === "DAY";
+
   const className = [
     classNames.segmentMonth,
-    timePeriod === "DAY" && classNames.isRelative,
+    isContainer && classNames.isRelative,
   ].join(" ");
-
-  // const timeScaleActive = timeScale === "MONTH";
-  // const segmentColumns = Object.keys(monthContent).length;
-  // const style = {
-  //   gridTemplateColumns: `repeat(${segmentColumns}, ${320}px)`,
-  // };
-  // const className = [
-  //   timeScaleActive
-  //     ? classNames.monthSegmentActive
-  //     : classNames.monthSegmentInactive,
-  // ].join(" ");
 
   /**
    * Utils
@@ -69,6 +64,8 @@ const Month: FC<MonthProps> = ({
         return ({});
       case "DAY":
         return ({
+          // Month is container
+          display: "relative",
           // paddingRight: "5px",
           backgroundColor: "rgba(0,0,0,0.3)",
           // display: "grid",
@@ -92,21 +89,22 @@ const Month: FC<MonthProps> = ({
     if (!content) {
       return null;
     }
-    let idx = -1;
-    return content?.map((day) => {
+    return content?.map((day, idx) => {
       if (!day) {
         return null;
       }
-      idx++;
+      const segmentDate = {
+        ...date,
+        DAY: idx,
+      };
       return (
         <Day
-          key={`day-${idx}`}
-          idx={idx}
-          date={{
-            ...date,
-            day: idx,
-          }}
+          key={`month-${getDateFromMap(segmentDate)}`}
+          date={segmentDate}
           content={day}
+          timePeriod={timePeriod}
+          calendarMarker={calendarMarker}
+          slideWidth={slideWidth}
         />
       );
     });

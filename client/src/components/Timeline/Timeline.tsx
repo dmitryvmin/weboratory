@@ -10,9 +10,9 @@ import styles from "./styles.module.scss";
 import { useWindowSize } from "@utils/hooks/useWindowSize";
 
 // Store
-import { useCalendar } from "@stores/CalendarStore";
 import { TIMELINE_HEIGHT } from "@common/constants";
 import { useEvents } from "@stores/EventStore";
+import { useCalendar } from "@components/Calendar/store";
 
 // Types
 export type ITimeline = any;

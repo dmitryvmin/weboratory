@@ -2,10 +2,10 @@
 import { useContext, useState } from "react";
 
 // App
-import { CalendarContext } from "@stores/CalendarStore/CalendarContext";
-import { CalendarContextInterface, CalendarState, UseCalendar } from "@stores/CalendarStore/types";
-import { getTimeScaleFrom } from "@stores/CalendarStore/utils/getTimeScaleFrom";
-import { TimePeriodMap } from "@stores/CalendarStore/constants";
+import { CalendarContext } from "./CalendarContext";
+import { CalendarContextInterface, CalendarState, UseCalendar } from "./types";
+import { getTimeScaleFrom } from "./utils/getTimeScaleFrom";
+import { TimePeriodMap } from "@components/Calendar/constants";
 
 /**
  * Calendar Context Facade
@@ -115,6 +115,27 @@ const useCalendar = (): UseCalendar => {
     }));
   }
 
+  function setSlideWidth(slideWidth: number) {
+    setState((s): CalendarState => ({
+      ...s,
+      slideWidth,
+    }));
+  }
+
+  // function setLeftBufferRef(leftBufferRef: HTMLDivElement) {
+  //   setState((s): CalendarState => ({
+  //     ...s,
+  //     leftBufferRef,
+  //   }));
+  // }
+  //
+  // function setRightBufferRef(rightBufferRef: HTMLDivElement) {
+  //   setState((s): CalendarState => ({
+  //     ...s,
+  //     rightBufferRef,
+  //   }));
+  // }
+
   /**
    * useCalendar hook state and functions
    */
@@ -125,6 +146,9 @@ const useCalendar = (): UseCalendar => {
     xPosition: state.xPosition,
     intervalData: state.intervalData,
     slideCount: state.slideCount,
+    slideWidth: state.slideWidth,
+    // leftBufferRef: state.leftBufferRef,
+    // rightBufferRef: state.rightBufferRef,
     setCalendarIsOpen,
     zoomIn,
     zoomOut,
@@ -135,6 +159,9 @@ const useCalendar = (): UseCalendar => {
     setCalendarMarker,
     setIntervalData,
     setSlideCount,
+    setSlideWidth,
+    // setLeftBufferRef,
+    // setRightBufferRef,
   };
 };
 

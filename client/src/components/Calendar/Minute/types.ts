@@ -1,6 +1,6 @@
-import { DateMap } from "@stores/CalendarStore/types";
+import { CalendarEvent, DateMap } from "@components/Calendar/store/types";
 
 export type MinuteProps = {
-  date: DateMap;
-  content: any;
+  date: Partial<DateMap>;
+  content: CalendarEvent[] | undefined;
 };

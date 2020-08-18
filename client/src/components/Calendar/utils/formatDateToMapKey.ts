@@ -1,5 +1,5 @@
-import { TimePeriod } from "@stores/CalendarStore/types";
 import { getMapFromDate } from "@components/Calendar/utils/getMapFromDate";
+import { TimePeriod } from "@components/Calendar/store/types";
 
 function formatDateToMapKey(
   scale: TimePeriod,
@@ -11,13 +11,13 @@ function formatDateToMapKey(
     case "MINUTE":
       return `${YEAR}-${MONTH}-${DAY}-${HOUR}-${MINUTE}`;
     case "HOUR":
-      return `${YEAR}-${MONTH}-${DAY}-${HOUR}-${MINUTE}`;
-    case "DAY":
       return `${YEAR}-${MONTH}-${DAY}-${HOUR}`;
-    case "MONTH":
+    case "DAY":
       return `${YEAR}-${MONTH}-${DAY}`;
-    case "YEAR":
+    case "MONTH":
       return `${YEAR}-${MONTH}`;
+    case "YEAR":
+      return `${YEAR}`;
     default:
       return `${YEAR}`;
   }

@@ -1,5 +1,6 @@
 // Libs
 import React, { CSSProperties, FC } from "react";
+import { motion } from "framer-motion";
 
 // Utils
 
@@ -7,17 +8,14 @@ import React, { CSSProperties, FC } from "react";
 
 // Store
 
-// Constants
-import { EventDots } from "@components/Calendar/EventDot/EventDots";
+// Constants;
 
 // Styles
 import classNames from "./styles.module.scss";
 
 // Types
 import { MinuteProps } from "./types";
-import { Hour } from "@components/Calendar/Hour";
-import { useCalendar } from "@stores/CalendarStore";
-import { CalendarEvent } from "@components/Calendar/types";
+import { useCalendar } from "../store";
 import { Dot } from "@components/Calendar/EventDot";
 
 /**
@@ -35,10 +33,7 @@ const Minute: FC<MinuteProps> = ({
   /**
    * Component hooks
    */
-  const {
-    timePeriod,
-    intervalData,
-  } = useCalendar();
+  const { timePeriod } = useCalendar();
 
   /**
    * Utils
@@ -51,9 +46,8 @@ const Minute: FC<MinuteProps> = ({
   /**
    * Variables
    */
-  const className = "";
+  const className = classNames.minuteSegment;
   const segmentColumns = "60";
-
   // gridTemplateColumns: `repeat(${segmentColumns}, ${100}px)`,
 
   const getStyles = (): CSSProperties => {
@@ -69,9 +63,10 @@ const Minute: FC<MinuteProps> = ({
       case "YEAR":
         return ({});
       default:
-        return ({
-          gridTemplateColumns: `repeat(${segmentColumns}, ${1}px)`,
-        });
+        // return ({
+        //   gridTemplateColumns: `repeat(${segmentColumns}, ${1}px)`,
+        // });
+        return ({});
     }
   };
 
@@ -79,40 +74,32 @@ const Minute: FC<MinuteProps> = ({
    * Render fns
    */
   const renderMinutes = () => {
-    var c = content;
-debugger;
     if (!content) {
       return null;
     }
-    if (content.length) {
-      debugger;
+    else {
+      return content.map((event) => {
+        return (
+          <Dot
+            key={`event-${event.time}-${event.title}`}
+            event={event}
+          />
+        );
+      });
     }
-
-    return (
-      <Dot
-        key={`event-${content.time}-${content.title}`}
-        event={content}
-      />
-    );
-    // return content.map((event: CalendarEvent, eventIdx: number) => {
-    //   return (
-    //     <Dot
-    //       key={`event-${event.time}-${event.title}`}
-    //       event={event}
-    //     />
-    //   );
-    // });
   };
 
   /**
    * =============== JSX ===============
    */
   return (
-    <div style={getStyles()}>
+    <motion.div
+      className={className}
+      style={getStyles()}
+    >
       {renderMinutes()}
-    </div>
+    </motion.div>
   );
-
 };
 
 Minute.displayName = "Second";

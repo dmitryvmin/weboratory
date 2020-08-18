@@ -3,17 +3,16 @@
 @import "../../../styles/radius";
 @import "../../../styles/colors";
 
-.eventContainer {
-  display: flex;
-  align-items: center;
-  height: 100%;
+.eventMarker {
+  white-space: nowrap;
+  position: relative;
+  transform: translateX(-10px);
 }
 
-.eventMarker {
+.eventDot {
   width: $size_4;
   height: $size_4;
-  border-radius: 50%;
-  white-space: nowrap;
+  border-radius: $size_2;
   position: absolute;
 }
 

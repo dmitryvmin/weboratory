@@ -1,7 +1,6 @@
 // App
 import { getTimeDifference } from "@components/Calendar/utils/getTimeDifference";
-import { CalendarEvent } from "@components/Calendar/types";
-import { TimePeriod } from "@stores/CalendarStore/types";
+import { CalendarEvent, TimePeriod } from "@components/Calendar/store/types";
 
 type GetEventMap = {
   eventMap: any[];

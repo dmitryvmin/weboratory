@@ -1,27 +1,30 @@
 // Libs
 import React, { FC } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { format } from "date-fns";
 
 // Styles
 import styles from "./styles.module.scss";
 
 // Components
+import { Text } from "@components/UI/Text";
 import { Slider } from "@components/Calendar/Slider";
-import { useCalendar } from "@stores/CalendarStore";
 
-// Types
+// Calendar
 import { TCalendarProps } from "./types";
 import { CalendarMenu } from "@components/Calendar/CalendarMenu";
 import classNames from "@components/Calendar/styles.module.scss";
-import { Text } from "@components/UI/Text";
-import { format } from "date-fns";
+import { useCalendar } from "@components/Calendar/store";
 
 /**
  * Calendar
  */
 const Calendar: FC<TCalendarProps> = ({eventsData}) => {
 
-  const { isOpen, calendarMarker } = useCalendar();
+  const {
+    isOpen,
+    calendarMarker,
+  } = useCalendar();
 
   return (
     <AnimatePresence>
@@ -29,7 +32,7 @@ const Calendar: FC<TCalendarProps> = ({eventsData}) => {
         <>
           <div className={classNames.calendarLabel}>
             <Text style="label2">
-              {format(calendarMarker, "EEE, eo")}
+              {format(calendarMarker, "MMM dd")}
             </Text>
           </div>
           <motion.div

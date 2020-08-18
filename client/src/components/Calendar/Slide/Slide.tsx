@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 import classNames from "./styles.module.scss";
 
 // Constants
-import { SLIDER_MARGIN } from "@components/Calendar/constants";
+import { SLIDER_MARGIN, TimeFormatMap } from "@components/Calendar/constants";
 
 // Components
 import { Text } from "@components/UI/Text";
@@ -17,9 +17,6 @@ import { useWindowSize } from "@utils/hooks/useWindowSize";
 import { useMutationObserver } from "@utils/hooks/useMutationObserver";
 import { getEventMap } from "@components/Calendar/utils/getEventMap";
 import { getSegmentsForTimeScale } from "@components/Calendar/utils/getSegmentsForTimeScale";
-
-// Store
-import { TimeFormatMap } from "@stores/CalendarStore";
 
 // Types
 import { SlideProps } from "@components/Calendar/Slide/types";

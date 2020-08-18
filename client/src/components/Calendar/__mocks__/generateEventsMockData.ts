@@ -5,12 +5,12 @@ import { addMonths, addYears, subDays, subMonths, subYears } from "date-fns";
 import { getRandomHEX } from "@utils/test/getRandomHEX";
 import { getRandomDate } from "@utils/test/getRandomDate";
 import { getRandomString } from "@utils/test/getRandomString";
-import { CalendarEvent } from "@components/Calendar/types";
+import { CalendarEvent } from "@components/Calendar/store/types";
 
 // Generates an array of Date objects of length [num]
 // that fall within the [start] - [end] timeframe
 function generateEventsMockData(
-  num = 1000,
+  num = 500,
   start = subMonths(new Date(), 1),
   end = addMonths(new Date(), 1),
 ): CalendarEvent[] {

@@ -16,7 +16,8 @@ import classNames from "./styles.module.scss";
 // Types
 import { YearProps } from "./types";
 import { Month } from "@components/Calendar/Month";
-import { useCalendar } from "@stores/CalendarStore";
+import { useCalendar } from "@components/Calendar/store";
+import { getDateFromMap } from "@components/Calendar/utils/getDateFromMap";
 
 /**
  *
@@ -24,14 +25,10 @@ import { useCalendar } from "@stores/CalendarStore";
 const Year: FC<YearProps> = ({
   date,
   content,
+  timePeriod,
+  calendarMarker,
+  slideWidth,
 }) => {
-
-  /**
-   * Context hooks
-   */
-  const {
-    timePeriod,
-  } = useCalendar();
 
   /**
    * Variables
@@ -84,14 +81,18 @@ const Year: FC<YearProps> = ({
       if (!month) {
         return null;
       }
+      const segmentDate = {
+        ...date,
+        MONTH: idx,
+      };
       return (
         <Month
-          key={`month-${idx}`}
-          date={{
-            ...date,
-            month: idx,
-          }}
+          key={`year-${getDateFromMap(segmentDate)}`}
+          date={segmentDate}
           content={month}
+          timePeriod={timePeriod}
+          calendarMarker={calendarMarker}
+          slideWidth={slideWidth}
         />
       );
     });

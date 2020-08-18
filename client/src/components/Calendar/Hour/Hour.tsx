@@ -16,7 +16,8 @@ import classNames from "./styles.module.scss";
 
 // Types
 import { MyComponentProps } from "./types";
-import { useCalendar } from "@stores/CalendarStore";
+import { useCalendar } from "../store";
+import { getDateFromMap } from "@components/Calendar/utils/getDateFromMap";
 
 /**
  *
@@ -24,18 +25,13 @@ import { useCalendar } from "@stores/CalendarStore";
 const Hour: FC<MyComponentProps> = ({
   date,
   content,
+  timePeriod,
+  slideWidth,
 }) => {
 
   /**
    * =============== Hooks ===============
    */
-
-  /**
-   * Context hooks
-   */
-  const {
-    timePeriod,
-  } = useCalendar();
 
   /**
    * Variables
@@ -54,7 +50,7 @@ const Hour: FC<MyComponentProps> = ({
       case "DAY":
         return ({
           display: "grid",
-          gridAutoFlow: "column",
+          gridAutoFlow: "row",
         });
       case "MONTH":
         return ({});
@@ -73,19 +69,22 @@ const Hour: FC<MyComponentProps> = ({
    * =============== JSX ===============
    */
   const renderMinute = () => {
-    debugger;
     if (!content) {
       return null;
     }
     return content.map((minute, idx) => {
+      if (!minute) {
+        return null;
+      }
+      const segmentDate = {
+        ...date,
+        MINUTE: idx,
+      };
       return (
         <Minute
-          key={`minute-${idx}`}
+          key={`hour-${getDateFromMap(segmentDate)}`}
           content={minute}
-          date={{
-            ...date,
-            minute: idx,
-          }}
+          date={segmentDate}
         />
       );
     });

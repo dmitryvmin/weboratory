@@ -17,25 +17,17 @@ import { useWindowSize } from "@utils/hooks/useWindowSize";
 import classNames from "./styles.module.scss";
 
 // Store
-import { useCalendar } from "@stores/CalendarStore";
 
 // Constants
-import { DRAG_STATUS, SLIDER_BUFFER } from "@components/Calendar/constants";
+import { DRAG_STATUS, SLIDER_MARGIN } from "@components/Calendar/constants";
 
 // Components
 import { getTimestamp } from "@components/Calendar/utils/getTimestamp";
-import { getTimeTable } from "@components/Calendar/utils/getTimeTable";
-import { getBaseDate } from "@components/Calendar/utils/getBaseDate";
-import { checkProps } from "@utils/react/checkProps";
-import { Content } from "@components/Calendar/Content/Content";
-import {
-  EventsDataMap,
-  getEventsAtTimeScaleForInterval,
-} from "@components/Calendar/utils/getEventsAtTimeScaleForInterval";
-
-type SliderProps = {
-  eventsData: EventsDataMap;
-};
+import { SliderProps } from "@components/Calendar/Slider/types";
+import { useCalendar } from "@components/Calendar/store";
+import { Year } from "@components/Calendar/Year";
+import { useTimeTable } from "@components/Calendar/utils/useTimeTable/useTimeTable";
+import { getDateFromMap } from "@components/Calendar/utils/getDateFromMap";
 
 /**
  * Slider
@@ -54,16 +46,21 @@ const Slider: FC<SliderProps> = memo(({
   const {
     slideCount,
     timePeriod,
-    xPosition,
+    // xPosition,
     calendarMarker,
     // intervalData,
     setSlideCount,
+    setSlideWidth,
+    slideWidth,
+    setCalendarMarker,
   } = useCalendar();
 
   /**
    * Component hooks
    */
-  const [timeTable, setTimeTable] = useState<any>();
+  const [slidesTraveled, setSlidesTraveled] = useState<number>(0);
+
+  const slidesTraveledRef = useRef<number>(0);
 
   const [dragStatus, setDragStatus] = useState(DRAG_STATUS.NONE);
 
@@ -71,17 +68,13 @@ const Slider: FC<SliderProps> = memo(({
 
   const dragContainerRef = useRef<HTMLDivElement>(null);
 
-  const sliderRef = (node: HTMLDivElement) => {
-    if (node === null) {
-      return;
-    }
-  };
+  const timeTable = useTimeTable(calendarMarker, timePeriod, slideCount, eventsData);
 
   /**
    * Util hooks
    */
-  // @ts-ignore
-  const [{ x }, setSpring] = useSpring(() => ({ x: 0 }));
+    // @ts-ignore
+  const [{ x: xDistance }, setSpring] = useSpring(() => ({ x: 0 }));
 
   const { windowWidth } = useWindowSize();
 
@@ -90,82 +83,75 @@ const Slider: FC<SliderProps> = memo(({
    */
   useEffect(() => {
 
+    let visibleSlides;
+
     // 1 Slide
     if (windowWidth < 600) {
-      setSlideCount(1);
+      visibleSlides = 1;
     }
     // 2 Slides
     else if (windowWidth < 1000) {
-      setSlideCount(2);
+      visibleSlides = 2
     }
     // 3 slides - max 1140
     else {
-      setSlideCount(3);
+      visibleSlides = 3;
     }
+
+    setSlideCount(visibleSlides);
+
+    const slideWidth = (windowWidth - (2 * SLIDER_MARGIN)) / slideCount;
+
+    setSlideWidth(slideWidth);
 
   }, [
     windowWidth,
   ]);
 
-  useEffect(() => {
+  // useEffect(() => {
+  //   debugger;
+  // }, [
+  //   timeTable,
+  // ]);
+  // useEffect(() => {
+  //   debugger;
+  // }, [
+  //   calendarMarker,
+  // ]);
+  // useEffect(() => {
+  //   debugger;
+  // }, [
+  //   slideCount,
+  // ]);
+  // useEffect(() => {
+  //   debugger;
+  // }, [
+  //   slideWidth,
+  // ]);
+  // useEffect(() => {
+  //   debugger;
+  // }, [
+  //   slidesTraveled,
+  // ]);
 
-    if (!calendarMarker || !timePeriod || slideCount === undefined) {
+  // Update calendarMarker when slidesTraveled changes
+  useEffect(() => {
+    console.log("slides traveled");
+
+    if (slidesTraveled === slidesTraveledRef.current) {
       return;
     }
 
-    const timeRangeStart = getTimestamp(calendarMarker, timePeriod, -SLIDER_BUFFER);
-    const timeTableFloor = getBaseDate(timeRangeStart, timePeriod, "floor");
+    const segmentDelta = slidesTraveledRef.current - slidesTraveled;
+    const newCalendarMarker = getTimestamp(calendarMarker, timePeriod, segmentDelta);
 
-    const timeRangeEnd = getTimestamp(calendarMarker, timePeriod, slideCount + SLIDER_BUFFER);
-    const timeTableCeiling = getBaseDate(timeRangeEnd, timePeriod, "ceiling");
+    setCalendarMarker(newCalendarMarker);
 
-    const eventsDataMap = getEventsAtTimeScaleForInterval({
-      eventsData,
-      intervalStart: timeTableFloor,
-      intervalEnd: timeTableCeiling,
-    });
-
-    const _timetable = getTimeTable({
-      eventsDataMap,
-      timeTableFloor,
-      timeTableCeiling,
-    });
-
-    setTimeTable(_timetable);
+    slidesTraveledRef.current = slidesTraveled;
 
   }, [
-    slideCount,
-    // calendarMarker,
-    // timeScale,
-    // slideCount,
+    slidesTraveled,
   ]);
-
-
-
-  // Set up slides based on the timeScale
-  // useEffect(() => {
-  //   if (slides.length === 0) {
-  //     const currentTimeMarker = getCurrentTimeMarker(timeScale, 0);
-  //
-  //     const leftTimeMarker = getTimeMarker({
-  //       start: getTimestamp(currentTimeMarker.start, timeScale, -1),
-  //       end: currentTimeMarker.start,
-  //       x: currentTimeMarker.x - slideWidth,
-  //     });
-  //
-  //     const rightTimeMarker = getTimeMarker({
-  //       start: currentTimeMarker.end,
-  //       end: getTimestamp(currentTimeMarker.end, timeScale, 1),
-  //       x: currentTimeMarker.x + slideWidth,
-  //     });
-  //
-  //     setSlides([
-  //       leftTimeMarker,
-  //       currentTimeMarker,
-  //       rightTimeMarker,
-  //     ]);
-  //   }
-  // }, []);
 
   useEffect(() => {
 
@@ -205,37 +191,37 @@ const Slider: FC<SliderProps> = memo(({
   //   centerTimeMarker,
   // ]);
 
-  useEffect(() => {
-    setSpring({
-      x: x.get() + xPosition,
-    });
-  }, [
-    xPosition,
-  ]);
+  // useEffect(() => {
+  //   setSpring({
+  //     x: xDistance.get(),
+  //   });
+  // }, [
+  //   xPosition,
+  // ]);
 
   // Create an observer instance for the center slide
-  useEffect(() => {
-    const dragEl = dragContainerRef.current;
-
-    if (!dragEl || dragEl) {
-      return;
-    }
-
-    const observer = new MutationObserver(onDragContainerUpdate);
-
-    // Start observing the target node for configured mutations
-    observer.observe(dragEl, {
-      attributes: true,
-      attributeFilter: ["style"],
-      childList: false,
-      subtree: false,
-    });
-    return () => {
-      observer.disconnect();
-    };
-  }, [
-    dragContainerRef.current,
-  ]);
+  // useEffect(() => {
+  //   const dragEl = dragContainerRef.current;
+  //
+  //   if (!dragEl || dragEl) {
+  //     return;
+  //   }
+  //
+  //   const observer = new MutationObserver(onDragContainerUpdate);
+  //
+  //   // Start observing the target node for configured mutations
+  //   observer.observe(dragEl, {
+  //     attributes: true,
+  //     attributeFilter: ["style"],
+  //     childList: false,
+  //     subtree: false,
+  //   });
+  //   return () => {
+  //     observer.disconnect();
+  //   };
+  // }, [
+  //   dragContainerRef.current,
+  // ]);
 
   // const dragContainerRef = useCallbackRef(null, (node) => {
   //   debugger;
@@ -279,6 +265,14 @@ const Slider: FC<SliderProps> = memo(({
     // setIsDragging(false);
   }
 
+  function updateSlidesTraveled(xDelta: number) {
+    const newSlidesTraveled = Math.round(xDelta / slideWidth);
+    if (slidesTraveled === newSlidesTraveled) {
+      return;
+    }
+    setSlidesTraveled(newSlidesTraveled);
+  }
+
   // Set the drag hook and define component movement based on gesture data
   const dragBind = useGesture(
     {
@@ -295,11 +289,13 @@ const Slider: FC<SliderProps> = memo(({
           // x: down ? mx : 0,
           x: mx,
         });
+
+        updateSlidesTraveled(mx);
       },
     },
     {
       drag: {
-        initial: () => [x.get(), 0],
+        initial: () => [xDistance.get(), 0],
       },
     },
   );
@@ -312,14 +308,23 @@ const Slider: FC<SliderProps> = memo(({
    * Render Slides
    */
   const renderTimetable = () => {
-    return (
-      checkProps(
-        <Content
-          timeTable={timeTable}
-          // data={intervalData}
-        />,
-      )
-    );
+    for (const year in timeTable) {
+      const yearContent = timeTable[year];
+      if (!yearContent) {
+        return null;
+      }
+      const segmentDate = { YEAR: parseInt(year) };
+      return (
+        <Year
+          key={`year-${getDateFromMap(segmentDate)}`}
+          date={segmentDate}
+          content={yearContent}
+          timePeriod={timePeriod}
+          slideWidth={slideWidth}
+          calendarMarker={calendarMarker}
+        />
+      );
+    }
   };
 
   /**
@@ -327,34 +332,38 @@ const Slider: FC<SliderProps> = memo(({
    */
   return (
     <div
-      className={classNames.sliderContainer}
       {...dragBind()}
-      ref={sliderRef}
-      // onDragStart={handleDragStart}
-      // onDragEnd={handleDragEnd}
-      // onDrag={handleDrag}
+      // {...bind()}
+      ref={dragContainerRef}
+      // animate={controls}
+      className={classNames.dragContainer}
+      // whileTap={{ cursor: "grabbing" }}
+      // drag="x"
+
+      // style={{
+      //   width: sliderWidth,
+      //   x,
+      // }}
+
+      // onPanStart={handleDragStart}
+
+      // onDrag={
+      //   (event, info) => {
+      //     // console.log(info.point.x, info.point.y)
+      //   }
+      // }
     >
       <animated.div
-
         // {...bind()}
-        ref={dragContainerRef}
+        // ref={dragContainerRef}
         // animate={controls}
-        className={classNames.dragContainer}
+        className={classNames.slidesContainer}
         // whileTap={{ cursor: "grabbing" }}
         // drag="x"
-
         style={{
           // width: windowWidth * 3,
-          x,
+          x: xDistance,
         }}
-
-        // onPanStart={handleDragStart}
-
-        // onDrag={
-        //   (event, info) => {
-        //     // console.log(info.point.x, info.point.y)
-        //   }
-        // }
       >
         {renderTimetable()}
       </animated.div>

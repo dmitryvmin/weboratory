@@ -2,7 +2,7 @@
 import invariant from "invariant";
 
 // App
-import { TimeMarker } from "@stores/CalendarStore/types";
+import { TimeMarker } from "@components/Calendar/store/types";
 
 /**
  * Returns an assembled TimeMarker object

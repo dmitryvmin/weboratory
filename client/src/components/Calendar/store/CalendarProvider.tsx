@@ -2,9 +2,9 @@
 import React, { FC, useState } from "react";
 
 // App
-import { CalendarProviderInterface, CalendarState } from "@stores/CalendarStore/types";
-import { CalendarInitState } from "@stores/CalendarStore/constants";
 import { CalendarContext } from "./CalendarContext";
+import { CalendarProviderInterface, CalendarState } from "@components/Calendar/store/types";
+import { CalendarInitState } from "@components/Calendar/constants";
 
 const CalendarProvider: FC<CalendarProviderInterface> = ({ children }) => {
 

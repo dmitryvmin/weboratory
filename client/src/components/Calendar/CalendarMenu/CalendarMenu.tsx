@@ -6,17 +6,18 @@ import { ZoomIn, ZoomOut } from "@components/UI/Icon";
 import { Text } from "@components/UI/Text";
 
 // Store
-import { useCalendar } from "@stores/CalendarStore";
+import { useCalendar } from "../store";
 
 // Styles
 import styles from "./styles.module.scss";
 import { format } from "date-fns";
 import { getDateFromMap } from "@components/Calendar/utils/getDateFromMap";
+import { CalendarMenuProps } from "@components/Calendar/CalendarMenu/types";
 
 /**
  * Controls Calendar zoom
  */
-const CalendarMenu: FC<{}> = ({}) => {
+const CalendarMenu: FC<CalendarMenuProps> = ({}) => {
 
   /**
    * Hooks

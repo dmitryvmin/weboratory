@@ -3,7 +3,7 @@ import invariant from "invariant";
 
 // App
 import { getTimestamp } from "@components/Calendar/utils/getTimestamp";
-import { TimePeriod } from "@stores/CalendarStore/types";
+import { TimePeriod } from "@components/Calendar/store/types";
 
 /**
  * Returns a timeMarker of [timeScale] duration starting at current time

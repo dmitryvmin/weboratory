@@ -1,19 +1,19 @@
-import { TimePeriod } from "@stores/CalendarStore/types";
+// Libs
 import { log } from "@dmitrymin/fe-log";
 
+// App
+import { IntervalType, TimePeriod } from "@components/Calendar/store/types";
+
 const getTimePeriodIntervals = ({
-  timeScale,
+  timePeriod,
   start,
   end,
 }: {
-  timeScale: TimePeriod;
+  timePeriod: TimePeriod;
   start?: number;
   end?: number
-}): {
-  start: number;
-  end: number;
-} => {
-  switch (timeScale) {
+}): IntervalType => {
+  switch (timePeriod) {
     case "MINUTE":
       return { start: 0, end: 59 };
     case "HOUR":

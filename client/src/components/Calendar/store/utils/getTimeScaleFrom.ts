@@ -1,5 +1,5 @@
-import { TimePeriod } from "@stores/CalendarStore/types";
-import { TimePeriodMap } from "@stores/CalendarStore";
+import { TimePeriod } from "@components/Calendar/store/types";
+import { TimePeriodMap } from "@components/Calendar/constants";
 
 function getTimeScaleFrom(
   timeScale: TimePeriod,

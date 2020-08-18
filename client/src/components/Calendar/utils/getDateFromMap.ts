@@ -2,7 +2,7 @@
  * Return a Date from a json date object
  */
 import { log } from "@dmitrymin/fe-log";
-import { DateMap } from "@stores/CalendarStore/types";
+import { DateMap } from "@components/Calendar/store/types";
 
 function getDateFromMap({
   YEAR,
@@ -10,14 +10,14 @@ function getDateFromMap({
   DAY,
   HOUR,
   MINUTE,
-}: DateMap): Date {
+}: Partial<DateMap>): Date {
 
   let dateString: string = "";
 
   if (YEAR) {
     dateString = `${YEAR}`;
     if (MONTH) {
-      dateString += `-${MONTH}`;
+      dateString += `-${MONTH + 1}`;
       if (DAY) {
         dateString += `-${DAY}`;
         if (HOUR) {
@@ -29,7 +29,7 @@ function getDateFromMap({
       }
     }
   }
-debugger;
+
   return new Date(dateString);
 }
 

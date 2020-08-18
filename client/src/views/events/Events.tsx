@@ -8,15 +8,13 @@ import { Calendar } from "@components/Calendar";
 import { Timeline } from "@components/Timeline";
 import { EventsApp } from "@components/Events";
 
-// Stores
-import { CalendarProvider } from "@stores/CalendarStore";
+// App
+import { CalendarProvider } from "@components/Calendar/store";
 import { MapProvider } from "@stores/MapStore";
 import { EventsProvider } from "@stores/EventStore";
-
-// Constants
 import { GOOGLE_MAPS_API } from "../../constants";
-
 import { generateEventsMockData } from "@components/Calendar/__mocks__/generateEventsMockData";
+
 const mockData = generateEventsMockData();
 
 /**

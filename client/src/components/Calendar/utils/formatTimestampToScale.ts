@@ -1,5 +1,8 @@
-import { TimePeriod } from "@stores/CalendarStore/types";
+// Libs
 import { getDaysInMonth, getTime } from "date-fns";
+
+// App
+import { TimePeriod } from "@components/Calendar/store/types";
 
 function formatTimestampToScale(
   timeScale: TimePeriod,

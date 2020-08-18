@@ -7,7 +7,7 @@ import { motion, AnimatePresence, useMotionValue } from "framer-motion";
 // Components
 
 // Store
-import { useCalendar } from "@stores/CalendarStore";
+import { useCalendar } from "../store";
 
 // Constants
 
@@ -16,6 +16,7 @@ import classNames from "./styles.module.scss";
 
 // Types
 import { MyComponentProps } from "./types";
+import { Rnd } from "react-rnd";
 
 /**
  *
@@ -66,25 +67,31 @@ const Dot: FC<MyComponentProps> = ({ event }) => {
    */
   return (
     <motion.div
-      key={`event-${event.time}-${event.title}`}
       ref={dotRef}
-      className={classNames.eventContainer}
-      style={{
-        // gridTemplateColumns: `repeat(${segmentColumns}, ${segmentWidth})`,
-        // gridRowStart: idx + 1,
-      }}
+      className={classNames.eventMarker}
     >
-      <motion.div
-        className={classNames.eventMarker}
+      <div className={classNames.eventTitle}>
+        Title
+      </div>
+      <Rnd
+        default={{
+          x: 0,
+          y: 0,
+          width: 20,
+          height: 20,
+        }}
+        className={classNames.eventDot}
         style={{
           backgroundColor: event.color,
         }}
-      >
-        <div className={classNames.eventTitle}>
-          Title
-        </div>
-        {/*{format(event.time, "dd-mm:hh")}*/}
-      </motion.div>
+      />
+      {/*<div*/}
+      {/*  className={classNames.eventDot}*/}
+      {/*  style={{*/}
+      {/*    backgroundColor: event.color,*/}
+      {/*  }}*/}
+      {/*/>*/}
+      {/*{format(event.time, "dd-mm:hh")}*/}
     </motion.div>
   );
 };

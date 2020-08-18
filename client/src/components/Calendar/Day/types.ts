@@ -1,7 +1,9 @@
-import { DateMap } from "@stores/CalendarStore/types";
+import { DateMap, TimePeriod } from "@components/Calendar/store/types";
 
 export type MyComponentProps = {
-  date: DateMap;
+  date: Partial<DateMap>;
   content: any;
-  idx: number;
+  timePeriod: TimePeriod;
+  calendarMarker: Date;
+  slideWidth: number;
 };

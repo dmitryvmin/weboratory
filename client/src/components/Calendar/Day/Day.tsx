@@ -1,5 +1,5 @@
 // Libs
-import React, { CSSProperties, FC } from "react";
+import React, { CSSProperties, FC, useEffect, useRef, memo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 // Utils
@@ -17,20 +17,20 @@ import classNames from "./styles.module.scss";
 // Types
 import { MyComponentProps } from "./types";
 import { Hour } from "@components/Calendar/Hour";
-import { SLIDER_MARGIN } from "@components/Calendar/constants";
-import { format } from "date-fns";
-import { TimeFormatMap, useCalendar } from "@stores/CalendarStore";
-import { start } from "repl";
+import { DateFormatMap, SLIDER_MARGIN } from "@components/Calendar/constants";
+import { differenceInDays, differenceInHours, format } from "date-fns";
 import { getDateFromMap } from "@components/Calendar/utils/getDateFromMap";
-import { useWindowSize } from "@utils/hooks/useWindowSize";
+import { getSegmentIdxFromDate } from "@components/Calendar/utils/getSegmentIdxFromDate";
 
 /**
  *
  */
-const Day: FC<MyComponentProps> = ({
+const Day: FC<MyComponentProps> = memo(({
   date,
   content,
-  idx,
+  timePeriod,
+  calendarMarker,
+  slideWidth,
 }) => {
 
   /**
@@ -38,35 +38,20 @@ const Day: FC<MyComponentProps> = ({
    */
 
   /**
-   * Context hooks
-   */
-  const {
-    timePeriod,
-    slideCount,
-  } = useCalendar();
-
-  /**
-   * Util hooks
-   */
-  const { windowWidth } = useWindowSize();
-
-  /**
    * Variables
    */
-  const isActive = timePeriod === "DAY";
+  const isContainer = timePeriod === "HOUR";
+  const isSlide = timePeriod === "DAY";
   const className = [
     classNames.segmentDay,
-    isActive && classNames.isAbsolute,
+    isSlide && classNames.isAbsolute,
   ].join(" ");
+
 
   /**
    * Utils
    */
   const getStyles = () => {
-
-    const slideWidth = (windowWidth - (2 * SLIDER_MARGIN)) / slideCount;
-    const slideX = idx * slideWidth + (idx * SLIDER_MARGIN);
-
     switch (timePeriod) {
       case "MINUTE":
         return ({});
@@ -75,10 +60,30 @@ const Day: FC<MyComponentProps> = ({
           // backgroundColor: "rgba(255,255,255,0.2)",
         });
       case "DAY":
+
+        // const slideIdx = getSegmentIdxFromDate(timePeriod, calendarMarker, slideDate);
+        // const slideX = slideIdx * slideWidth;
+
+        const slideDate = getDateFromMap(date);
+        const daysDiff = differenceInDays(getDateFromMap(date), calendarMarker);
+        const slideX =  daysDiff * slideWidth;
+        // const slideX = (-slidesTraveled * slideWidth) + (slideIdx * slideWidth);
+
+        // console.log("$$$$$ date", date);
+        // console.log("$$$$$ slideIdx", slideIdx);
+        // console.log("$$$$$ slidesTraveled", slidesTraveled);
+        // console.log("$$$$$ slideWidth", slideWidth);
+        // console.log("$$$$$ content", content);
+        // console.log("$$$$$ calendarMarker", calendarMarker);
+        //
+        // if (slidesTraveled === 1) {
+        //   debugger;
+        // }
         return ({
-          x: slideX,
+          // flexShrink: 0,
+          x: slideX + (SLIDER_MARGIN / 2),
           y: 8,
-          width: `${slideWidth}px`,
+          width: slideWidth - (SLIDER_MARGIN / 2),
           height: "180px",
           backgroundColor: "rgba(255,255,255,0.5)",
           // backgroundColor: "rgba(0,0,0,0.15)",
@@ -106,22 +111,20 @@ const Day: FC<MyComponentProps> = ({
     if (!content) {
       return null;
     }
-    debugger;
     return content.map((hour, idx) => {
-      if (!hour) {
-        return null;
-      }
-      return null;
-      // return (
-      //   <Hour
-      //     key={`hour-${idx}`}
-      //     date={{
-      //       ...date,
-      //       hour: idx,
-      //     }}
-      //     content={hour}
-      //   />
-      // );
+      const segmentDate = {
+        ...date,
+        HOUR: idx,
+      };
+      return (
+        <Hour
+          key={`day-${getDateFromMap(segmentDate)}`}
+          date={segmentDate}
+          content={hour}
+          timePeriod={timePeriod}
+          slideWidth={slideWidth}
+        />
+      );
     });
   };
 
@@ -136,13 +139,13 @@ const Day: FC<MyComponentProps> = ({
       {date &&
       <div className={classNames.segmentLabel}>
         <Text style="label1">
-          {format(getDateFromMap(date), "EEE, eo")}
+          {format(getDateFromMap(date), DateFormatMap["DAY"])}
         </Text>
       </div>}
       {renderDay()}
     </motion.div>
   );
-};
+});
 
 Day.displayName = "Day";
 

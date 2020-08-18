@@ -2,8 +2,8 @@
 import { createContext } from "react";
 
 // App
-import { CalendarContextInterface } from "@stores/CalendarStore/types";
-import { CalendarInitState } from "@stores/CalendarStore/constants";
+import { CalendarContextInterface } from "./types";
+import { CalendarInitState } from "@components/Calendar/constants";
 
 const CalendarContext = createContext<CalendarContextInterface>([CalendarInitState, () => {
 }]);

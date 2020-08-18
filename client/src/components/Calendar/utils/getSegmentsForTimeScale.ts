@@ -2,7 +2,7 @@
 import { getDaysInMonth } from "date-fns";
 
 // App
-import { TimePeriod } from "@stores/CalendarStore/types";
+import { TimePeriod } from "@components/Calendar/store/types";
 
 /**
  * Returns [timeScale] segments

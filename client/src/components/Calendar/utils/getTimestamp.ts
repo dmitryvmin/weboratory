@@ -9,7 +9,7 @@ import {
 import invariant from "invariant";
 
 // App
-import { TimePeriod } from "@stores/CalendarStore/types";
+import { TimePeriod } from "@components/Calendar/store/types";
 
 /**
  * Returns a timestamp offset by [numOfIntervals] of [timeScale] starting at [start]

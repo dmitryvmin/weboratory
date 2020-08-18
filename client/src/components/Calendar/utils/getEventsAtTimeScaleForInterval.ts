@@ -3,11 +3,7 @@ import { isWithinInterval } from "date-fns";
 
 // App
 import { formatDateToMapKey } from "@components/Calendar/utils/formatDateToMapKey";
-import { CalendarEvent } from "@components/Calendar/types";
-
-export type EventsDataMap = {
-  [timestamp: string]: CalendarEvent[];
-}
+import { EventsDataMap } from "@components/Calendar/store/types";
 
 function getEventsAtTimeScaleForInterval({
   eventsData,
@@ -29,6 +25,7 @@ function getEventsAtTimeScaleForInterval({
 
     // const timestamp = formatDateToMapKey(timeScale, eventDatum.time);
     const timestamp = formatDateToMapKey("MINUTE", eventDatum.time);
+    // const timestamp = formatDateToMapKey("HOUR", eventDatum.time);
 
     if (eventMap[timestamp] === undefined) {
       eventMap[timestamp] = [];
