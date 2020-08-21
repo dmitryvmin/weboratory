@@ -6,7 +6,7 @@ import { useEventListener } from "@utils/hooks/useEventListener";
 import { useObservable } from "@utils/hooks/useObservable";
 
 // API
-import { tagsServiceSingleton } from "@api/services/tagService/tagService";
+import { tagsServiceSingleton } from "@api/services/TagService/TagService";
 
 // Components
 import { Tag } from "@components/Tags/Tag";
@@ -58,7 +58,6 @@ const TagsMenu: FC<TagMenuProps> = memo(({ post, tagMapSingleton }) => {
         if (!post?.id) {
           return;
         }
-        debugger;
         tagMapSingleton.addTagByTagId(post.id, tagId);
       };
     }

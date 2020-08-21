@@ -125,12 +125,15 @@ const EventModal: FC<any> = ({ menuNode }) => {
     isMenuOpen,
   ]);
 
+  /**
+   * Utils
+   */
   function centerModalOn(variant) {
     animationControls.start(variant);
-  };
+  }
 
-  const getInitialPosition = () => {
-    if (!!markerNode) {
+  function getInitialPosition() {
+    if (markerNode) {
       return "closedOnMarker";
     }
     else {
@@ -141,7 +144,7 @@ const EventModal: FC<any> = ({ menuNode }) => {
         return "closedOnMenuOrigin";
       }
     }
-  };
+  }
 
   /**
    * Return JSX

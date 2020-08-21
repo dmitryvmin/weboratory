@@ -28,6 +28,6 @@ async function getClientPosition() {
   catch (error) {
     console.log("Unable to retrieve client location", error);
   }
-};
+}
 
 export { getClientPosition };

@@ -23,7 +23,7 @@ const usePortal = () => {
   //   return bindTo ?? document.body;
   // }, [bindTo]);
 
-  const Portal = useCallback(({ children, bindTo }: { children: ReactNode, bindTo: Element }) => {
+  const Portal = useCallback(({ children, bindTo }: { children: ReactNode; bindTo: Element }) => {
     const elToMountTo = bindTo ?? document.body;
     return ReactDOM.createPortal(children, elToMountTo);
   }, []);

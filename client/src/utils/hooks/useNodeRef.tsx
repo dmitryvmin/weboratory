@@ -6,7 +6,7 @@ import React, { useState, useCallback } from "react";
  * https://bit.ly/2mh3piB
  */
 
-function useNodeRef<T>(): { node: T | undefined, ref: (newNode: any) => void } {
+function useNodeRef<T>(): { node: T | undefined; ref: (newNode: any) => void } {
 
   const [node, setNode] = useState<T>();
 

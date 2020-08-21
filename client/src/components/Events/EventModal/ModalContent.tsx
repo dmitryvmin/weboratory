@@ -17,7 +17,7 @@ import { getPositionFromTarget } from "@components/Events/utils/getPositionFromT
 import { Close, Calendar, Map, MapPin } from "@components/UI/Icon";
 
 // Services
-import { eventsService } from "@api/services/eventsService";
+import { EventsService } from "@api/services/EventsService";
 
 // Utils
 import { useObservable } from "@utils/hooks/useObservable";
@@ -94,7 +94,7 @@ const ModalContent: any = ({ centerModalOn }) => {
     setAddressSearchTo(isOn);
     centerModalOn(isOn ? "openOnMarker" : "openOnCenter");
     if (isOn) {
-
+      console.log("address search is on");
     }
   };
 

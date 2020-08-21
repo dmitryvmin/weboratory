@@ -1,3 +1,4 @@
+// Libs
 import {
   getYear,
   getDate,
@@ -5,7 +6,9 @@ import {
   getMinutes,
   getMonth,
 } from "date-fns";
-import { DateMap } from "@components/Calendar/store/types";
+
+// App
+import { DateMap } from "@components/Calendar/common/types";
 
 /**
  * Returns a timeMarker of [timeScale] duration starting at current time

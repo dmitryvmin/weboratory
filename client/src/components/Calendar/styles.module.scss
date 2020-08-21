@@ -8,11 +8,12 @@
   z-index: $zi2;
   bottom: 70px;
   width: calc(100vw - 40px);
-  height: 200px;
+  //height: 200px;
   margin: 20px;
   border: 1px solid white;
   border-radius: $bradius_1;
   overflow: hidden;
+  background-color: rgba(0,0,0,0.15);
 
   > div {
     cursor: grab;
@@ -23,7 +24,7 @@
   position: absolute;
   display: flex;
   align-items: center;
-  right: $size_2;
+  right: $size_4;
   bottom: 1px;
   z-index: $zi4;
   height: 50px;
@@ -36,7 +37,17 @@
   border-radius: $bradius_1;
 }
 
-.calendarLabel {
+.calendarDateContainer {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  left: $size_4;
+  bottom: 1px;
+  z-index: $zi4;
+  height: 50px;
+}
+
+.calendarDateLabel {
   position: absolute;
   -webkit-user-select: none;
   user-select: none;

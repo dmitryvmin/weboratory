@@ -1,5 +1,5 @@
-import { eventsService } from "@api/services/eventsService";
+import { EventsService } from "@api/services/EventsService";
 
-const eventsInstance = new eventsService();
+const eventsInstance = new EventsService();
 
 export {eventsInstance};

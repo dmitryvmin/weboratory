@@ -3,54 +3,50 @@
 @import "../../../styles/radius";
 @import "../../../styles/colors";
 
-.slide {
+.slideBase {
+}
+
+.isContainer {
+  position: relative;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.isSlide {
   position: absolute;
-  height: 200px;
-  column-gap: $size_1;
-  padding: 0 2.5px;
-  background: rgba(255,255,255,0.8);
-}
-
-.slideLabel {
-  height: 20px;
-}
-
-.slideContent {
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: $bradius_1;
+  overflow: scroll;
   display: grid;
-  height: 180px;
-}
+  grid-auto-flow: column;
 
-.segment {
-  //display: grid;
+  > div:not(.segmentLabel) {
+    display: grid;
+    grid-auto-rows: 50px;
+    padding-top: $size_6;
+    position: relative;
+
+    &:after {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      border-right: solid 1px rgba(0, 0, 0, 0.5);
+      transform: translate(-50%);
+    }
+  }
 }
 
 .segmentLabel {
-  user-select: none;
-  font-weight: 600;
-  color: $color-neutral-200;
-}
-
-.segmentContent {
-  display: grid;
-  height: calc(100% - 20px);
-}
-
-.segmentInstant {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.segmentInstantTitle {
-  white-space: nowrap;
   position: absolute;
-  top: 0;
-  user-select: none;
-}
+  font-weight: 600;
+  background-color: $color-neutral-0;
+  margin: 2px;
+  border-radius: $bradius_1;
+  padding: 2px 5px;
 
-.segmentInstantBlob {
-  width: $size_4;
-  height: $size_4;
-  border-radius: 50%;
-  white-space: nowrap;
+  > div {
+    user-select: none;
+  }
 }

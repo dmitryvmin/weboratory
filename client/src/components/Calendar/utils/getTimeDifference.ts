@@ -8,7 +8,7 @@ import {
 } from "date-fns";
 
 // App
-import { TimePeriod } from "@components/Calendar/store/types";
+import { TimePeriod } from "@components/Calendar/common/types";
 
 /**
  * Returns the [timeScale] difference between the [start] and [end] dates

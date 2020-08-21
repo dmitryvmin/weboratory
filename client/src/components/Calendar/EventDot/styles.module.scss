@@ -6,19 +6,22 @@
 .eventMarker {
   white-space: nowrap;
   position: relative;
-  transform: translateX(-10px);
+  //transform: translateX(-10px);
 }
 
 .eventDot {
+  position: absolute;
+  left: calc(50% - 10px);
+  top: calc(50% - 10px);
   width: $size_4;
   height: $size_4;
   border-radius: $size_2;
-  position: absolute;
 }
 
 .eventTitle {
-  white-space: nowrap;
   position: absolute;
-  top: -20px;
+  top: calc(50% - 30px);
+  left: -2px;
+  white-space: nowrap;
   user-select: none;
 }

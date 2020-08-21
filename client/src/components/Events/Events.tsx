@@ -9,7 +9,7 @@ import styles from "./styles.module.scss";
 // Utils
 import { Auth0Context } from "@utils/hooks/useAuth0";
 import { useObservable } from "@utils/hooks/useObservable";
-import { eventsService } from "@api/services/eventsService";
+import { EventsService } from "@api/services/EventsService";
 
 // Types
 import { IEvent } from "@common/types";
@@ -153,10 +153,10 @@ const EventsApp: React.FC = () => {
       <EventsMenu menuRefs={{ menuRef1, menuRef2 }}/>
       <EventModal menuNode={menuNode1}/>
       <MapSearch menuNode={menuNode2}/>
-      {/*<Map>*/}
-      {/*  {renderNewEventMarker()}*/}
-      {/*  {renderSavedMarkers()}*/}
-      {/*</Map>*/}
+      <Map>
+        {renderNewEventMarker()}
+        {renderSavedMarkers()}
+      </Map>
     </div>
   );
 };

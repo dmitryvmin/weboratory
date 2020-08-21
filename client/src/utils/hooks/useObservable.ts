@@ -18,6 +18,6 @@ function useObservable<T>(observable?: Observable<T>): T | undefined {
   }, [observable]);
 
   return state;
-};
+}
 
 export { useObservable };

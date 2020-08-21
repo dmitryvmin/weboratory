@@ -10,11 +10,3 @@
   cursor: default;
   color: $color-disabled;
 }
-
-.calendarLabel {
-  margin-right: $size_2;
-
-  > div {
-    user-select: none;
-  }
-}

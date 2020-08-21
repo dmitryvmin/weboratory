@@ -26,6 +26,6 @@ async function geocodeQuery(address) {
     log(`geocodeQuery error for address ${address}:`, err);
     return;
   }
-};
+}
 
 export { geocodeQuery };

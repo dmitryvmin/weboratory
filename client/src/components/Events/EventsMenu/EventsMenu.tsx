@@ -92,7 +92,7 @@ const EventsMenu: FC<any> = ({menuRefs}) => {
   /**
    * ========== Util hooks
    */
-  let { windowWidth, windowHeight } = useWindowSize();
+  const { windowWidth, windowHeight } = useWindowSize();
 
   // const controls = useAnimation();
 

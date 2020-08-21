@@ -1,6 +1,6 @@
 // App
+import { CalendarEvent, TimePeriod } from "@components/Calendar/common/types";
 import { getTimeDifference } from "@components/Calendar/utils/getTimeDifference";
-import { CalendarEvent, TimePeriod } from "@components/Calendar/store/types";
 
 type GetEventMap = {
   eventMap: any[];
@@ -26,7 +26,7 @@ function getEventMap(
   const eventMap: any[] = [];
 
   // Highest number of events occurring on a [segmentPeriod]
-  let mapHeight: number = 1;
+  let mapHeight = 1;
 
   for (let i = 0; i < data.length; i++) {
 

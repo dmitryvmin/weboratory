@@ -30,7 +30,7 @@ import { getLastContentRecord } from "@components/Editor/utils/getLastContentRec
 import { getHtmlIdxFromTextIdx } from "@components/Editor/utils/getHtmlIdxFromTextIdx";
 import { renderStaticMarkup } from "@components/Editor/utils/renderStaticMarkup";
 import { useObservable } from "@utils/hooks/useObservable";
-import { editorServiceSingleton } from "@api/services/editorService";
+import { editorServiceSingleton } from "@api/services/EditorService";
 import { useEditor } from "@stores/EditorStore";
 
 /**
@@ -293,7 +293,6 @@ const Editor: FC<TEditor> = ({ content, onEditorChange }) => {
     const caretPosition = getCaretPosition(editor);
     if (!caretPosition) {
       return;
-      ;
     }
     const activeRecord = getActiveRecord(contentHistory, activeRecordIdx);
     const newHtml = insertElIntoHtml(activeRecord.html, data, caretPosition);

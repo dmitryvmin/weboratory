@@ -1,5 +1,5 @@
 // Libs
-import React, { FC, SyntheticEvent, useState } from "react";
+import React, { FC } from "react";
 
 // Styles
 import classNames from "./styles.module.scss";
@@ -11,6 +11,7 @@ const Text: FC<TextProps> = ({
   children,
   style = "p1",
   brightness,
+  className,
 }) => {
 
   const getStyles = () => {
@@ -22,7 +23,10 @@ const Text: FC<TextProps> = ({
   };
 
   return (
-    <div className={getStyles()}>
+    <div
+      {...className && {className}}
+      className={getStyles()}
+    >
       {children}
     </div>
   );

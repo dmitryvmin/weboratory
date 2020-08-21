@@ -9,6 +9,6 @@ function getLngLatTuple(latLng: TLngLat): TCoords {
     latLng.lng,
     latLng.lat,
   ];
-};
+}
 
 export { getLngLatTuple };

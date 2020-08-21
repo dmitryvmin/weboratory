@@ -1,11 +1,11 @@
 import { TPost } from "@common/types";
-import { editorService, postService, tagMapService } from "@api/services";
+import { EditorService, PostService, TagMapService } from "@api/services";
 
 export type PostMenuProps = {
   post?: TPost;
   title?: string;
-  tagMapSingleton: tagMapService;
-  editorSingleton: editorService;
+  tagMapSingleton: TagMapService;
+  editorSingleton: EditorService;
   handleSave: any;
   handleDelete?: any;
 }

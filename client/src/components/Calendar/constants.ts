@@ -1,20 +1,22 @@
-import { CalendarState, TimePeriod } from "@components/Calendar/store/types";
+// App
+import { CalendarState } from "@components/Calendar/store/types";
+import { getToday } from "@components/Calendar/utils/getToday";
+import { TimePeriod } from "@components/Calendar/common/types";
 
 export const SLIDER_MARGIN = 20;
-
-export const DRAG_STATUS = {
-  NONE: "none",
-  DRAG_STARTED: "drag started",
-  DRAG_ENDED: "drag ended",
-};
 
 export const SLIDER_BUFFER = 1;
 
 export const CalendarInitState: CalendarState = {
   timePeriod: "DAY",
-  isOpen: true,
-  xPosition: 0,
-  calendarMarker: new Date,
+  isOpen: false,
+  isFullScreen: false,
+  xDistance: {
+    distance: 0,
+    velocity: 0,
+  },
+  startingDate: getToday(),
+  currentDate: getToday(),
   intervalData: undefined,
   slideCount: 1,
   slideWidth: 400,
@@ -30,19 +32,27 @@ export const TimeFormatMap: {[key in TimePeriod]: string} = {
 };
 
 export const TimePeriodMap: TimePeriod[] = [
-  "SECOND",
-  "MINUTE",
-  "HOUR",
-  "DAY",
-  "MONTH",
   "YEAR",
+  "MONTH",
+  "DAY",
+  "HOUR",
+  "MINUTE",
 ];
 
 export const DateFormatMap: {[key in TimePeriod]: string} = {
-  "SECOND": "",
-  "MINUTE": "",
-  "HOUR": "",
+  "SECOND": "p",
+  "MINUTE": "p",
+  "HOUR": "p",
   "DAY": "EEE, do",
-  "MONTH": "",
-  "YEAR": "",
+  "MONTH": "MMM",
+  "YEAR": "yyyy",
+}
+
+export const CurrentDateFormatMap: {[key in TimePeriod]: string} = {
+  "SECOND": "MMM do, p yyy h:m aaaa",
+  "MINUTE": "MMM do, p h:m aaaa yyy",
+  "HOUR": "MMM do, h aaaa yyy",
+  "DAY": "MMM do, yyy",
+  "MONTH": "MMM yyy",
+  "YEAR": "MMM",
 }

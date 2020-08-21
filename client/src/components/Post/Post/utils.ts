@@ -6,7 +6,7 @@ function checkIfSelected(
 ) {
   if (!match?.params?.id) {
     return;
-  };
+  }
   if (match.params.id === "new" && title === undefined) {
     return true;
   }

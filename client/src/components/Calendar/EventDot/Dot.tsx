@@ -1,13 +1,14 @@
 // Libs
 import React, { FC, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useMotionValue } from "framer-motion";
+import { Rnd } from "react-rnd";
 
 // Utils
 
 // Components
 
 // Store
-import { useCalendar } from "../store";
+import { useCalendar } from "@components/Calendar/hooks/useCalendar/useCalendar";
 
 // Constants
 
@@ -15,13 +16,12 @@ import { useCalendar } from "../store";
 import classNames from "./styles.module.scss";
 
 // Types
-import { MyComponentProps } from "./types";
-import { Rnd } from "react-rnd";
+import { DotProps } from "./types";
 
 /**
- *
+ * Event Dot Calendar Marker
  */
-const Dot: FC<MyComponentProps> = ({ event }) => {
+const Dot: FC<DotProps> = ({ event }) => {
 
   /**
    * =============== Hooks ===============
@@ -70,9 +70,6 @@ const Dot: FC<MyComponentProps> = ({ event }) => {
       ref={dotRef}
       className={classNames.eventMarker}
     >
-      <div className={classNames.eventTitle}>
-        Title
-      </div>
       <Rnd
         default={{
           x: 0,
@@ -90,8 +87,11 @@ const Dot: FC<MyComponentProps> = ({ event }) => {
       {/*  style={{*/}
       {/*    backgroundColor: event.color,*/}
       {/*  }}*/}
-      {/*/>*/}
-      {/*{format(event.time, "dd-mm:hh")}*/}
+      {/*>*/}
+        {/*<div className={classNames.eventTitle}>*/}
+        {/*  Title*/}
+        {/*</div>*/}
+      {/*</div>*/}
     </motion.div>
   );
 };

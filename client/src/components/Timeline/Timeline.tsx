@@ -1,6 +1,8 @@
 // Libs
-import React, { FC, useRef } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 import { motion, motionValue, useAnimation, useMotionValue } from "framer-motion";
+
+// Components
 import { Move } from "@components/UI/Icon";
 
 // Styles
@@ -10,9 +12,10 @@ import styles from "./styles.module.scss";
 import { useWindowSize } from "@utils/hooks/useWindowSize";
 
 // Store
-import { TIMELINE_HEIGHT } from "@common/constants";
+import { TIMELINE_HEIGHT, DRAG_STATUS } from "@common/constants";
 import { useEvents } from "@stores/EventStore";
-import { useCalendar } from "@components/Calendar/store";
+import { useCalendar } from "@components/Calendar/hooks/useCalendar";
+import { useTimeline } from "@components/Timeline/useTimeline";
 
 // Types
 export type ITimeline = any;
@@ -56,73 +59,77 @@ const y = motionValue(0);
 const Timeline: FC<ITimeline> = () => {
 
   /**
-   * Hooks
+   * =============== Hooks ===============
    */
+
+  /**
+   * Component hooks
+   */
+  const [dragStatus, setDragStatus] = useState(DRAG_STATUS.NONE);
+
   const constraintsRef = useRef<HTMLDivElement>(null);
 
-  const { setCalendarIsOpen, moveLeft, moveRight } = useCalendar();
+  const isDragging = useRef<boolean>(false);
 
+  const {updatePanInfo} = useTimeline();
+
+  /**
+   * Context hooks
+   */
+  const { isMenuOpen, setIsMenuOpenTo } = useEvents();
+
+  /**
+   * Util hooks
+   */
   const { windowHeight, windowWidth } = useWindowSize();
-
-  const {isMenuOpen, setIsMenuOpenTo} = useEvents();
 
   const dragYValue = useMotionValue(0);
 
   const scaleValue = useMotionValue(0);
 
   const animate = useAnimation();
-  // const dragControls = useDragControls();
+
+  /**
+   * Effects
+   */
+  // Throttle swipe events
+  // useEffect(() => {
+  //   if (dragStatus !== DRAG_STATUS.DRAG_STARTED) {
+  //     return;
+  //   }
+  //
+  //   const interval = setInterval(() => {
+  //     isDragging.current = false;
+  //   }, 500);
+  //
+  //   return () => clearInterval(interval);
+  // }, [
+  //   dragStatus,
+  // ]);
 
   /**
    * Handlers
    */
     // Constrain the cursor to height of the Timeline container
   const handleDrag = (event, info) => {
-      const {
-        point: {
-          x: px,
-          y: py,
-        },
-        offset: {
-          x: ox,
-          y: oy,
-        },
-      } = info;
 
-      // If y dips below the container, set it to 0
-      if (py > windowHeight - 20) {
-        console.log("Cursor below too low", py);
-        // animate.set({
-        //   y: 0,
-        // });
-        setCalendarIsOpen(false);
-      }
+      updatePanInfo(info);
 
-      if (py < window.innerHeight - 100) {
-        // console.log("Cursor below too high", py);
-        // animate.set({
-        //   y: 0,
-        // });
-        setCalendarIsOpen(true);
-      }
+      // On First Drag set
+      // if (isDragging.current === false) {
+      //   moveTimelineXDistance(ox);
+      // }
 
-      if (ox < -50) {
-        moveRight(ox);
-      }
-
-      if (ox > 50) {
-        moveLeft(ox);
-      }
-
+      isDragging.current = true;
     };
 
-  // Spring back to radius, if overdragged
+  const handleDragStart = (event, info) => {
+    setDragStatus(DRAG_STATUS.DRAG_STARTED);
+  };
+
   const handleDragEnd = (event, info) => {
-    // const { x: px, y: py } = info.point;
-    // console.log("@@ handleDragEnd");
-    // animate.set({
-    //   scale: 1,
-    // });
+    isDragging.current = false;
+    setDragStatus(DRAG_STATUS.DRAG_ENDED);
   };
 
   /**
@@ -153,8 +160,9 @@ const Timeline: FC<ITimeline> = () => {
         //   bounceDamping: 10,
         // }}
         onDrag={handleDrag}
-        // onDragEnd={handleDragEnd}
-        onDoubleClick={() => setIsMenuOpenTo(!isMenuOpen)}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
+        onClick={() => setIsMenuOpenTo(!isMenuOpen)}
       >
         <Move fontSize="40"/>
       </motion.div>

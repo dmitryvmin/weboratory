@@ -1,23 +1,24 @@
 // Libs
 import React, { FC } from "react";
 
+// Utils
+import { cn } from "@utils/css/getClassName";
+
 // Components
 import { ZoomIn, ZoomOut } from "@components/UI/Icon";
 import { Text } from "@components/UI/Text";
+import { CalendarMenuProps } from "@components/Calendar/CalendarMenu/types";
 
-// Store
-import { useCalendar } from "../store";
+// Hooks
+import { useCalendar } from "@components/Calendar/hooks/useCalendar/useCalendar";
 
 // Styles
 import styles from "./styles.module.scss";
-import { format } from "date-fns";
-import { getDateFromMap } from "@components/Calendar/utils/getDateFromMap";
-import { CalendarMenuProps } from "@components/Calendar/CalendarMenu/types";
 
 /**
  * Controls Calendar zoom
  */
-const CalendarMenu: FC<CalendarMenuProps> = ({}) => {
+const CalendarMenu: FC<CalendarMenuProps> = () => {
 
   /**
    * Hooks
@@ -25,10 +26,8 @@ const CalendarMenu: FC<CalendarMenuProps> = ({}) => {
   const {
     zoomIn,
     zoomOut,
-    timePeriod,
-    isFirstPeriod,
-    isLastPeriod,
-    calendarMarker,
+    isAtMaxPeriod,
+    isAtMinPeriod,
   } = useCalendar();
 
   /**
@@ -36,23 +35,19 @@ const CalendarMenu: FC<CalendarMenuProps> = ({}) => {
    */
   return (
     <>
-      <div className={styles.calendarLabel}>
-        {/*{format(calendarMarker, "EEE, eo")}*/}
-        <Text style="p3">{timePeriod}</Text>
-      </div>
       <ZoomOut
-        className={[
+        className={cn(
           styles.zoomnBtn,
-          isLastPeriod() && styles.zoomnBtnDisabled,
-        ].join(" ")}
+          isAtMaxPeriod() && styles.zoomnBtnDisabled,
+        )}
         fontSize="40px"
         onClick={zoomOut}
       />
       <ZoomIn
-        className={[
+        className={cn(
           styles.zoomnBtn,
-          isFirstPeriod() && styles.zoomnBtnDisabled,
-        ].join(" ")}
+          isAtMinPeriod() && styles.zoomnBtnDisabled,
+        )}
         fontSize="40px"
         onClick={zoomIn}
       />

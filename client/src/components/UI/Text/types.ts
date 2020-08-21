@@ -14,4 +14,5 @@ export type TextProps = {
   children: ReactNode;
   style?: TextStyle;
   brightness?: "light" | "dark";
+  className?: string;
 }

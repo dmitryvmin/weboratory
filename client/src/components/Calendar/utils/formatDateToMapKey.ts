@@ -1,6 +1,10 @@
+// App
+import { TimePeriod } from "@components/Calendar/common/types";
 import { getMapFromDate } from "@components/Calendar/utils/getMapFromDate";
-import { TimePeriod } from "@components/Calendar/store/types";
 
+/**
+ * Returns a date as DateMap key
+ */
 function formatDateToMapKey(
   scale: TimePeriod,
   date: Date,

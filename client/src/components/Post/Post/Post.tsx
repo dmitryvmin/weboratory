@@ -5,7 +5,7 @@ import { useRouteMatch } from "react-router";
 import { motion, useAnimation } from "framer-motion";
 
 // API
-import { editorService, postService, tagMapService } from "@api/services";
+import { EditorService, PostService, TagMapService } from "@api/services";
 
 // Components
 import { PostMenu } from "@components/Post/PostMenu";
@@ -105,15 +105,15 @@ const Post: FC<PostProps> = ({
 
   const isSelected = checkIfSelected(title, match);
 
-  const tagMapSingleton = useRef<tagMapService>(new tagMapService());
+  const tagMapSingleton = useRef<TagMapService>(new TagMapService());
 
-  const postSingleton = useRef<postService>(new postService());
+  const postSingleton = useRef<PostService>(new PostService());
 
   const [postTitle, setPostTitle] = useState<string>("New Post");
 
   const { pageYOffset } = useWindowOffset();
 
-  const editorSingleton = useRef<editorService>(new editorService());
+  const editorSingleton = useRef<EditorService>(new EditorService());
 
   const editorContent$ = useObservable(editorSingleton.current.onEditorContent());
 
@@ -143,7 +143,7 @@ const Post: FC<PostProps> = ({
       }
     }
     else {
-      if (!!title) {
+      if (title) {
         animationControls.start("inactiveSavedPost");
       }
       else {

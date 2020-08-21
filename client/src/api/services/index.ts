@@ -1,4 +1,5 @@
-export {editorService} from "./editorService/editorService";
-export {postService, postServiceSingleton} from "./postService";
-export {tagMapService} from "./tagMapService";
-export {tagService} from "./tagService";
+export * from "./PostService";
+export * from "./TagMapService";
+export * from "./TagService";
+export * from "./EditorService";
+export * from "./EventsService";

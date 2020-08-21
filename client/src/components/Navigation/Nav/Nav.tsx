@@ -35,7 +35,7 @@ export type INavItem = {
 const items: INavItem[] = [
   { icon: null, to: "/", label: "Home", props: { exact: true } },
   { icon: null, to: "/posts", label: "Posts", props: { exact: true } },
-  { icon: null, to: "/photos", label: "Photos", props: { exact: true } },
+  // { icon: null, to: "/photos", label: "Photos", props: { exact: true } },
   // { icon: null, to: "/about", label: "About" },
   // { icon: null, to: "/design", label: "Design" },
   // { icon: null, to: "/projects", label: "Projects" },

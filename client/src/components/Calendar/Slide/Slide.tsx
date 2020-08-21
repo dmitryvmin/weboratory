@@ -1,162 +1,249 @@
 // Libs
-import React, { FC, useRef, memo, useEffect, forwardRef, ForwardRefRenderFunction } from "react";
+import React, { CSSProperties, FC, memo, useEffect, useState } from "react";
+import { motion, MotionStyle, TargetAndTransition, useAnimation, VariantLabels } from "framer-motion";
 import { format } from "date-fns";
-import { motion } from "framer-motion";
+
+// Utils
+import { getSegDiff } from "../utils/getSegDiff";
+import { cn } from "@utils/css/getClassName";
+
+// UI
+import { Text } from "@components/UI/Text";
+
+// Calendar
+import { Dot } from "@components/Calendar/EventDot";
+
+// Constants
+import { DateFormatMap, SLIDER_MARGIN } from "@components/Calendar/constants";
+
+// Utils
+import { getDateFromMap } from "@components/Calendar/utils/getDateFromMap";
+import { getParentTimePeriod } from "@components/Calendar/utils/getParentTimePeriod";
+import { getChildTimePeriod } from "@components/Calendar/utils/getChildTimePeriod";
 
 // Styles
 import classNames from "./styles.module.scss";
 
-// Constants
-import { SLIDER_MARGIN, TimeFormatMap } from "@components/Calendar/constants";
-
-// Components
-import { Text } from "@components/UI/Text";
-
-// Utils
-import { useWindowSize } from "@utils/hooks/useWindowSize";
-import { useMutationObserver } from "@utils/hooks/useMutationObserver";
-import { getEventMap } from "@components/Calendar/utils/getEventMap";
-import { getSegmentsForTimeScale } from "@components/Calendar/utils/getSegmentsForTimeScale";
-
 // Types
-import { SlideProps } from "@components/Calendar/Slide/types";
-import { useIntersectionObserver } from "@utils/hooks/useIntersectionObserver";
+import { SlideProps } from "./types";
+import { getStartOfPeriod } from "@components/Calendar/utils/getStartOfPeriod";
+import { getTimePeriodIdx } from "@components/Calendar/utils/getTimePeriodIdx";
+import { useEventsData } from "@stores/EventsDataStore/useEventsData";
+import { formatDateToMapKey } from "@components/Calendar/utils/formatDateToMapKey";
+import { log } from "@dmitrymin/fe-log";
+import { useCalendar } from "@components/Calendar/hooks/useCalendar";
+import { useWindowSize } from "@utils/hooks/useWindowSize";
+
+type AnimationDefinition = VariantLabels | TargetAndTransition | any;
+
+const TRANSITION_PROPS = {
+  duration: 0,
+  type: "tween",
+};
 
 /**
  * Slide
  */
-const Slide = forwardRef(
-  ({
-      timeScale,
-      data,
-      marker: {
-        start,
-        end,
-      },
-    }: SlideProps,
-    centerSlideRef: any,
-  ) => {
+const Slide: FC<SlideProps> = memo(({
+    slideTimePeriod,
+    slideDateMap,
+    slideContent,
+    slideWidth,
+    calendarTimePeriod,
+    calendarStartingDate,
+  }) => {
 
     /**
-     * Hooks
+     * =============== Variables ===============
      */
-    const slideRef = useRef<HTMLDivElement>(null);
-
-    const { windowWidth, windowHeight } = useWindowSize();
-
-    // const [inView, entry] = useIntersectionObserver(slideRef, {
-    //   threshold: 0,
-    // });
+    const calendarParentTimePeriod = getParentTimePeriod(calendarTimePeriod);
+    const isContainer = slideTimePeriod === calendarParentTimePeriod;
+    const isSlide = slideTimePeriod === calendarTimePeriod;
 
     /**
-     * Variables
+     * =============== Hooks ===============
      */
-    const slideWidth = windowWidth - (SLIDER_MARGIN * 2);
+    const controls = useAnimation();
 
-    // const segmentScale = TimeScaleSegmentMap[timeScale];
-    //
-    // const segments = getSegmentsForTimeScale(timeScale, start);
-    //
-    // const { eventMap, mapHeight } = getEventMap(data, start, segmentScale) || {};
+    const { intervalEventsDataMap } = useEventsData();
+
+    const { isFullScreen } = useCalendar();
+
+  const { windowHeight } = useWindowSize();
 
     /**
-     * Utils - move out of the component
+     * =============== Effects ===============
      */
-
+    useEffect(() => {
+      if (isSlide) {
+        controls.start(getActiveSlideStyle());
+      }
+      // else {
+      //   controls.start(getSlideStyle(false));
+      // }
+    }, [
+      calendarStartingDate,
+      calendarTimePeriod,
+      slideTimePeriod,
+    ]);
 
     /**
-     * Effects
+     * =============== Variables ===============
      */
-    // useEffect(() => {
-    //   cb(idx);
-    // }, [inView]);
+    const slideDate = getDateFromMap(slideDateMap);
+
+    const className = cn(
+      classNames.slideBase,
+      isContainer && classNames.isContainer,
+      isSlide && classNames.isSlide,
+    );
+
+    /**
+     * Utils
+     */
+    function getInactiveSlideStyle(): AnimationDefinition {
+      return ({
+        x: "unset",
+        y: "unset",
+        width: "unset",
+      });
+    }
+
+    function getActiveSlideStyle(): AnimationDefinition {
+
+      const calendarFloor = getStartOfPeriod(calendarTimePeriod, calendarStartingDate);
+
+      const segmentDiff = getSegDiff({
+        timePeriod: calendarTimePeriod,
+        from: slideDate,
+        to: calendarFloor,
+      });
+
+      const slideX = segmentDiff * slideWidth;
+
+      return ({
+        left: slideX + (SLIDER_MARGIN / 2),
+        top: 8,
+        width: slideWidth - (SLIDER_MARGIN / 2),
+        height: isFullScreen ? windowHeight - 140 : 180,
+      });
+    }
 
     /**
      * =============== JSX ===============
      */
+    function renderLabel() {
+      if (isSlide) {
+        const dateFormat = DateFormatMap[slideTimePeriod];
+        const formattedDate = format(slideDate, dateFormat);
+        return (
+          <div className={classNames.segmentLabel}>
+            <Text style="label1">
+              {`${formattedDate}`}
+            </Text>
+          </div>
+        );
+      }
+    }
 
-    /**
-     * Render Segment Events
-     */
-    // const renderSegmentEvents = (segment, events) => {
-    //   if (!events || !events.length) {
-    //     return;
-    //   }
-    //   return events.map((event, eventIdxAtSegment) => {
-    //     return (
-    //       <div
-    //         key={`instant-${segmentScale}-${event.time.toString()}`}
-    //         style={{
-    //           gridRowStart: eventIdxAtSegment,
-    //         }}
-    //         className={classNames.segmentInstant}
-    //       >
-    //         <div className={classNames.segmentInstantTitle}>
-    //           Title
-    //         </div>
-    //         <motion.div
-    //           className={classNames.segmentInstantBlob}
-    //           style={{
-    //             backgroundColor: event.color,
-    //           }}
-    //         >
-    //           {/*{format(date, "dd-mm:hh")}*/}
-    //         </motion.div>
-    //       </div>
-    //     );
-    //   });
-    // };
+    function renderEvents() {
+
+      const sliderDateKey = formatDateToMapKey(slideTimePeriod, slideDate);
+      const segmentEvents = intervalEventsDataMap[sliderDateKey];
+
+      if (!segmentEvents || !segmentEvents.length) {
+        return;
+      }
+
+      return segmentEvents.map((event, idx) => {
+        return (
+          <Dot
+            key={`${slideTimePeriod}-${slideDate}-${idx}`}
+            event={event}
+          />
+        );
+      });
+    }
+
+    // TODO: Clean up...
+
+    // Render this Slide
+    function renderContent() {
+      // Content is null, render empty Slide
+      if (slideContent === null) {
+        return renderEvents();
+      }
+      else if (Array.isArray(slideContent)) {
+
+        return slideContent.map((childContent, idx) => {
+          // If 0-day or undefined, return
+          if (childContent === 0 || childContent === undefined) {
+            return;
+          }
+          else {
+
+            const slideChildTimePeriod = getChildTimePeriod(slideTimePeriod);
+
+            const childDateMap = {
+              ...slideDateMap,
+              [slideChildTimePeriod]: idx,
+            };
+
+            const childDate = getDateFromMap(childDateMap);
+
+            return (
+              <Slide
+                // key={`${calendarTimePeriod}-${slideDate}-${childDate}`}
+                key={`${slideChildTimePeriod}-${childDate}`}
+                slideTimePeriod={slideChildTimePeriod}
+                slideDateMap={childDateMap}
+                slideContent={childContent}
+                slideWidth={slideWidth}
+                calendarTimePeriod={calendarTimePeriod}
+                calendarStartingDate={calendarStartingDate}
+              />
+            );
+          }
+        });
+      }
+    }
 
     /**
      * Render Component
      */
-    return (
-      <div
-        ref={centerSlideRef}
-        style={{
-          width: `${slideWidth}px`,
-          // left: `${x}px`,
-          // left: `${idx * slideWidth}px`,
-        }}
-        className={classNames.slide}
-      >
-        <div className={classNames.slideLabel}>
-          {format(start, TimeFormatMap[timeScale])}
-        </div>
+    if (isSlide) {
+      // return (
+      //   <motion.div
+      //     layout
+      //     style={getActiveSlideStyle()}
+      //     // animate={controls}
+      //     transition={TRANSITION_PROPS}
+      //     className={className}
+      //   >
+      //     {renderLabel()}
+      //     {renderContent()}
+      //   </motion.div>
+      // );
+      return (
         <div
-          className={classNames.slideContent}
-          style={{
-            // gridTemplateColumns: `repeat(${segments.length}, 1fr)`,
-          }}
+          style={getActiveSlideStyle()}
+          className={className}
         >
-          {/*{segments.map((segment) => {*/}
-          {/*  const eventsAtSegment = eventMap ? eventMap[segment] : undefined;*/}
-          {/*  return (*/}
-          {/*    <div*/}
-          {/*      key={`segment-${segment}`}*/}
-          {/*      style={{*/}
-          {/*        gridColumnStart: segment,*/}
-          {/*      }}*/}
-          {/*      className={classNames.segment}*/}
-          {/*    >*/}
-          {/*      <div className={classNames.segmentLabel}>*/}
-          {/*        <Text>{segment}</Text>*/}
-          {/*      </div>*/}
-          {/*      <div*/}
-          {/*        style={{*/}
-          {/*          gridTemplateRows: `repeat(${mapHeight}, 50px)`,*/}
-          {/*        }}*/}
-          {/*        className={classNames.segmentContent}*/}
-          {/*      >*/}
-          {/*        {renderSegmentEvents(segment, eventsAtSegment)}*/}
-          {/*      </div>*/}
-          {/*    </div>*/}
-          {/*  );*/}
-          {/*})}*/}
+          {renderLabel()}
+          {renderContent()}
         </div>
-      </div>
-    );
-  },
+      );
+    }
+    else {
+      return (
+        <div className={className}>
+          {renderContent()}
+        </div>
+      );
+    }
+  }
 );
+
+Slide.displayName = "Slide";
 
 export { Slide };

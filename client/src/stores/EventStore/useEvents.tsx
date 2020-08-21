@@ -131,47 +131,8 @@ const useEvents = (): IUseEvents => {
    * ==================== Public functions ====================
    */
 
-  /**
-   * Sets the passed event as the activeEvent
-   */
-  const setEvent = async (event, isOpen) => {
-
-    const newActiveEvent = await createEventObject(event);
-
-    setActiveEvent(newActiveEvent);
-
-    easeTo({
-      coords: newActiveEvent.coordinates,
-    });
-
-    if (isOpen) {
-      openEvent(newActiveEvent);
-    }
-  };
-
-  // When the Event Modal is closed
-  const closeEvent = () => {
-
-    log("Closing Event Modal...");
-
-    setIsEventOpen(false);
-
-    // Update browser history
-    history.push("/events");
-
-    // If Event address has been set...
-    if (activeEvent?.coordinates) {
-
-      easeTo({
-        coords: activeEvent.coordinates,
-        padding: { top: 0, bottom: 0 },
-        zoom: 15,
-      });
-    }
-  };
-
   // When the Event Modal is opened
-  const openEvent = (event: any) => {
+  function openEvent(event: any) {
 
     const eventToOpen = event ?? activeEvent;
 
@@ -194,13 +155,52 @@ const useEvents = (): IUseEvents => {
         zoom: 17,
       });
     }
-  };
+  }
 
-  const openSearch = () => {
+  /**
+   * Sets the passed event as the activeEvent
+   */
+  async function setEvent(event, isOpen) {
+
+    const newActiveEvent = await createEventObject(event);
+
+    setActiveEvent(newActiveEvent);
+
+    easeTo({
+      coords: newActiveEvent.coordinates,
+    });
+
+    if (isOpen) {
+      openEvent(newActiveEvent);
+    }
+  }
+
+  // When the Event Modal is closed
+  function closeEvent() {
+
+    log("Closing Event Modal...");
+
+    setIsEventOpen(false);
+
+    // Update browser history
+    history.push("/events");
+
+    // If Event address has been set...
+    if (activeEvent?.coordinates) {
+
+      easeTo({
+        coords: activeEvent.coordinates,
+        padding: { top: 0, bottom: 0 },
+        zoom: 15,
+      });
+    }
+  }
+
+  function openSearch() {
     log("Opening Search...");
-  };
+  }
 
-  const closeSearch = () => {
+  function closeSearch() {
     log("Closing Search...");
 
     // Hide search predictions
@@ -209,9 +209,9 @@ const useEvents = (): IUseEvents => {
 
     // Close Search Input
     setIsSearchOpen(false);
-  };
+  }
 
-  const startNewEvent = async () => {
+  async function startNewEvent() {
     log("Starting new Event...");
 
     const newEvent = await createEventObject({
@@ -222,7 +222,7 @@ const useEvents = (): IUseEvents => {
     setActiveEvent(newEvent);
 
     setIsEventOpen(true);
-  };
+  }
 
   // log({ labelAs: "Events state" }, state);
 

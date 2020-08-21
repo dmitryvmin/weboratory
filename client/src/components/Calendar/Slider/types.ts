@@ -1,5 +1,5 @@
-import { CalendarEvent } from "@components/Calendar/store/types";
+import { CalendarEvent } from "@components/Calendar/common/types";
 
 export type SliderProps = {
-  eventsData: CalendarEvent[];
+  // eventsData: CalendarEvent[];
 };

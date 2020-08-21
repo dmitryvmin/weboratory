@@ -1,6 +1,12 @@
+// Libs
 import { getDate, getHours, getMinutes, getMonth, getYear } from "date-fns";
-import { TimePeriod } from "@components/Calendar/store/types";
 
+// App
+import { TimePeriod } from "@components/Calendar/common/types";
+
+/**
+ * Returns timePeriod idx
+ */
 function getTimePeriodIdxFromDate(
   timePeriod: TimePeriod,
   date: Date,

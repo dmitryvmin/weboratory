@@ -1,9 +1,10 @@
 // Libs
+import { startOfToday } from "date-fns";
 import invariant from "invariant";
 
 // App
-import { getTimestamp } from "@components/Calendar/utils/getTimestamp";
-import { TimePeriod } from "@components/Calendar/store/types";
+import { TimePeriod } from "@components/Calendar/common/types";
+import { getDateAdjustedBy } from "@components/Calendar/utils/getDateAdjustedBy";
 
 /**
  * Returns a timeMarker of [timeScale] duration starting at current time
@@ -12,9 +13,9 @@ function getCurrentTimeMarker(timeScale: TimePeriod) {
 
   invariant(timeScale, "Couldn't get getCurrentTimeMarker. The [timeScale] object is falsy:", timeScale);
 
-  const currentTime = new Date();
+  const currentTime = startOfToday();
   const markerStart = currentTime;
-  const markerEnd = getTimestamp(markerStart, timeScale, 1);
+  const markerEnd = getDateAdjustedBy(markerStart, timeScale, 1);
 
   return ({
     start: currentTime,

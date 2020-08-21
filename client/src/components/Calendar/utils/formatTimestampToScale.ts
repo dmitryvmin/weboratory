@@ -2,17 +2,20 @@
 import { getDaysInMonth, getTime } from "date-fns";
 
 // App
-import { TimePeriod } from "@components/Calendar/store/types";
+import { TimePeriod } from "@components/Calendar/common/types";
 
+/**
+ * Returns a timestamp expressed as a [timePeriod] value
+ */
 function formatTimestampToScale(
-  timeScale: TimePeriod,
+  timePeriod: TimePeriod,
   date: Date,
 ): number {
 
   const timestamp = getTime(date);
   const daysInMonth = getDaysInMonth(date);
 
-  switch (timeScale) {
+  switch (timePeriod) {
     case "MINUTE":
     default:
       return Math.floor(timestamp / (60 * 1000));
@@ -27,4 +30,4 @@ function formatTimestampToScale(
   }
 }
 
-export {formatTimestampToScale};
+export { formatTimestampToScale };

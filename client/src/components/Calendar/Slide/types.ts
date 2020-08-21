@@ -1,7 +1,10 @@
-import { CalendarEvent, TimeMarker, TimePeriod } from "@components/Calendar/store/types";
+import { DateMap, TimePeriod } from "@components/Calendar/common/types";
 
 export type SlideProps = {
-  timeScale: TimePeriod;
-  data: CalendarEvent[];
-  marker: TimeMarker;
+  slideTimePeriod: TimePeriod;
+  slideDateMap: Partial<DateMap>;
+  slideContent: any[]; // TimeTablePeriodType;
+  slideWidth: number;
+  calendarTimePeriod: TimePeriod;
+  calendarStartingDate: Date;
 };

@@ -2,7 +2,7 @@
 import React, { FC, useRef } from "react";
 
 // API
-import { editorService, postServiceSingleton } from "@api/services";
+import { EditorService, postServiceSingleton } from "@api/services";
 
 // Hooks
 import { useObservable } from "@utils/hooks/useObservable";

@@ -1,12 +1,10 @@
 // Libs
+import { getDaysInMonth, lastDayOfMonth } from "date-fns";
 import { log } from "@dmitrymin/fe-log";
 
 // App
+import { TimePeriod } from "@components/Calendar/common/types";
 import { getMapFromDate } from "@components/Calendar/utils/getMapFromDate";
-import { getDateFromMap } from "@components/Calendar/utils/getDateFromMap";
-import { getTimestamp } from "@components/Calendar/utils/getTimestamp";
-import { lastDayOfMonth } from "date-fns";
-import { TimePeriod } from "@components/Calendar/store/types";
 
 /**
  * Return a date which start at the [date]'s [timeScale]
@@ -14,7 +12,7 @@ import { TimePeriod } from "@components/Calendar/store/types";
  */
 function getBaseDate(
   date: Date,
-  timeScale: TimePeriod,
+  timePeriod: TimePeriod,
   direction: "floor" | "ceiling",
 ): Date {
 
@@ -22,7 +20,7 @@ function getBaseDate(
   let baseDate;
 
   if (direction === "floor") {
-    switch (timeScale) {
+    switch (timePeriod) {
       case "MINUTE":
         baseDate = new Date(YEAR, MONTH, DAY, HOUR, MINUTE);
         break;
@@ -39,17 +37,16 @@ function getBaseDate(
         baseDate = new Date(YEAR, 0, 1, 0, 0);
         break;
       default:
-        log({ logLevel: "error" }, `Couldn't get BaseStartDate for ${date} of timeScale ${timeScale}`);
+        log({ logLevel: "error" }, `Couldn't get BaseStartDate for ${date} of timeScale ${timePeriod}`);
         baseDate = date;
         break;
     }
   }
   // Get the date ceiling
   else {
-    const endDate = lastDayOfMonth(date);
-    const lastDay = endDate.getDay();
+    const daysInMonth = getDaysInMonth(date);
 
-    switch (timeScale) {
+    switch (timePeriod) {
       case "MINUTE":
         baseDate = new Date(YEAR, MONTH, DAY, HOUR, MINUTE);
         break;
@@ -60,13 +57,13 @@ function getBaseDate(
         baseDate = new Date(YEAR, MONTH, DAY, 23, 59);
         break;
       case "MONTH":
-        baseDate = new Date(YEAR, MONTH, lastDay, 23, 59);
+        baseDate = new Date(YEAR, MONTH, daysInMonth, 23, 59);
         break;
       case "YEAR":
-        baseDate = new Date(YEAR, 11, lastDay, 23, 59);
+        baseDate = new Date(YEAR, 11, daysInMonth, 23, 59);
         break;
       default:
-        log({ logLevel: "error" }, `Couldn't get BaseStartDate for ${date} of timeScale ${timeScale}`);
+        log({ logLevel: "error" }, `Couldn't get BaseStartDate for ${date} of timeScale ${timePeriod}`);
         baseDate = date;
         break;
     }

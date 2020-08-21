@@ -2,17 +2,22 @@
 import { log } from "@dmitrymin/fe-log";
 
 // App
-import { IntervalType, TimePeriod } from "@components/Calendar/store/types";
+import { IntervalType, TimePeriod } from "@components/Calendar/common/types";
 
+type GetTimePeriodIntervalsProps = {
+  timePeriod: TimePeriod;
+  start?: number;
+  end?: number;
+}
+
+/**
+ * Returns child timePeriod intervals for a timePeriod
+ */
 const getTimePeriodIntervals = ({
   timePeriod,
   start,
   end,
-}: {
-  timePeriod: TimePeriod;
-  start?: number;
-  end?: number
-}): IntervalType => {
+}: GetTimePeriodIntervalsProps): IntervalType => {
   switch (timePeriod) {
     case "MINUTE":
       return { start: 0, end: 59 };
@@ -20,7 +25,7 @@ const getTimePeriodIntervals = ({
       return { start: 0, end: 23 };
     case "DAY":
       if (!end) {
-        log({logLevel: "warn"}, "To get day intervals, the length of the month needs to be provided.");
+        log({ logLevel: "warn" }, "To get day intervals, the length of the month needs to be provided.");
         return { start: 1, end: 1 };
       }
       return { start: 1, end };
@@ -32,4 +37,4 @@ const getTimePeriodIntervals = ({
   }
 };
 
-export {getTimePeriodIntervals};
+export { getTimePeriodIntervals };

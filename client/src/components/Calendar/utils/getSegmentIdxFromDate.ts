@@ -1,6 +1,9 @@
+import { TimePeriod } from "@components/Calendar/common/types";
 import { getTimePeriodIdxFromDate } from "@components/Calendar/utils/getTimePeriodIdxFromDate";
-import { TimePeriod } from "@components/Calendar/store/types";
 
+/**
+ * Returns the index of the slide
+ */
 function getSegmentIdxFromDate(
   timePeriod: TimePeriod,
   markerDate: Date,

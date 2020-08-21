@@ -9,7 +9,7 @@
   position: fixed;
   bottom: 60px;
   right: $size_2;
-  z-index: $zi2;
+  z-index: $zi4;
 }
 
 .menuButtonBase {
@@ -31,6 +31,7 @@
   background-color: $color-white;
   padding: $size_1 $size_2;
   border-radius: $bradius_1;
+  box-shadow: $shadow_1;
 
   > a {
     font-size: 12px;

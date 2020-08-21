@@ -1,0 +1,12 @@
+@import "../../../styles/sizes";
+@import "../../../styles/colors";
+
+.calendarLabel {
+  > div {
+    user-select: none;
+  }
+}
+
+.timePeriod {
+  text-transform: capitalize;
+}

@@ -1,4 +1,4 @@
-import { editorService } from "@api/services";
+import { EditorService } from "@api/services";
 
 export type TEditor = {
   content?: string;

@@ -2,7 +2,7 @@
 import React, { FC, useEffect, useRef } from "react";
 
 // API
-import { tagMapService } from "@api/services/tagMapService/tagMapService";
+import { TagMapService } from "@api/services/TagMapService/TagMapService";
 
 // Components
 import { Tag } from "@components/Tags/Tag";
