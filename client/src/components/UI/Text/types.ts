@@ -8,6 +8,7 @@ type TextStyle =
   | "p3"
   | "label1"
   | "label2"
+  | "label3"
   ;
 
 export type TextProps = {

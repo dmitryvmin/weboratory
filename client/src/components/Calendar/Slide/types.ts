@@ -5,6 +5,4 @@ export type SlideProps = {
   slideDateMap: Partial<DateMap>;
   slideContent: any[]; // TimeTablePeriodType;
   slideWidth: number;
-  calendarTimePeriod: TimePeriod;
-  calendarStartingDate: Date;
 };

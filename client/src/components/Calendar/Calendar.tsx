@@ -1,19 +1,28 @@
 // Libs
 import React, { FC, useEffect } from "react";
 import { motion, AnimatePresence, useAnimation } from "framer-motion";
+import { format } from "date-fns";
 
 // Styles
 import classNames from "./styles.module.scss";
 
 // Components
+import { Text } from "@components/UI/Text";
 import { Slider } from "@components/Calendar/Slider";
+import { useCalendar } from "@components/Calendar/hooks/useCalendar";
+import { formatDateRange } from "@components/Calendar/utils/formatDateRange";
+
+// Utils
+import { getDateAdjustedBy } from "@components/Calendar/utils/getDateAdjustedBy";
 
 // Calendar
+import { useWindowSize } from "@utils/hooks/useWindowSize";
 import { TCalendarProps } from "./types";
 import { CalendarMenu } from "@components/Calendar/CalendarMenu";
-import { useCalendar } from "@components/Calendar/hooks/useCalendar";
 import { CurrentDate } from "@components/Calendar/CurrentDate";
-import { useWindowSize } from "@utils/hooks/useWindowSize";
+
+// Constants
+// import { CurrentDateFormatMap } from "./constants";
 
 /**
  * Calendar
@@ -23,7 +32,13 @@ const Calendar: FC<TCalendarProps> = () => {
   /**
    * Hooks
    */
-  const { isOpen, isFullScreen } = useCalendar();
+  const {
+    isCalendarOpen,
+    isFullScreen,
+    currentDate,
+    timePeriod,
+    slideCount,
+  } = useCalendar();
 
   const controls = useAnimation();
 
@@ -32,35 +47,27 @@ const Calendar: FC<TCalendarProps> = () => {
   const sliderContainerVariants = {
     docked: {
       opacity: 1,
-      y: 0,
+      y: -300,
       height: 200,
       transition: {
         duration: 0.5,
       },
     },
     fullScreen: {
-      y: 0,
-      height: windowHeight - 120,
+      y: -windowHeight + 100,
+      height: windowHeight - 200,
       transition: {
         duration: 0.5,
       },
     },
-    // closed: {
-    //   opacity: 0,
-    //   y: 200,
-    //   transition: {
-    //     duration: 0.5,
-    //   },
-    // },
     exit: {
       opacity: 0,
-      y: 50,
+      y: 0,
       transition: {
         duration: 0.5,
       },
     },
   };
-
 
   useEffect(() => {
 
@@ -70,7 +77,7 @@ const Calendar: FC<TCalendarProps> = () => {
         variant = "fullScreen";
       }
       else {
-        if (isOpen) {
+        if (isCalendarOpen) {
           variant = "docked";
         }
         else {
@@ -81,12 +88,11 @@ const Calendar: FC<TCalendarProps> = () => {
     };
 
     const variant = getCalendarVariant();
-
     controls.start(sliderContainerVariants[variant]);
 
   }, [
     isFullScreen,
-    isOpen,
+    isCalendarOpen,
   ]);
 
   /**
@@ -94,7 +100,7 @@ const Calendar: FC<TCalendarProps> = () => {
    */
   return (
     <AnimatePresence>
-      {isOpen && (
+      {(isCalendarOpen || isFullScreen) && (
         <>
           <motion.div
             className={classNames.calendarContainer}
@@ -103,7 +109,14 @@ const Calendar: FC<TCalendarProps> = () => {
             exit="exit"
             variants={sliderContainerVariants}
           >
-            <Slider/>
+            <div className={classNames.calendarDateLabel}>
+              <Text style="label1">
+                {formatDateRange(timePeriod, currentDate, slideCount)}
+              </Text>
+            </div>
+            <div className={classNames.sliderContainer}>
+              <Slider/>
+            </div>
           </motion.div>
           <motion.div
             className={classNames.calendarMenuContainer}
@@ -126,7 +139,7 @@ const Calendar: FC<TCalendarProps> = () => {
             <CalendarMenu/>
           </motion.div>
           <motion.div
-            className={classNames.calendarDateContainer}
+            className={classNames.calendarTimePeriod}
             initial={{ opacity: 0 }}
             animate={{
               opacity: 1,

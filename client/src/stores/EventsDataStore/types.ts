@@ -18,10 +18,12 @@ type UseEventsDataFunctions = {
   setIntervalEventsDataMap(
     calendarTimePeriod: TimePeriod,
     calendarDate: Date,
+    slideCount: number,
   ): void;
   getIntervalEventsDataMap(
     calendarTimePeriod: TimePeriod,
     calendarDate: Date,
+    slideCount: number,
   ): EventsDataMap;
 }
 

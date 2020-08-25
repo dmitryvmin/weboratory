@@ -1,17 +1,29 @@
+// Libs
+import { getDate, getHours, getMinutes, getMonth, getYear } from "date-fns";
+
+// App
 import { TimePeriod } from "@components/Calendar/common/types";
-import { getTimePeriodIdxFromDate } from "@components/Calendar/utils/getTimePeriodIdxFromDate";
 
 /**
- * Returns the index of the slide
+ * Returns segment idx from a date's timePeriod
  */
 function getSegmentIdxFromDate(
   timePeriod: TimePeriod,
-  markerDate: Date,
-  slideDate: Date,
+  date: Date,
 ): number {
-  const slideIdx = getTimePeriodIdxFromDate(timePeriod, slideDate);
-  const markerIdx = getTimePeriodIdxFromDate(timePeriod, markerDate);
-  return slideIdx - markerIdx;
+  switch (timePeriod) {
+    case "MINUTE":
+      return getMinutes(date);
+    case "HOUR":
+      return getHours(date);
+    case "DAY":
+      return getDate(date);
+    case "MONTH":
+      return getMonth(date);
+    case "YEAR":
+    default:
+      return getYear(date);
+  }
 }
 
 export { getSegmentIdxFromDate };

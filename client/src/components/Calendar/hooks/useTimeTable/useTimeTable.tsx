@@ -12,7 +12,7 @@ import { TimeTable } from "@components/Calendar/hooks/useTimeTable/TimeTable";
 import { getDateAdjustedBy } from "@components/Calendar/utils/getDateAdjustedBy";
 import { getEventsForTimePeriodInterval } from "@components/Calendar/utils/getEventsForTimePeriodInterval";
 import { getBaseDate } from "@components/Calendar/utils/getBaseDate";
-import { UseTimeTableProps } from "@components/Calendar/hooks/useTimeTable/types";
+import { TimeTableType, UseTimeTableProps } from "@components/Calendar/hooks/useTimeTable/types";
 
 /**
  * TimeTable
@@ -23,13 +23,13 @@ function useTimeTable({
   slideCount,
 }: UseTimeTableProps) {
 
-  log("============ useTimeTable ============",
-    currentDate,
-    timePeriod,
-    slideCount,
-  );
+  // log("============ useTimeTable ============",
+  //   currentDate,
+  //   timePeriod,
+  //   slideCount,
+  // );
 
-  const [timeTable, setTimeTable] = useState<TimeTable>();
+  const [timeTable, setTimeTable] = useState<TimeTableType>();
   const currentDateRef = useRef<Date>();
 
   useEffect(() => {
@@ -37,12 +37,14 @@ function useTimeTable({
     const _timetable = TimeTable.createTimeTable({
       calendarDate: currentDate,
       calendarTimePeriod: timePeriod,
+      visibleSlideCount: slideCount,
+      timeTable,
     });
 
     setTimeTable(_timetable);
     currentDateRef.current = currentDate;
 
-    log("Timetable", _timetable);
+    // log("Timetable", _timetable, slideCount);
   }, [
     slideCount,
     timePeriod,

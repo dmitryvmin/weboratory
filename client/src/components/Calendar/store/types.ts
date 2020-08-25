@@ -6,7 +6,7 @@ import { CalendarEvent, TimePeriod } from "@components/Calendar/common/types";
 
 export type CalendarState = {
   timePeriod: TimePeriod;
-  isOpen: boolean;
+  isCalendarOpen: boolean;
   isFullScreen: boolean;
   startingDate: Date;
   currentDate: Date;
@@ -14,8 +14,9 @@ export type CalendarState = {
   slideCount: number;
   slideWidth: number;
   xDistance: {
-    distance: number;
-    velocity: number;
+    distance: number | undefined;
+    velocity?: number | undefined;
+    duration?: number | undefined;
   };
 };
 

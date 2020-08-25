@@ -9,11 +9,11 @@ export const SLIDER_BUFFER = 1;
 
 export const CalendarInitState: CalendarState = {
   timePeriod: "DAY",
-  isOpen: false,
+  isCalendarOpen: true,
   isFullScreen: false,
   xDistance: {
-    distance: 0,
-    velocity: 0,
+    distance: undefined,
+    velocity: undefined,
   },
   startingDate: getToday(),
   currentDate: getToday(),

@@ -19,6 +19,7 @@ import { getPositionFromTarget } from "@components/Events/utils/getPositionFromT
 
 // Constants
 import { MENU_SIZE, PADDING_1, PADDING_2, TIMELINE_HEIGHT } from "@common/constants";
+import { useCalendar } from "@components/Calendar/hooks/useCalendar";
 
 /**
  * Event Modal

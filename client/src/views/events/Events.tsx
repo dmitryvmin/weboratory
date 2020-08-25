@@ -21,19 +21,19 @@ import { EventsDataProvider } from "@stores/EventsDataStore";
 const Events = () => {
   return (
     <ReactDependentScript scripts={[GOOGLE_MAPS_API]}>
+      <CalendarProvider>
       <EventsProvider>
         <MapProvider>
           <PageContainer>
             <EventsApp/>
-            <CalendarProvider>
               <EventsDataProvider>
                 <Calendar/>
               </EventsDataProvider>
               <Timeline/>
-            </CalendarProvider>
           </PageContainer>
         </MapProvider>
       </EventsProvider>
+      </CalendarProvider>
     </ReactDependentScript>
   );
 };

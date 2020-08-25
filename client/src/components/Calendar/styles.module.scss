@@ -5,11 +5,25 @@
 
 .calendarContainer {
   position: absolute;
+}
+
+.calendarDateLabel {
+  position: absolute;
+  z-index: $zi4;
+  top: -$size_4;
+  left: 20px;
+  display: flex;
+  align-items: center;
+  border-radius: $bradius_1 $bradius_1 0 0;
+  background-color: $color-white;
+  padding: 2px 5px;
+}
+
+.sliderContainer {
   z-index: $zi2;
-  bottom: 70px;
   width: calc(100vw - 40px);
-  //height: 200px;
-  margin: 20px;
+  height: 100%;
+  margin: 0 20px;
   border: 1px solid white;
   border-radius: $bradius_1;
   overflow: hidden;
@@ -17,6 +31,7 @@
 
   > div {
     cursor: grab;
+    height: 100%;
   }
 }
 
@@ -37,7 +52,7 @@
   border-radius: $bradius_1;
 }
 
-.calendarDateContainer {
+.calendarTimePeriod {
   position: absolute;
   display: flex;
   align-items: center;
@@ -47,15 +62,3 @@
   height: 50px;
 }
 
-.calendarDateLabel {
-  position: absolute;
-  -webkit-user-select: none;
-  user-select: none;
-  font-weight: 600;
-  background-color: #ffffff;
-  padding: 2px 5px;
-  margin: 2px;
-  border-radius: 2px;
-  bottom: 288px;
-  left: 18px;
-}

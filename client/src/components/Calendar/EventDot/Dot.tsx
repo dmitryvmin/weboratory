@@ -70,28 +70,28 @@ const Dot: FC<DotProps> = ({ event }) => {
       ref={dotRef}
       className={classNames.eventMarker}
     >
-      <Rnd
-        default={{
-          x: 0,
-          y: 0,
-          width: 20,
-          height: 20,
-        }}
-        className={classNames.eventDot}
-        style={{
-          backgroundColor: event.color,
-        }}
-      />
-      {/*<div*/}
+      {/*<Rnd*/}
+      {/*  default={{*/}
+      {/*    x: 0,*/}
+      {/*    y: 0,*/}
+      {/*    width: 20,*/}
+      {/*    height: 20,*/}
+      {/*  }}*/}
       {/*  className={classNames.eventDot}*/}
       {/*  style={{*/}
       {/*    backgroundColor: event.color,*/}
       {/*  }}*/}
-      {/*>*/}
+      {/*/>*/}
+      <div
+        className={classNames.eventDot}
+        style={{
+          backgroundColor: event.color,
+        }}
+      >
         {/*<div className={classNames.eventTitle}>*/}
         {/*  Title*/}
         {/*</div>*/}
-      {/*</div>*/}
+      </div>
     </motion.div>
   );
 };

@@ -15,11 +15,13 @@ function useTimeline() {
    */
     // const [panInfo, setPanInfo] = useState<PanInfo>();
 
-  const { setCalendarIsOpen, setXDistance, isFullScreen, setIsFullScreen, isOpen } = useCalendar();
+  const [isDragging, setIsDragging] = useState<boolean>(false);
+
+  const { setCalendarIsOpen, setXDistance, isFullScreen, isCalendarOpen, toggleCalendar } = useCalendar();
 
   const { windowHeight, windowWidth } = useWindowSize();
 
-  const updatePanInfo = useCallback(throttle(_updatePanInfo, 250), [isFullScreen, isOpen]);
+  const updatePanInfo = useCallback(throttle(_updatePanInfo, 500), [isFullScreen, isCalendarOpen]);
 
   function _updatePanInfo(info: PanInfo) {
 
@@ -38,45 +40,37 @@ function useTimeline() {
       },
     } = info;
 
-    // If y dips below the container, set it to 0
     if (oy < -50) {
-      console.log("Cursor high");
-      // console.log("Cursor below too low", py);
-      // animate.set({
-      //   y: 0,
-      // });
-      if (isOpen) {
-        setIsFullScreen(true);
-      }
-      else {
-        setCalendarIsOpen(true);
-      }
+      console.log("Cursor UP");
+      toggleCalendar(true);
     }
 
     if (oy > 30) {
-      // console.log("Cursor below too high", py);
-      // animate.set({
-      //   y: 0,
-      // });
-      if (isFullScreen) {
-        setIsFullScreen(false);
-      }
-      else {
-        setCalendarIsOpen(false);
-      }
+      console.log("Cursor DOWN", oy);
+      toggleCalendar(false);
     }
 
     if (Math.abs(ox) > 20) {
+      const absX = Math.abs(ox);
+      let speed = 1;
+      if (absX > 50 && absX < 100) {
+        speed = 1.5;
+      }
+      if (absX > 100) {
+        speed = 2;
+      }
+      console.log(`Cursor ${ox < 0 ? "LEFT" : "RIGHT"}`, absX);
       setXDistance({
-        distance: ox,
+        distance: ox * speed,
+        duration: 500,
         velocity: vx,
       });
     }
   }
 
-  return {
+  return ({
     updatePanInfo,
-  };
+  });
 }
 
 

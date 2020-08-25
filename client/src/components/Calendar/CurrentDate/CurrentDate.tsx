@@ -40,7 +40,7 @@ const CurrentDate = () => {
       >
         {/*{format(currentDate, CurrentDateFormatMap[timePeriod])}*/}
         <span className={styles.timePeriod}>
-          {`${timePeriod.toLowerCase()}s`}
+          {`${timePeriod.toLowerCase()}`}
         </span>
       </Text>
     </div>

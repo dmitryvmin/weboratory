@@ -6,11 +6,8 @@ import { TimePeriodMap } from "@components/Calendar/constants";
 import { UseCalendar } from "@components/Calendar/hooks/useCalendar/types";
 import { CalendarContextInterface, CalendarState } from "@components/Calendar/store/types";
 import { CalendarContext } from "@components/Calendar/store";
-import { getTimePeriodFromIdx } from "@components/Calendar/utils/getTimePeriodFromIdx";
 import { getChildTimePeriod } from "@components/Calendar/utils/getChildTimePeriod";
 import { getParentTimePeriod } from "@components/Calendar/utils/getParentTimePeriod";
-import { log } from "@dmitrymin/fe-log";
-import { PanInfo } from "framer-motion";
 
 /**
  * Calendar Context Facade
@@ -23,7 +20,7 @@ const useCalendar = (): UseCalendar => {
   const [state, setState] = useContext<CalendarContextInterface>(CalendarContext);
 
   const {
-    isOpen,
+    isCalendarOpen,
     isFullScreen,
     timePeriod,
     xDistance,
@@ -37,11 +34,36 @@ const useCalendar = (): UseCalendar => {
   /**
    * Public functions
    */
-  function toggleCalendarIsOpen() {
+  function toggleCalendar(isOpen) {
+    const newVisState = {
+      isFullScreen,
+      isCalendarOpen,
+    };
+
+    if (isOpen) {
+      if (isFullScreen === false && isCalendarOpen === false) {
+        newVisState.isCalendarOpen = true;
+      }
+      else if (isFullScreen === false && isCalendarOpen === true) {
+        newVisState.isFullScreen = true;
+      }
+    }
+    else {
+      if (isFullScreen === true) {
+        newVisState.isFullScreen = false;
+      }
+      else {
+        newVisState.isCalendarOpen = false;
+      }
+    }
+
+    console.log("@@", newVisState);
+
     setState((s) => ({
-      ...s,
-      isOpen: !s.isOpen,
-    }));
+        ...s,
+        ...newVisState,
+      }),
+    );
   }
 
   function setCalendarIsOpen(_isOpen: boolean) {
@@ -155,7 +177,8 @@ const useCalendar = (): UseCalendar => {
    * useCalendar hook state and functions
    */
   return {
-    isOpen,
+    isCalendarOpen,
+    isFullScreen,
     timePeriod,
     xDistance,
     intervalData,
@@ -163,8 +186,6 @@ const useCalendar = (): UseCalendar => {
     slideWidth,
     startingDate,
     currentDate,
-    isFullScreen,
-    setCalendarIsOpen,
     zoomIn,
     zoomOut,
     isAtMinPeriod,
@@ -175,6 +196,8 @@ const useCalendar = (): UseCalendar => {
     setSlideWidth,
     setStartingDate,
     setCurrentDate,
+    toggleCalendar,
+    setCalendarIsOpen,
     setIsFullScreen,
   };
 };

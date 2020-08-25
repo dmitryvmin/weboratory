@@ -23,17 +23,21 @@
 }
 
 .label1 {
-  color: #000;
-  //color: #959aa2;
+  color: $color-neutral-600;
   font-weight: 500;
   font-size: 13px;
 }
 
 .label2 {
-  color: #000;
-  //color: #959aa2;
+  color: $color-neutral-600;
   font-weight: 500;
   font-size: 15px;
+}
+
+.label3 {
+  color: $color-neutral-60;
+  font-weight: 400;
+  font-size: 11px;
 }
 
 .colorDark {

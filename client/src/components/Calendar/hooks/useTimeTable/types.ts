@@ -5,6 +5,7 @@ export type TimeTablePeriodType = CalendarEvent[] | undefined[] | undefined | 0;
 export type GetTimeTableDatesProps = {
   calendarDate: Date;
   calendarTimePeriod: TimePeriod;
+  visibleSlideCount?: number;
 }
 
 export type TimeTableDatesType = {
@@ -24,13 +25,14 @@ export type TimeTableMapsType = {
 export type CreateTimeTableProps = {
   calendarDate: Date;
   calendarTimePeriod: TimePeriod;
-  timeTable?: TimeTable;
+  visibleSlideCount: number;
+  timeTable?: TimeTableType;
 }
 
 export type FillTimeTableProps = {
-  timeTable: TimeTable;
+  timeTable: TimeTableType;
   timeTableDates: TimeTableDatesType;
-  timeTableMaps: TimeTableMapsType
+  timeTableMaps: TimeTableMapsType;
   calendarTimePeriod: TimePeriod;
 }
 
@@ -40,12 +42,13 @@ export type FillWholeProps = {
   date: Date;
 }
 
-export type TimeTable = {
+export type TimeTableType = {
   [year: number]: TimeTablePeriodType;
 }
 
 export type FillIntervalProps = {
   calendarTimePeriod: TimePeriod;
+  timeTableDates: TimeTableDatesType;
   intervalTimePeriod: TimePeriod;
   intervalStart: Date;
   intervalEnd: Date;

@@ -90,36 +90,11 @@ const Timeline: FC<ITimeline> = () => {
   const animate = useAnimation();
 
   /**
-   * Effects
-   */
-  // Throttle swipe events
-  // useEffect(() => {
-  //   if (dragStatus !== DRAG_STATUS.DRAG_STARTED) {
-  //     return;
-  //   }
-  //
-  //   const interval = setInterval(() => {
-  //     isDragging.current = false;
-  //   }, 500);
-  //
-  //   return () => clearInterval(interval);
-  // }, [
-  //   dragStatus,
-  // ]);
-
-  /**
    * Handlers
    */
     // Constrain the cursor to height of the Timeline container
   const handleDrag = (event, info) => {
-
       updatePanInfo(info);
-
-      // On First Drag set
-      // if (isDragging.current === false) {
-      //   moveTimelineXDistance(ox);
-      // }
-
       isDragging.current = true;
     };
 
@@ -162,7 +137,7 @@ const Timeline: FC<ITimeline> = () => {
         onDrag={handleDrag}
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
-        onClick={() => setIsMenuOpenTo(!isMenuOpen)}
+        onDoubleClick={() => setIsMenuOpenTo(!isMenuOpen)}
       >
         <Move fontSize="40"/>
       </motion.div>

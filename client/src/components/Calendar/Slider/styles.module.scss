@@ -1,3 +1,10 @@
+@import "../../../styles/sizes";
+@import "../../../styles/zIndex";
+@import "../../../styles/colors";
+@import "../../../styles/radius";
+
 .dragContainer {}
 
-.slidesContainer {}
+.slidesContainer {
+  height: 100%;
+}

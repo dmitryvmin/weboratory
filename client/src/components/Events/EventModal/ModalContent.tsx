@@ -30,6 +30,7 @@ import { TEventModalProps } from "./types";
 import { useMap } from "@stores/MapStore";
 import { SEARCH_MIN, useEvents } from "@stores/EventStore";
 import { eventsInstance } from "@components/Events/eventsInstance";
+import { useCalendar } from "@components/Calendar/hooks/useCalendar";
 
 const ModalContent: any = ({ centerModalOn }) => {
 
@@ -42,6 +43,8 @@ const ModalContent: any = ({ centerModalOn }) => {
     activeEvent,
     updateActiveEvent,
   } = useEvents();
+
+  const { setCalendarIsOpen } = useCalendar();
 
   const { centerMapOnAddress } = useMap();
 
@@ -148,7 +151,10 @@ const ModalContent: any = ({ centerModalOn }) => {
         </div>
 
         <div className={styles.timeInput}>
-          <Calendar className={styles.timeBtn}/>
+          <Calendar
+            onClick={() => setCalendarIsOpen(true)}
+            className={styles.timeBtn}
+          />
           <input
             value={activeEvent?.time ?? ""}
             onChange={handleTime}

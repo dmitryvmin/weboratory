@@ -5,7 +5,7 @@ import { getTimePeriodIdx } from "@components/Calendar/utils/getTimePeriodIdx";
 import { getChildTimePeriod } from "@components/Calendar/utils/getChildTimePeriod";
 import { getBaseDate } from "@components/Calendar/utils/getBaseDate";
 import { getDateAdjustedBy } from "@components/Calendar/utils/getDateAdjustedBy";
-import { getTimePeriodIdxFromDate } from "@components/Calendar/utils/getTimePeriodIdxFromDate";
+import { getSegmentIdxFromDate } from "@components/Calendar/utils/getSegmentIdxFromDate";
 import { setToPath } from "@components/Calendar/hooks/useTimeTable/utils/setToPath";
 
 // Constants
@@ -18,8 +18,9 @@ import {
   GetTimeTableDatesProps,
   TimeTableDatesType,
   GetTimeTableMapsProps,
-  TimeTableMapsType, FillTimeTableProps, FillWholeProps,
+  TimeTableMapsType, FillTimeTableProps, FillWholeProps, TimeTableType,
 } from "@components/Calendar/hooks/useTimeTable/types";
+import { isWithinInterval } from "date-fns";
 
 /**
  * TimeTable Class:
@@ -39,11 +40,11 @@ class TimeTable {
   public static getTimeTableDates({
     calendarDate,
     calendarTimePeriod,
+    visibleSlideCount = 1,
   }: GetTimeTableDatesProps): TimeTableDatesType {
 
     const timeRangeStart = getDateAdjustedBy(calendarDate, calendarTimePeriod, -SLIDER_BUFFER);
-    const timeRangeEnd = getDateAdjustedBy(calendarDate, calendarTimePeriod, SLIDER_BUFFER);
-
+    const timeRangeEnd = getDateAdjustedBy(calendarDate, calendarTimePeriod, (visibleSlideCount - 1) + SLIDER_BUFFER);
     const timeTableFloorDate = getBaseDate(timeRangeStart, calendarTimePeriod, "floor");
     const timeTableCeilingDate = getBaseDate(timeRangeEnd, calendarTimePeriod, "ceiling");
 
@@ -79,13 +80,18 @@ class TimeTable {
    */
   public static fillInterval({
     calendarTimePeriod,
+    timeTableDates,
     intervalTimePeriod,
     intervalStart,
     intervalEnd,
   }: FillIntervalProps) {
 
+    const calendarTimePeriodIdx = getTimePeriodIdx(calendarTimePeriod);
+    const intervalTimePeriodIdx = getTimePeriodIdx(intervalTimePeriod);
+
+    // const calendarChildTimePeriod = getChildTimePeriod(calendarTimePeriod);
     // Fill current timePeriod
-    const intervalArray = this.fillWhole({
+    const intervalArray = this.segmentInterval({
       calendarTimePeriod,
       timePeriod: intervalTimePeriod,
       date: intervalStart,
@@ -93,43 +99,61 @@ class TimeTable {
 
     let curDate = intervalStart;
 
-    // Loop over interval, incrementing curDate by one
-    // intervalTimePeriod value each iteration
+    // Loop over interval, incrementing curDate by one intervalTimePeriod value
     while (curDate.getTime() <= intervalEnd.getTime()) {
 
-      const newFieldKey = getTimePeriodIdxFromDate(intervalTimePeriod, curDate);
+      const newFieldKey = getSegmentIdxFromDate(intervalTimePeriod, curDate);
       const childTimePeriod = getChildTimePeriod(intervalTimePeriod);
 
-      // If current interval timePeriod is higher than the calendar timePeriod (MONTH > DAY)...
-      if (getTimePeriodIdx(intervalTimePeriod) < getTimePeriodIdx(calendarTimePeriod)) {
+      // ===== Path 1:
+      // If current interval timePeriod is higher than the calendar timePeriod (MONTH > DAY),
+      // recurse over the child timeperiod intervals
+      if (intervalTimePeriodIdx < calendarTimePeriodIdx) {
 
         const childIntervalStart = getBaseDate(curDate, intervalTimePeriod, "floor");
         const childIntervalEnd = getBaseDate(curDate, intervalTimePeriod, "ceiling");
 
-        // ...recurse over the interval's child timePeriod
+        // Recurse
         const table = this.fillInterval({
           calendarTimePeriod,
+          timeTableDates,
           intervalTimePeriod: childTimePeriod,
           intervalStart: childIntervalStart,
           intervalEnd: childIntervalEnd,
         });
 
-        // ...save the result
+        // Save the result
         setToPath(intervalArray, [newFieldKey], table);
       }
 
-      // If current interval is at the calendar's period level...
-      if (intervalTimePeriod === calendarTimePeriod) {
+      // ===== Path 2:
+      // If current interval is at the calendar's period level,
+      // check it falls within timetable's floor/ceiling date range.
+      // If it does, fill in the child time period segments.
+      if (intervalTimePeriodIdx === calendarTimePeriodIdx) {
 
-        // ... fill all segments for the the time period
-        const table = this.fillWhole({
-          calendarTimePeriod,
-          timePeriod: childTimePeriod,
-          date: curDate,
-        });
+        // Check if within timetable interval
+        const isCurrentIntervalWithin = isWithinInterval(
+          curDate,
+          {
+            start: timeTableDates.floorDate,
+            end: timeTableDates.ceilingDate,
+          },
+        );
 
-        // ...save the result
-        setToPath(intervalArray, [newFieldKey], table);
+        // If it is...
+        if (isCurrentIntervalWithin) {
+
+          // ...segment the interval
+          const newFieldValue = this.segmentInterval({
+            calendarTimePeriod,
+            timePeriod: childTimePeriod,
+            date: curDate,
+          });
+
+          // ...and save the result
+          setToPath(intervalArray, [newFieldKey], newFieldValue);
+        }
       }
 
       curDate = getDateAdjustedBy(curDate, intervalTimePeriod, 1);
@@ -141,11 +165,11 @@ class TimeTable {
   /**
    * Returns an array of indexed segments for a timePeriod
    */
-  public static fillWhole({
+  public static segmentInterval({
     calendarTimePeriod,
     timePeriod,
     date,
-  }: FillWholeProps): null[] | {[k: number]: null} {
+  }: FillWholeProps) {
 
     // YEARS are stored as objects
     // Other timePeriods are stored as arrays
@@ -163,7 +187,7 @@ class TimeTable {
       table[0] = 0;
     }
 
-    const calendarChildTimePeriod = getChildTimePeriod(calendarTimePeriod)
+    const calendarChildTimePeriod = getChildTimePeriod(calendarTimePeriod);
     const insideCalendarTimePeriod = timePeriod === calendarChildTimePeriod;
 
     // Get interval segments and create an array from them
@@ -185,7 +209,7 @@ class TimeTable {
     timeTableDates,
     timeTableMaps,
     calendarTimePeriod,
-  }: FillTimeTableProps): TimeTable {
+  }: FillTimeTableProps): TimeTableType {
 
     const { curDateMap, startDateMap, endDateMap } = timeTableMaps;
     const { curDate, floorDate, ceilingDate } = timeTableDates;
@@ -206,7 +230,7 @@ class TimeTable {
         const thisTimePeriodKey = curDateMap[thisTimePeriod];
         timeTablePath.push(thisTimePeriodKey);
 
-        const table = this.fillWhole({
+        const table = this.segmentInterval({
           calendarTimePeriod,
           timePeriod: childTimePeriod,
           date: curDate,
@@ -220,6 +244,7 @@ class TimeTable {
         // ...and fill in segments for the floor/ceiling range
         const table = this.fillInterval({
           calendarTimePeriod,
+          timeTableDates,
           intervalTimePeriod: thisTimePeriod,
           intervalStart: getBaseDate(floorDate, thisTimePeriod, "floor"),
           intervalEnd: getBaseDate(ceilingDate, thisTimePeriod, "ceiling"),
@@ -244,10 +269,11 @@ class TimeTable {
     calendarDate,
     calendarTimePeriod,
     timeTable,
-  }: CreateTimeTableProps): TimeTable {
+    visibleSlideCount = 1,
+  }: CreateTimeTableProps): TimeTableType {
 
     // Get timeTable props
-    const timeTableDates = this.getTimeTableDates({ calendarDate, calendarTimePeriod });
+    const timeTableDates = this.getTimeTableDates({ calendarDate, calendarTimePeriod, visibleSlideCount });
     const timeTableMaps = this.getTimeTableMaps(timeTableDates);
 
     // Fill out the table
@@ -255,8 +281,15 @@ class TimeTable {
       calendarTimePeriod,
       timeTableDates,
       timeTableMaps,
-      timeTable: {},
+      timeTable: timeTable ?? {},
     });
+
+    console.log(
+      "@@ TimeTable",
+      // timeTableDates,
+      // timeTableMaps,
+      _timeTable,
+    );
 
     return _timeTable;
   }

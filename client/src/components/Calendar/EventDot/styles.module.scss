@@ -3,6 +3,8 @@
 @import "../../../styles/radius";
 @import "../../../styles/colors";
 
+$dotSize: $size_3;
+
 .eventMarker {
   white-space: nowrap;
   position: relative;
@@ -11,11 +13,11 @@
 
 .eventDot {
   position: absolute;
-  left: calc(50% - 10px);
-  top: calc(50% - 10px);
-  width: $size_4;
-  height: $size_4;
-  border-radius: $size_2;
+  left: calc(50% - (#{$dotSize} / 2));
+  top: calc(50% - (#{$dotSize} / 2));
+  width: $dotSize;
+  height: $dotSize;
+  border-radius: 50%;
 }
 
 .eventTitle {

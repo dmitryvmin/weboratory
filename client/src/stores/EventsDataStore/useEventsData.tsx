@@ -40,6 +40,7 @@ function useEventsData(): UseEventsDataReturnType {
   function setIntervalEventsDataMap(
     calendarTimePeriod,
     calendarDate,
+    visibleSlideCount,
   ) {
 
     if (!eventsData || !eventsData.length) {
@@ -49,6 +50,7 @@ function useEventsData(): UseEventsDataReturnType {
     const _intervalEventsDataMap = getIntervalEventsDataMap(
       calendarTimePeriod,
       calendarDate,
+      visibleSlideCount,
     );
 
     dispatch((s): EventsDataState => ({
@@ -63,19 +65,25 @@ function useEventsData(): UseEventsDataReturnType {
   function getIntervalEventsDataMap(
     calendarTimePeriod,
     calendarDate,
+    visibleSlideCount,
   ): EventsDataMap {
 
     const { floorDate, ceilingDate } = TimeTable.getTimeTableDates({
       calendarTimePeriod,
       calendarDate,
+      visibleSlideCount,
     });
 
-    return getEventsForTimePeriodInterval({
+    const eventsDataMap = getEventsForTimePeriodInterval({
       timePeriod: calendarTimePeriod,
       intervalStart: floorDate,
       intervalEnd: ceilingDate,
       eventsData,
     });
+
+    console.log("@@ eventsDataMap", eventsData, eventsDataMap);
+
+    return eventsDataMap;
   }
 
   /**
@@ -90,4 +98,4 @@ function useEventsData(): UseEventsDataReturnType {
   });
 }
 
-export {useEventsData};
+export { useEventsData };

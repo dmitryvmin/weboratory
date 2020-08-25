@@ -8,8 +8,6 @@ import React, {
 } from "react";
 import { useSpring, animated } from "react-spring";
 import { useGesture } from "react-use-gesture";
-import { motion } from "framer-motion";
-import { log } from "@dmitrymin/fe-log";
 
 // Utils
 import { useWindowSize } from "@utils/hooks/useWindowSize";
@@ -23,16 +21,21 @@ import { useCalendar } from "@components/Calendar/hooks/useCalendar";
 import { useEventsData } from "@stores/EventsDataStore/useEventsData";
 
 // Constants
-import { SLIDER_MARGIN } from "@components/Calendar/constants";
+import { CurrentDateFormatMap, SLIDER_MARGIN } from "@components/Calendar/constants";
 import { DRAG_STATUS } from "@common/constants";
 
 // Components
 import { Slide } from "@components/Calendar/Slide/Slide";
+import { Text } from "@components/UI/Text";
 
 // Types
 import { SliderProps } from "@components/Calendar/Slider/types";
 import { getDateAdjustedBy } from "@components/Calendar/utils/getDateAdjustedBy";
 import { getDateFromMap } from "@components/Calendar/utils/getDateFromMap";
+import { format } from "date-fns";
+import { motion } from "framer-motion";
+import { TimePeriod } from "@components/Calendar/common/types";
+import { getStartOfPeriod } from "@components/Calendar/utils/getStartOfPeriod";
 
 /**
  * Slider
@@ -53,9 +56,11 @@ const Slider: FC<SliderProps> = memo(() => {
     setSlideWidth,
     slideWidth,
     setCurrentDate,
-    startingDate,
     currentDate,
+    startingDate,
+    setStartingDate,
     xDistance,
+    setXDistance,
     isFullScreen,
   } = useCalendar();
 
@@ -80,6 +85,8 @@ const Slider: FC<SliderProps> = memo(() => {
 
   const slidesTraveledRef = useRef<number>(0);
 
+  const timePeriodRef = useRef<TimePeriod>();
+
   const isDragging = useRef<boolean>(false);
 
   const dragContainerRef = useRef<HTMLDivElement>(null);
@@ -87,45 +94,34 @@ const Slider: FC<SliderProps> = memo(() => {
   /**
    * Lib hooks
    */
-  const [{ x }, setSpring] = useSpring(() => ({ x: 0 }));
+  const [{ x }, setSpring, stopSpring] = useSpring(() => ({ x: 0 }));
 
   const { windowWidth } = useWindowSize();
 
   /**
    * Effects
    */
+  // Get all mock events data
   useEffect(() => {
     setAllEventsData();
   }, []);
 
+  // Get events for the active slides
   useEffect(() => {
-    setIntervalEventsDataMap(timePeriod, currentDate);
+    setIntervalEventsDataMap(timePeriod, currentDate, slideCount);
   }, [
     eventsData,
     currentDate,
     timePeriod,
   ]);
 
-  useEffect(() => {
-    const xDelta = x.get() + xDistance.distance;
-    setSpring({
-      x: xDelta,
-      config: {
-        velocity: xDistance.velocity,
-        duration: 500,
-      }
-    });
-    updateSlidesTraveled(xDelta);
-  }, [
-    xDistance,
-  ]);
-
+  // windowWidth
   useEffect(() => {
 
     let visibleSlides;
 
     // 1 Slide
-    if (windowWidth < 600) {
+    if (windowWidth < 680) {
       visibleSlides = 1;
     }
     // 2 Slides
@@ -137,14 +133,25 @@ const Slider: FC<SliderProps> = memo(() => {
       visibleSlides = 3;
     }
 
+    const slideWidth = (windowWidth - (2 * SLIDER_MARGIN)) / visibleSlides;
+
     setSlideCount(visibleSlides);
-
-    const slideWidth = (windowWidth - (2 * SLIDER_MARGIN)) / slideCount;
-
     setSlideWidth(slideWidth);
 
   }, [
     windowWidth,
+  ]);
+
+  // When Slider xDistance is updated
+  useEffect(() => {
+    if (!xDistance.distance) {
+      return;
+    }
+    const xDelta = x.get() + (xDistance.distance * -1);
+    updateSlidesTraveled(xDelta);
+    updateSpring(xDelta, xDistance.duration, xDistance.velocity);
+  }, [
+    xDistance,
   ]);
 
   // Update calendarMarker when slidesTraveled changes
@@ -152,29 +159,82 @@ const Slider: FC<SliderProps> = memo(() => {
     if (slidesTraveled === slidesTraveledRef.current) {
       return;
     }
-
-    const segmentDelta = slidesTraveledRef.current - slidesTraveled;
-    const newCurrentDate = getDateAdjustedBy(currentDate, timePeriod, segmentDelta);
-
-    setCurrentDate(newCurrentDate);
-    slidesTraveledRef.current = slidesTraveled;
-
+    else {
+      updateCurrentDate(slidesTraveledRef.current, slidesTraveled);
+    }
   }, [
     slidesTraveled,
   ]);
 
+  useEffect(() => {
+    if (timePeriodRef.current === timePeriod) {
+      return;
+    }
+    // Get start date for the timePeriod
+    setStartingDate(getStartOfPeriod(timePeriod, currentDate));
+    // Reset xDistance, if it's been updated
+    setXDistance({ distance: 0, duration: 0 });
+    // Reset slides traveled
+    updateSlidesTraveled(null);
+    // Reset the drag container
+    updateSpring(0, 0);
+
+    timePeriodRef.current = timePeriod;
+  }, [
+    timePeriod,
+  ]);
+
+  /**
+   * State Setters
+   */
+  function updateCurrentDate(slideTraveledPrev, slidesTraveledNext) {
+    const slidesTraveledDelta = slideTraveledPrev - slidesTraveledNext;
+    const newCurrentDate = getDateAdjustedBy(currentDate, timePeriod, slidesTraveledDelta);
+
+    if (newCurrentDate === currentDate) {
+      return;
+    }
+
+    console.log("@@ updateCurrentDate", slidesTraveledDelta, newCurrentDate);
+    slidesTraveledRef.current = slidesTraveledNext;
+    setCurrentDate(newCurrentDate);
+  }
+
+  // When slider moves right, xDelta value is positive
+  // When slider moves left, xDelta value is negative
+  function updateSlidesTraveled(xDelta: number | null) {
+    if (xDelta === null) {
+      setSlidesTraveled(0);
+      slidesTraveledRef.current = 0;
+
+      console.log("@@ updateSlidesTraveled reset to 0:");
+    }
+    else {
+      const newSlidesTraveled = Math.round(xDelta / slideWidth);
+      if (newSlidesTraveled === slidesTraveled) {
+        return;
+      }
+
+      console.log("@@ updateSlidesTraveled set to", newSlidesTraveled);
+      setSlidesTraveled(newSlidesTraveled);
+    }
+  }
+
+  // function updateSpring({x, config}: typeof useSpring.arguments) {
+  function updateSpring(x: number, duration = 0, velocity?: number) {
+    setSpring({
+      x,
+      config: {
+        ...velocity && { velocity: velocity },
+        duration: duration ?? 0,
+      },
+    });
+  }
+
   /**
    * Utils
    */
-  function updateSlidesTraveled(xDelta: number) {
-    const newSlidesTraveled = Math.round(xDelta / slideWidth);
-    if (slidesTraveled === newSlidesTraveled) {
-      return;
-    }
-    setSlidesTraveled(newSlidesTraveled);
-  }
-
-  // Set the drag hook and update Slider movement based on gesture data
+    // Set the drag hook and update Slider movement based on gesture data
   const dragBind = useGesture(
     {
       onDrag: ({ down, movement: [mx, my], first, last }) => {
@@ -199,7 +259,7 @@ const Slider: FC<SliderProps> = memo(() => {
         initial: () => [x.get(), 0],
       },
     },
-  );
+    );
 
   /**
    * =============== JSX ===============
@@ -217,9 +277,11 @@ const Slider: FC<SliderProps> = memo(() => {
       if (!segmentContent) {
         return null;
       }
+
       const segmentTimePeriod = "YEAR";
       const segmentDateMap = { [segmentTimePeriod]: parseInt(year) };
       const segmentDate = getDateFromMap(segmentDateMap);
+
       return (
         <Slide
           key={`ROOT-${segmentTimePeriod}-${segmentDate}`}
@@ -227,8 +289,6 @@ const Slider: FC<SliderProps> = memo(() => {
           slideDateMap={segmentDateMap}
           slideContent={segmentContent}
           slideWidth={slideWidth}
-          calendarTimePeriod={timePeriod}
-          calendarStartingDate={startingDate}
         />
       );
     });
@@ -240,34 +300,12 @@ const Slider: FC<SliderProps> = memo(() => {
   return (
     <div
       {...dragBind()}
-      // {...bind()}
       ref={dragContainerRef}
-      // animate={controls}
       className={classNames.dragContainer}
-      // whileTap={{ cursor: "grabbing" }}
-      // drag="x"
-
-      // initial="docked"
-      // variants={sliderContainerVariants}
-      // animate={isFullScreen ? "fullScreen" : "docked"}
-
-      // onPanStart={handleDragStart}
-
-      // onDrag={
-      //   (event, info) => {
-      //     // console.log(info.point.x, info.point.y)
-      //   }
-      // }
     >
       <animated.div
-        // {...bind()}
-        // ref={dragContainerRef}
-        // animate={controls}
         className={classNames.slidesContainer}
-        // whileTap={{ cursor: "grabbing" }}
-        // drag="x"
         style={{
-          // width: windowWidth * 3,
           x,
         }}
       >

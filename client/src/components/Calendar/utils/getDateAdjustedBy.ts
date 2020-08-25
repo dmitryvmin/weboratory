@@ -17,11 +17,15 @@ import { TimePeriod } from "@components/Calendar/common/types";
 function getDateAdjustedBy(
   start: Date,
   timeScale: TimePeriod,
-  numOfIntervals = 1,
+  numOfIntervals,
 ): Date {
 
   invariant(start, "Couldn't getTimestamp, timeMarker value is falsy", start);
   invariant(timeScale, "Couldn't getTimestamp, timeScale value is falsy", timeScale);
+
+  if (!numOfIntervals) {
+    return start;
+  }
 
   switch (timeScale) {
     case "MINUTE":

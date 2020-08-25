@@ -33,6 +33,7 @@ import { formatDateToMapKey } from "@components/Calendar/utils/formatDateToMapKe
 import { log } from "@dmitrymin/fe-log";
 import { useCalendar } from "@components/Calendar/hooks/useCalendar";
 import { useWindowSize } from "@utils/hooks/useWindowSize";
+import { getSegmentIdxFromDate } from "@components/Calendar/utils/getSegmentIdxFromDate";
 
 type AnimationDefinition = VariantLabels | TargetAndTransition | any;
 
@@ -44,205 +45,218 @@ const TRANSITION_PROPS = {
 /**
  * Slide
  */
-const Slide: FC<SlideProps> = memo(({
-    slideTimePeriod,
-    slideDateMap,
-    slideContent,
-    slideWidth,
-    calendarTimePeriod,
-    calendarStartingDate,
-  }) => {
+const Slide: FC<SlideProps> = ({
+  slideTimePeriod,
+  slideDateMap,
+  slideContent,
+  slideWidth,
+}) => {
 
-    /**
-     * =============== Variables ===============
-     */
-    const calendarParentTimePeriod = getParentTimePeriod(calendarTimePeriod);
-    const isContainer = slideTimePeriod === calendarParentTimePeriod;
-    const isSlide = slideTimePeriod === calendarTimePeriod;
+  /**
+   * =============== Hooks ===============
+   */
+  const controls = useAnimation();
 
-    /**
-     * =============== Hooks ===============
-     */
-    const controls = useAnimation();
+  const { intervalEventsDataMap } = useEventsData();
 
-    const { intervalEventsDataMap } = useEventsData();
-
-    const { isFullScreen } = useCalendar();
+  const {
+    isFullScreen,
+    timePeriod: calendarTimePeriod,
+    startingDate: calendarStartingDate,
+  } = useCalendar();
 
   const { windowHeight } = useWindowSize();
 
-    /**
-     * =============== Effects ===============
-     */
-    useEffect(() => {
-      if (isSlide) {
-        controls.start(getActiveSlideStyle());
-      }
-      // else {
-      //   controls.start(getSlideStyle(false));
-      // }
-    }, [
-      calendarStartingDate,
-      calendarTimePeriod,
-      slideTimePeriod,
-    ]);
+  /**
+   * =============== Variables ===============
+   */
+  const calendarParentTimePeriod = getParentTimePeriod(calendarTimePeriod);
+  const calendarChildTimePeriod = getChildTimePeriod(calendarTimePeriod);
+  const isContainer = slideTimePeriod === calendarParentTimePeriod;
+  const isSlide = slideTimePeriod === calendarTimePeriod;
+  const isSegment = slideTimePeriod === calendarChildTimePeriod;
 
-    /**
-     * =============== Variables ===============
-     */
-    const slideDate = getDateFromMap(slideDateMap);
+  /**
+   * =============== Effects ===============
+   */
+  // useEffect(() => {
+  //   if (isSlide) {
+  //     controls.start(getActiveSlideStyle());
+  //   }
+  //   // else {
+  //   //   controls.start(getSlideStyle(false));
+  //   // }
+  // }, [
+  //   calendarStartingDate,
+  //   calendarTimePeriod,
+  //   slideTimePeriod,
+  // ]);
 
-    const className = cn(
-      classNames.slideBase,
-      isContainer && classNames.isContainer,
-      isSlide && classNames.isSlide,
-    );
+  /**
+   * =============== Variables ===============
+   */
+  const slideDate = getDateFromMap(slideDateMap);
 
-    /**
-     * Utils
-     */
-    function getInactiveSlideStyle(): AnimationDefinition {
-      return ({
-        x: "unset",
-        y: "unset",
-        width: "unset",
-      });
+  const className = cn(
+    classNames.slideBase,
+    isContainer && classNames.isContainer,
+    isSlide && classNames.isSlide,
+  );
+
+  /**
+   * Utils
+   */
+  function getInactiveSlideStyle(): AnimationDefinition {
+    return ({
+      x: "unset",
+      y: "unset",
+      width: "unset",
+    });
+  }
+
+  function getActiveSlideStyle(): AnimationDefinition {
+
+    // const calendarFloor = getStartOfPeriod(calendarTimePeriod, calendarStartingDate);
+
+    const segmentDiff = getSegDiff({
+      timePeriod: calendarTimePeriod,
+      from: slideDate,
+      to: calendarStartingDate,
+    });
+
+    const slideX = segmentDiff * slideWidth;
+
+    return ({
+      left: slideX + (SLIDER_MARGIN / 2),
+      top: 8,
+      width: slideWidth - (SLIDER_MARGIN / 2),
+      // height: isFullScreen ? windowHeight - 220 : 180,
+    });
+  }
+
+  function getStyle() {
+    if (isSlide && slideContent !== undefined) {
+      return getActiveSlideStyle();
     }
+  }
 
-    function getActiveSlideStyle(): AnimationDefinition {
-
-      const calendarFloor = getStartOfPeriod(calendarTimePeriod, calendarStartingDate);
-
-      const segmentDiff = getSegDiff({
-        timePeriod: calendarTimePeriod,
-        from: slideDate,
-        to: calendarFloor,
-      });
-
-      const slideX = segmentDiff * slideWidth;
-
-      return ({
-        left: slideX + (SLIDER_MARGIN / 2),
-        top: 8,
-        width: slideWidth - (SLIDER_MARGIN / 2),
-        height: isFullScreen ? windowHeight - 140 : 180,
-      });
-    }
-
-    /**
-     * =============== JSX ===============
-     */
-    function renderLabel() {
-      if (isSlide) {
-        const dateFormat = DateFormatMap[slideTimePeriod];
-        const formattedDate = format(slideDate, dateFormat);
-        return (
-          <div className={classNames.segmentLabel}>
-            <Text style="label1">
-              {`${formattedDate}`}
-            </Text>
-          </div>
-        );
-      }
-    }
-
-    function renderEvents() {
-
-      const sliderDateKey = formatDateToMapKey(slideTimePeriod, slideDate);
-      const segmentEvents = intervalEventsDataMap[sliderDateKey];
-
-      if (!segmentEvents || !segmentEvents.length) {
-        return;
-      }
-
-      return segmentEvents.map((event, idx) => {
-        return (
-          <Dot
-            key={`${slideTimePeriod}-${slideDate}-${idx}`}
-            event={event}
-          />
-        );
-      });
-    }
-
-    // TODO: Clean up...
-
-    // Render this Slide
-    function renderContent() {
-      // Content is null, render empty Slide
-      if (slideContent === null) {
-        return renderEvents();
-      }
-      else if (Array.isArray(slideContent)) {
-
-        return slideContent.map((childContent, idx) => {
-          // If 0-day or undefined, return
-          if (childContent === 0 || childContent === undefined) {
-            return;
-          }
-          else {
-
-            const slideChildTimePeriod = getChildTimePeriod(slideTimePeriod);
-
-            const childDateMap = {
-              ...slideDateMap,
-              [slideChildTimePeriod]: idx,
-            };
-
-            const childDate = getDateFromMap(childDateMap);
-
-            return (
-              <Slide
-                // key={`${calendarTimePeriod}-${slideDate}-${childDate}`}
-                key={`${slideChildTimePeriod}-${childDate}`}
-                slideTimePeriod={slideChildTimePeriod}
-                slideDateMap={childDateMap}
-                slideContent={childContent}
-                slideWidth={slideWidth}
-                calendarTimePeriod={calendarTimePeriod}
-                calendarStartingDate={calendarStartingDate}
-              />
-            );
-          }
-        });
-      }
-    }
-
-    /**
-     * Render Component
-     */
+  /**
+   * =============== JSX ===============
+   */
+  function renderSlideLabel() {
     if (isSlide) {
-      // return (
-      //   <motion.div
-      //     layout
-      //     style={getActiveSlideStyle()}
-      //     // animate={controls}
-      //     transition={TRANSITION_PROPS}
-      //     className={className}
-      //   >
-      //     {renderLabel()}
-      //     {renderContent()}
-      //   </motion.div>
-      // );
+      const dateFormat = DateFormatMap[slideTimePeriod];
+      const formattedDate = format(slideDate, dateFormat);
       return (
-        <div
-          style={getActiveSlideStyle()}
-          className={className}
-        >
-          {renderLabel()}
-          {renderContent()}
-        </div>
-      );
-    }
-    else {
-      return (
-        <div className={className}>
-          {renderContent()}
+        <div className={classNames.slideLabel}>
+          <Text style="label1">
+            {`${formattedDate}`}
+          </Text>
         </div>
       );
     }
   }
-);
+
+  function renderSegmentLabel() {
+    if (isSegment) {
+      return (
+        <div className={classNames.segmentLabel}>
+          <Text style="label3">
+            {getSegmentIdxFromDate(slideTimePeriod, slideDate)}
+          </Text>
+        </div>
+      );
+    }
+  }
+
+  function renderEvents() {
+
+    const sliderDateKey = formatDateToMapKey(slideTimePeriod, slideDate);
+    const segmentEvents = intervalEventsDataMap[sliderDateKey];
+
+    if (!segmentEvents || !segmentEvents.length) {
+      return;
+    }
+
+    return segmentEvents.map((event, idx) => {
+      return (
+        <Dot
+          key={`${slideTimePeriod}-${slideDate}-${idx}`}
+          event={event}
+        />
+      );
+    });
+  }
+
+  // TODO: Clean up...
+  // Render this Slide
+  function renderContent() {
+    // Content is null, render empty Slide
+    if (slideContent === null) {
+      return renderEvents();
+    }
+    else if (Array.isArray(slideContent)) {
+
+      return slideContent.map((childContent, idx) => {
+        // If 0-day or undefined, return
+        if (childContent === 0 || childContent === undefined) {
+          return;
+        }
+        else {
+
+          const slideChildTimePeriod = getChildTimePeriod(slideTimePeriod);
+
+          const childDateMap = {
+            ...slideDateMap,
+            [slideChildTimePeriod]: idx,
+          };
+
+          const slideChildDate = getDateFromMap(childDateMap);
+
+          return (
+            <Slide
+              key={`${calendarTimePeriod}-${slideChildTimePeriod}-${slideChildDate}`}
+              slideTimePeriod={slideChildTimePeriod}
+              slideDateMap={childDateMap}
+              slideContent={childContent}
+              slideWidth={slideWidth}
+            />
+          );
+        }
+      });
+    }
+  }
+
+  /**
+   * Render Component
+   */
+  // if (isSlide && slideContent !== undefined) {
+  // return (
+  //   <motion.div
+  //     layout
+  //     style={getActiveSlideStyle()}
+  //     // animate={controls}
+  //     transition={TRANSITION_PROPS}
+  //     className={className}
+  //   >
+  //     {renderLabel()}
+  //     {renderContent()}
+  //   </motion.div>
+  // );
+  // }
+  // else {
+  //
+  // }
+  return (
+    <div
+      className={className}
+      style={getStyle()}
+    >
+      {renderSegmentLabel()}
+      {renderContent()}
+    </div>
+  );
+};
 
 Slide.displayName = "Slide";
 

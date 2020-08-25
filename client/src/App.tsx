@@ -1,5 +1,6 @@
 // React
 import React from "react";
+import { Provider } from "react-redux";
 
 // Libs
 import {
@@ -27,27 +28,32 @@ import Breadcrumbs from "./components/Navigation/Breadcrumbs";
 
 // Styles
 import classNames from "./styles.module.scss";
+import { configureStore } from "@stores/globalStore/globalStore";
+
+// Store
+const globalStore = configureStore();
 
 const App = () => {
   const location = useLocation();
-
   return (
-    <div id="app" className={classNames.app}>
-      <Nav/>
-      {/*<Breadcrumbs />*/}
-      <AnimatePresence>
-        <Switch location={location} key={location.pathname}>
-          <Route path="/" exact component={Home}/>
-          <Route path="/about" exact component={About}/>
-          <Route path="/photos" exact component={Photos}/>
-          <Route path="/posts" component={Posts}/>
-          <Route path="/projects" component={Projects}/>
-          <Route path="/events" component={Events}/>
-          <Route path="/profile" component={Profile}/>
-          {/*<PrivateRoute path="/admin" exact component={} />*/}
-        </Switch>
-      </AnimatePresence>
-    </div>
+    <Provider store={globalStore}>
+      <div id="app" className={classNames.app}>
+        <Nav/>
+        {/*<Breadcrumbs />*/}
+        <AnimatePresence>
+          <Switch location={location} key={location.pathname}>
+            <Route path="/" exact component={Home}/>
+            <Route path="/about" exact component={About}/>
+            <Route path="/photos" exact component={Photos}/>
+            <Route path="/posts" component={Posts}/>
+            <Route path="/projects" component={Projects}/>
+            <Route path="/events" component={Events}/>
+            <Route path="/profile" component={Profile}/>
+            {/*<PrivateRoute path="/admin" exact component={} />*/}
+          </Switch>
+        </AnimatePresence>
+      </div>
+    </Provider>
   );
 };
 
