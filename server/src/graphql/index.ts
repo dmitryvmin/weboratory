@@ -2,7 +2,7 @@
 import { ApolloServer } from "apollo-server-koa";
 
 // App
-import models from './connectors';
+import models from "./connectors";
 import schema from "./schema";
 
 /**
@@ -12,9 +12,14 @@ function iniGraphQlServer(app, router) {
 
   const apolloServer = new ApolloServer({
     schema,
-    context: ({ ctx: { state } }) => ({
-      models,
-    }),
+    context: (req) => {
+
+      const { session } = req.ctx;
+
+      return ({
+        models,
+      });
+    },
     introspection: true,
     playground: true,
   });

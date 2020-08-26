@@ -2,6 +2,7 @@
 import React, { CSSProperties, FC, memo, useEffect, useState } from "react";
 import { motion, MotionStyle, TargetAndTransition, useAnimation, VariantLabels } from "framer-motion";
 import { format } from "date-fns";
+import { useSelector } from "react-redux";
 
 // Utils
 import { getSegDiff } from "../utils/getSegDiff";
@@ -55,15 +56,19 @@ const Slide: FC<SlideProps> = ({
   /**
    * =============== Hooks ===============
    */
-  const controls = useAnimation();
+  const eventsData = useSelector(state => state.calendarReducer.eventsData);
 
-  const { intervalEventsDataMap } = useEventsData();
+  if (!eventsData) {
+    return null;
+  }
 
   const {
     isFullScreen,
     timePeriod: calendarTimePeriod,
     startingDate: calendarStartingDate,
   } = useCalendar();
+
+  const controls = useAnimation();
 
   const { windowHeight } = useWindowSize();
 
@@ -172,7 +177,8 @@ const Slide: FC<SlideProps> = ({
   function renderEvents() {
 
     const sliderDateKey = formatDateToMapKey(slideTimePeriod, slideDate);
-    const segmentEvents = intervalEventsDataMap[sliderDateKey];
+
+    const segmentEvents = eventsData[sliderDateKey];
 
     if (!segmentEvents || !segmentEvents.length) {
       return;

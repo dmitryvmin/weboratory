@@ -24,7 +24,7 @@ async function createEvent(ctx: Context, next: () => Promise<any>) {
   }
   catch (err) {
     ctx.status = HttpStatus.INTERNAL_SERVER_ERROR;
-    ctx.body = "Couldn't create new event.";
+    ctx.body = "Couldn't create new event." + err;
     await next();
   }
 }

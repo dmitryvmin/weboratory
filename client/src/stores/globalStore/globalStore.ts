@@ -2,6 +2,8 @@
 import { applyMiddleware, createStore, compose } from "redux";
 import { composeWithDevTools } from "redux-devtools-extension";
 import thunkMiddleware from "redux-thunk";
+import createSentryMiddleware from "redux-sentry-middleware";
+import * as Sentry from "@sentry/browser";
 
 // App
 import { rootReducer } from "@stores/globalStore/reducers";
@@ -9,8 +11,18 @@ import { loggerMiddleware } from "@stores/globalStore/middleware/loggerMiddlewar
 import { monitorReducersEnhancer } from "@stores/globalStore/enhancers/monitorReducersEnhancer";
 import { createEpicMiddleware } from "redux-observable";
 
-const middlewareEnhancer = applyMiddleware(loggerMiddleware, thunkMiddleware);
-const composedEnhancers = compose(middlewareEnhancer, monitorReducersEnhancer);
+Sentry.init();
+
+const middlewareEnhancer = applyMiddleware(
+  loggerMiddleware,
+  thunkMiddleware,
+  createSentryMiddleware(Sentry),
+);
+
+const composedEnhancers = compose(
+  middlewareEnhancer,
+  monitorReducersEnhancer,
+);
 
 function configureStore(preloadedState = undefined) {
   const epicMiddleware = createEpicMiddleware();

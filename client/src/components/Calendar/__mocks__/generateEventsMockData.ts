@@ -1,5 +1,6 @@
 // Libs
 import { addMonths, addYears, subMonths, subYears } from "date-fns";
+import randomLocation from "random-location";
 
 // Utils
 import { getRandomHEX } from "@utils/test/getRandomHEX";
@@ -26,11 +27,16 @@ function generateEventsMockData(
     const time = getRandomDate(start, end);
     const title = getRandomString();
     const color = getRandomHEX();
+    const {latitude, longitude} = randomLocation.randomCirclePoint({
+      latitude: 47.620422,
+      longitude: -122.349358,
+    }, 1000);
 
     events.push({
       title,
       time,
       color,
+      coordinates: { lat: latitude, lng: longitude },
     });
   }
 

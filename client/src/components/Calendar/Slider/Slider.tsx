@@ -8,6 +8,7 @@ import React, {
 } from "react";
 import { useSpring, animated } from "react-spring";
 import { useGesture } from "react-use-gesture";
+import { useSelector, useDispatch } from "react-redux";
 
 // Utils
 import { useWindowSize } from "@utils/hooks/useWindowSize";
@@ -36,6 +37,8 @@ import { format } from "date-fns";
 import { motion } from "framer-motion";
 import { TimePeriod } from "@components/Calendar/common/types";
 import { getStartOfPeriod } from "@components/Calendar/utils/getStartOfPeriod";
+import { SET_CAL_CURRENT_DATE, SET_CAL_TIME_PERIOD } from "@stores/globalStore/constants/calendar";
+import { setCalTimePeriod, setCalStartDate, setCalCurrentDate } from "@stores/globalStore/actions/calendar";
 
 /**
  * Slider
@@ -65,9 +68,7 @@ const Slider: FC<SliderProps> = memo(() => {
   } = useCalendar();
 
   const {
-    setAllEventsData,
     setIntervalEventsDataMap,
-    eventsData,
   } = useEventsData();
 
   const timeTable = useTimeTable({
@@ -75,6 +76,8 @@ const Slider: FC<SliderProps> = memo(() => {
     timePeriod,
     slideCount,
   });
+
+  const dispatch = useDispatch();
 
   /**
    * Component hooks
@@ -101,17 +104,16 @@ const Slider: FC<SliderProps> = memo(() => {
   /**
    * Effects
    */
-  // Get all mock events data
-  useEffect(() => {
-    setAllEventsData();
-  }, []);
-
   // Get events for the active slides
   useEffect(() => {
-    setIntervalEventsDataMap(timePeriod, currentDate, slideCount);
+    dispatch(setCalCurrentDate(currentDate));
   }, [
-    eventsData,
     currentDate,
+  ]);
+
+  useEffect(() => {
+    dispatch(setCalTimePeriod(timePeriod));
+  }, [
     timePeriod,
   ]);
 

@@ -2,6 +2,7 @@
 import React, { useEffect, useRef, useContext, useMemo } from "react";
 import { history } from "../../router";
 import { useQuery } from "@apollo/client";
+import { useSelector, useDispatch } from "react-redux";
 
 // styles
 import styles from "./styles.module.scss";
@@ -43,14 +44,17 @@ import { useNodeRef } from "@utils/hooks/useNodeRef";
 const EventsApp: React.FC = () => {
 
   /**
-   * ========== Component hooks
+   * ========== hooks
    */
+
+  const eventsData = useSelector(state => state.calendarReducer.eventsData);
+
+  const isEventModalOpen = useSelector(state => state.isEventModalOpen);
+  const dispatch = useDispatch();
+
   const { node: menuNode1, ref: menuRef1 } = useNodeRef<HTMLDivElement>();
   const { node: menuNode2, ref: menuRef2 } = useNodeRef<HTMLDivElement>();
 
-  /**
-   * ========== Context hooks
-   */
   const {
     mapInstance,
     setMapCenterCoords,
@@ -116,10 +120,22 @@ const EventsApp: React.FC = () => {
   /**
    * Render fns
    */
-  const renderSavedMarkers = () => {
-    return events$
-      // ?.filter((event) => event.event_id !== activeEvent?.event_id)
-      ?.map((event, idx) => {
+  const renderQueriedMarkers = () => {
+    // return events$
+    //   // ?.filter((event) => event.event_id !== activeEvent?.event_id)
+    //   ?.map((event, idx) => {
+    //     return (
+    //       <MapMarker
+    //         key={`marker-${event.eventId}-${idx}`}
+    //         event={event}
+    //       />
+    //     );
+    //   });
+    if (!eventsData) {
+      return;
+    }
+    const mockEvents = Object.keys(eventsData).reduce((a: any, c: any) => [...a, eventsData[c]], []).flat();
+    return mockEvents?.map((event, idx) => {
         return (
           <MapMarker
             key={`marker-${event.eventId}-${idx}`}
@@ -150,12 +166,15 @@ const EventsApp: React.FC = () => {
    */
   return (
     <div className={styles.container}>
+
       <EventsMenu menuRefs={{ menuRef1, menuRef2 }}/>
+
       <EventModal menuNode={menuNode1}/>
       <MapSearch menuNode={menuNode2}/>
+
       <Map>
         {renderNewEventMarker()}
-        {renderSavedMarkers()}
+        {renderQueriedMarkers()}
       </Map>
     </div>
   );

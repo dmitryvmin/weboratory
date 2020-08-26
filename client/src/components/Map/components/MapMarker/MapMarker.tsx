@@ -41,6 +41,7 @@ const MapMarker: FC<TMapMarkerProps> = ({ event }) => {
     address,
     coordinates,
     title,
+    color,
   } = event;
 
   if (!coordinates) {
@@ -89,6 +90,7 @@ const MapMarker: FC<TMapMarkerProps> = ({ event }) => {
         </motion.div>
         }
         <div
+          style={{backgroundColor: color}}
           className={styles.poi}
           onClick={handleMarker}
         />

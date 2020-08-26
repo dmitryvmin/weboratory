@@ -37,4 +37,5 @@ export type IEvent = {
   title: string;
   content?: any;
   visibility?: EventVisibility;
+  color?: string;
 }

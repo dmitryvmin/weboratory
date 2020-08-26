@@ -1,8 +1,12 @@
 import {EventsDataActions} from '../constants/eventsDataActions';
+import { QUERY_EVENTS_DATA } from "@stores/globalStore/constants/eventsData";
 
-const actionCreator = (id) => ({
-  type: EventsDataActions.FETCH_EVENTS_DATA,
-  id,
-});
+function eventsData() {
+  return {
+    type: QUERY_EVENTS_DATA,
+  };
+}
 
-export default actionCreator;
+export {
+  eventsData,
+};
