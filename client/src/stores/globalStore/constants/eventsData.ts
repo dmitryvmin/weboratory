@@ -1,1 +1,0 @@
-export const QUERY_EVENTS_DATA = "QUERY_EVENTS_DATA";

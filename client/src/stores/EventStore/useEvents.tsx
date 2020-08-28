@@ -7,12 +7,6 @@ import invariant from "invariant";
 import { ActiveEvent, IEventsContext, IEventsState, IUseEvents } from "./types";
 import { EventsContext } from "./EventsContext";
 import { history } from "../../router";
-import { TEventModal } from "@components/Events/EventModal/types";
-import { useMap } from "@stores/MapStore";
-import { getNewEventKey } from "@components/Events/utils/getEventKey";
-import { geocodeQuery } from "@components/Events/utils/geocodeQuery";
-import { InitialEvent } from "@stores/EventStore/constants";
-import { useNodeRef } from "@utils/hooks/useNodeRef";
 
 /**
  * Events context facade
@@ -34,8 +28,6 @@ const useEvents = (): IUseEvents => {
     isMenuOpen,
     searchedAddress,
   } = state;
-
-  const { easeTo, flyTo } = useMap();
 
   /**
    * ==================== State setters ====================
@@ -93,39 +85,7 @@ const useEvents = (): IUseEvents => {
    * ==================== Utility functions ====================
    */
 
-  /**
-   * Creates an Event object
-   */
-  async function createEventObject({
-    coordinates: coordinatesArg,
-    eventId: eventIdArg,
-    address,
-    ...rest
-  }: ActiveEvent) {
 
-    // If no coordinates have been passed,
-    // query coordinates by address
-    let coordinates;
-    if (!coordinatesArg && address) {
-      coordinates = await geocodeQuery(address);
-    }
-    else {
-      coordinates = coordinatesArg;
-    }
-
-    // Generate a key if eventId doesn't exist
-    const eventId = eventIdArg ?? getNewEventKey(address);
-
-    // Create event object
-    const eventObject: ActiveEvent = {
-      eventId,
-      coordinates,
-      address,
-      ...rest,
-    };
-
-    return eventObject;
-  }
 
   /**
    * ==================== Public functions ====================
@@ -148,13 +108,13 @@ const useEvents = (): IUseEvents => {
     history.push(`/events?eventId=${eventToOpen.eventId}`);
 
     // Center marker above the event
-    if (eventToOpen.coordinates) {
-      easeTo({
-        coords: eventToOpen.coordinates,
-        padding: { bottom: 400 },
-        zoom: 17,
-      });
-    }
+    // if (eventToOpen.coordinates) {
+    //   easeTo({
+    //     coords: eventToOpen.coordinates,
+    //     padding: { bottom: 400 },
+    //     zoom: 17,
+    //   });
+    // }
   }
 
   /**
@@ -162,17 +122,17 @@ const useEvents = (): IUseEvents => {
    */
   async function setEvent(event, isOpen) {
 
-    const newActiveEvent = await createEventObject(event);
+    // const newActiveEvent = await createEventObject(event);
 
-    setActiveEvent(newActiveEvent);
-
-    easeTo({
-      coords: newActiveEvent.coordinates,
-    });
-
-    if (isOpen) {
-      openEvent(newActiveEvent);
-    }
+    // setActiveEvent(newActiveEvent);
+    //
+    // // easeTo({
+    // //   coords: newActiveEvent.coordinates,
+    // // });
+    //
+    // if (isOpen) {
+    //   openEvent(newActiveEvent);
+    // }
   }
 
   // When the Event Modal is closed
@@ -186,14 +146,14 @@ const useEvents = (): IUseEvents => {
     history.push("/events");
 
     // If Event address has been set...
-    if (activeEvent?.coordinates) {
-
-      easeTo({
-        coords: activeEvent.coordinates,
-        padding: { top: 0, bottom: 0 },
-        zoom: 15,
-      });
-    }
+    // if (activeEvent?.coordinates) {
+    //
+    //   easeTo({
+    //     coords: activeEvent.coordinates,
+    //     padding: { top: 0, bottom: 0 },
+    //     zoom: 15,
+    //   });
+    // }
   }
 
   function openSearch() {
@@ -214,12 +174,12 @@ const useEvents = (): IUseEvents => {
   async function startNewEvent() {
     log("Starting new Event...");
 
-    const newEvent = await createEventObject({
-      ...InitialEvent,
-      title: "New Event",
-    });
+    // const newEvent = await createEventObject({
+    //   ...InitialEvent,
+    //   title: "New Event",
+    // });
 
-    setActiveEvent(newEvent);
+    // setActiveEvent(newEvent);
 
     setIsEventOpen(true);
   }

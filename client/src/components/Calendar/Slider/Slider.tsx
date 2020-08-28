@@ -9,6 +9,8 @@ import React, {
 import { useSpring, animated } from "react-spring";
 import { useGesture } from "react-use-gesture";
 import { useSelector, useDispatch } from "react-redux";
+import { format } from "date-fns";
+import { motion } from "framer-motion";
 
 // Utils
 import { useWindowSize } from "@utils/hooks/useWindowSize";
@@ -19,7 +21,6 @@ import classNames from "./styles.module.scss";
 // Hooks
 import { useTimeTable } from "@components/Calendar/hooks/useTimeTable/useTimeTable";
 import { useCalendar } from "@components/Calendar/hooks/useCalendar";
-import { useEventsData } from "@stores/EventsDataStore/useEventsData";
 
 // Constants
 import { CurrentDateFormatMap, SLIDER_MARGIN } from "@components/Calendar/constants";
@@ -33,12 +34,9 @@ import { Text } from "@components/UI/Text";
 import { SliderProps } from "@components/Calendar/Slider/types";
 import { getDateAdjustedBy } from "@components/Calendar/utils/getDateAdjustedBy";
 import { getDateFromMap } from "@components/Calendar/utils/getDateFromMap";
-import { format } from "date-fns";
-import { motion } from "framer-motion";
 import { TimePeriod } from "@components/Calendar/common/types";
 import { getStartOfPeriod } from "@components/Calendar/utils/getStartOfPeriod";
-import { SET_CAL_CURRENT_DATE, SET_CAL_TIME_PERIOD } from "@stores/globalStore/constants/calendar";
-import { setCalTimePeriod, setCalStartDate, setCalCurrentDate } from "@stores/globalStore/actions/calendar";
+import { useCalendarStore } from "@stores/globalStore/stores/calendar/useCalendarStore";
 
 /**
  * Slider
@@ -48,36 +46,27 @@ const Slider: FC<SliderProps> = memo(() => {
   /**
    * =============== Hooks ===============
    */
-
-  /**
-   * Context hooks
-   */
   const {
+    calTimePeriod,
+    calCurrentDate,
+    calStartDate,
     slideCount,
-    timePeriod,
-    setSlideCount,
-    setSlideWidth,
     slideWidth,
-    setCurrentDate,
-    currentDate,
-    startingDate,
-    setStartingDate,
-    xDistance,
-    setXDistance,
-    isFullScreen,
-  } = useCalendar();
-
-  const {
-    setIntervalEventsDataMap,
-  } = useEventsData();
+    sliderXDistance,
+    setSlideWidth,
+    setSlideCount,
+    setCalCurrentDate,
+    setCalTimePeriod,
+    setCalStartDate,
+    setSliderXDistance,
+    queryInViewEventsData,
+  } = useCalendarStore();
 
   const timeTable = useTimeTable({
-    currentDate,
-    timePeriod,
-    slideCount,
+    currentDate: calCurrentDate,
+    timePeriod: calTimePeriod,
+    slideCount: slideCount,
   });
-
-  const dispatch = useDispatch();
 
   /**
    * Component hooks
@@ -106,16 +95,8 @@ const Slider: FC<SliderProps> = memo(() => {
    */
   // Get events for the active slides
   useEffect(() => {
-    dispatch(setCalCurrentDate(currentDate));
-  }, [
-    currentDate,
-  ]);
-
-  useEffect(() => {
-    dispatch(setCalTimePeriod(timePeriod));
-  }, [
-    timePeriod,
-  ]);
+    queryInViewEventsData();
+  }, []);
 
   // windowWidth
   useEffect(() => {
@@ -138,22 +119,23 @@ const Slider: FC<SliderProps> = memo(() => {
     const slideWidth = (windowWidth - (2 * SLIDER_MARGIN)) / visibleSlides;
 
     setSlideCount(visibleSlides);
-    setSlideWidth(slideWidth);
+    setSlideWidth(slideWidth)
 
   }, [
     windowWidth,
   ]);
 
-  // When Slider xDistance is updated
+  // When Slider's xDistance traveled changes,
+  // update slides traveled and spring value
   useEffect(() => {
-    if (!xDistance.distance) {
+    if (!sliderXDistance?.distance) {
       return;
     }
-    const xDelta = x.get() + (xDistance.distance * -1);
+    const xDelta = x.get() + (sliderXDistance.distance * -1);
     updateSlidesTraveled(xDelta);
-    updateSpring(xDelta, xDistance.duration, xDistance.velocity);
+    updateSpring(xDelta, sliderXDistance.duration, sliderXDistance.velocity);
   }, [
-    xDistance,
+    sliderXDistance,
   ]);
 
   // Update calendarMarker when slidesTraveled changes
@@ -169,21 +151,21 @@ const Slider: FC<SliderProps> = memo(() => {
   ]);
 
   useEffect(() => {
-    if (timePeriodRef.current === timePeriod) {
+    if (timePeriodRef.current === calTimePeriod) {
       return;
     }
     // Get start date for the timePeriod
-    setStartingDate(getStartOfPeriod(timePeriod, currentDate));
+    setCalStartDate(getStartOfPeriod(calTimePeriod, calCurrentDate));
     // Reset xDistance, if it's been updated
-    setXDistance({ distance: 0, duration: 0 });
+    setSliderXDistance({ distance: 0, duration: 0 });
     // Reset slides traveled
     updateSlidesTraveled(null);
     // Reset the drag container
     updateSpring(0, 0);
 
-    timePeriodRef.current = timePeriod;
+    timePeriodRef.current = calTimePeriod;
   }, [
-    timePeriod,
+    calTimePeriod,
   ]);
 
   /**
@@ -191,15 +173,15 @@ const Slider: FC<SliderProps> = memo(() => {
    */
   function updateCurrentDate(slideTraveledPrev, slidesTraveledNext) {
     const slidesTraveledDelta = slideTraveledPrev - slidesTraveledNext;
-    const newCurrentDate = getDateAdjustedBy(currentDate, timePeriod, slidesTraveledDelta);
+    const newCurrentDate = getDateAdjustedBy(calCurrentDate, calTimePeriod, slidesTraveledDelta);
 
-    if (newCurrentDate === currentDate) {
+    if (newCurrentDate === calCurrentDate) {
       return;
     }
 
     console.log("@@ updateCurrentDate", slidesTraveledDelta, newCurrentDate);
     slidesTraveledRef.current = slidesTraveledNext;
-    setCurrentDate(newCurrentDate);
+    setCalCurrentDate(newCurrentDate);
   }
 
   // When slider moves right, xDelta value is positive
@@ -290,7 +272,6 @@ const Slider: FC<SliderProps> = memo(() => {
           slideTimePeriod={segmentTimePeriod}
           slideDateMap={segmentDateMap}
           slideContent={segmentContent}
-          slideWidth={slideWidth}
         />
       );
     });

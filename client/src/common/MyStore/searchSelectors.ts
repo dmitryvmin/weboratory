@@ -1,0 +1,1 @@
+export const getMyState = state => state.myReducer.myState;

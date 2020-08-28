@@ -33,7 +33,7 @@ export type IEvent = {
   coordinates: TLngLat;
   createdAt: string;
   updatedAt: string;
-  time: string;
+  time: Date;
   title: string;
   content?: any;
   visibility?: EventVisibility;

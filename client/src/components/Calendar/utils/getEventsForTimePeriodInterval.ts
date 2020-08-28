@@ -2,9 +2,15 @@
 import { isWithinInterval } from "date-fns";
 
 // App
-import { EventsDataMap } from "@components/Calendar/common/types";
+import { CalendarEvent, EventsDataMap } from "@components/Calendar/common/types";
 import { formatDateToMapKey } from "@components/Calendar/utils/formatDateToMapKey";
 import { getChildTimePeriod } from "@components/Calendar/utils/getChildTimePeriod";
+import { IEvent } from "@common/types";
+
+export type MockEventsDataType = {
+  eventsDataArray: IEvent[];
+  eventsDataMap: EventsDataMap;
+};
 
 /**
  * Returns an array of events mapped to DateMap keys:
@@ -15,9 +21,10 @@ function getEventsForTimePeriodInterval({
   eventsData,
   intervalStart,
   intervalEnd,
-}): EventsDataMap {
+}): MockEventsDataType {
 
-  const eventMap: EventsDataMap = {};
+  const eventsDataArray: IEvent[] = [];
+  const eventsDataMap: EventsDataMap = {};
 
   for (let i = 0; i < eventsData.length; i++) {
     const eventDatum = eventsData[i];
@@ -32,14 +39,18 @@ function getEventsForTimePeriodInterval({
     const childTimePeriod = getChildTimePeriod(timePeriod);
     const timestamp = formatDateToMapKey(childTimePeriod, eventDatum.time);
 
-    if (eventMap[timestamp] === undefined) {
-      eventMap[timestamp] = [];
+    if (eventsDataMap[timestamp] === undefined) {
+      eventsDataMap[timestamp] = [];
     }
 
-    eventMap[timestamp].push(eventDatum);
+    eventsDataMap[timestamp].push(eventDatum);
+    eventsDataArray.push(eventDatum);
   }
 
-  return eventMap;
+  return {
+    eventsDataArray,
+    eventsDataMap,
+  };
 }
 
 export {getEventsForTimePeriodInterval};

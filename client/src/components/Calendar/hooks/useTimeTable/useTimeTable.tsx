@@ -35,8 +35,8 @@ function useTimeTable({
   useEffect(() => {
 
     const _timetable = TimeTable.createTimeTable({
-      calendarDate: currentDate,
-      calendarTimePeriod: timePeriod,
+      calDate: currentDate,
+      calTimePeriod: timePeriod,
       visibleSlideCount: slideCount,
       timeTable,
     });

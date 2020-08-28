@@ -3,7 +3,6 @@ import { Dispatch, ReactNode, SetStateAction } from "react";
 
 // App
 import { IEvent, TLngLat } from "@common/types";
-import { TEventModal } from "@components/Events/EventModal/types";
 
 export type ActiveEvent = {
   markerNode?: HTMLDivElement;
@@ -25,11 +24,6 @@ export type IEventsContext = [
 export type IEventsProvider = {
   children?: ReactNode;
 }
-
-export type CreateEventArgs = {
-  markerNode: TEventModal["markerNode"];
-  // animateFromNode: TEventModal["animateFromNode"];
-} & Partial<IEvent>;
 
 export type IUseEventsFunctions = {
   setIsSearchOpen(isOpen: boolean): void;

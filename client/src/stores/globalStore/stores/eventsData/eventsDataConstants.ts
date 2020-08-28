@@ -1,0 +1,2 @@
+export const EVENTS_DATA = "EVENTS_DATA";
+export const QUERY_EVENTS_DATA = "QUERY_EVENTS_DATA";

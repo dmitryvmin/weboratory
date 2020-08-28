@@ -10,7 +10,6 @@ import styles from "./styles.module.scss";
 // Utils
 import { Auth0Context } from "@utils/hooks/useAuth0";
 import { useObservable } from "@utils/hooks/useObservable";
-import { EventsService } from "@api/services/EventsService";
 
 // Types
 import { IEvent } from "@common/types";
@@ -23,16 +22,17 @@ import { MapSearch } from "@components/Events/Search/MapSearch";
 // Utils
 
 // Store
-import { useMap } from "@stores/MapStore";
 import { useEvents } from "@stores/EventStore";
 
 // Constants
 import { getNewEventKey } from "@components/Events/utils/getEventKey";
 
 import { eventsInstance } from "@components/Events/eventsInstance";
-import { EventModal } from "@components/Events/EventModal";
-import { EventsMenu } from "@components/Events/EventsMenu";
 import { useNodeRef } from "@utils/hooks/useNodeRef";
+import { EventModal } from "@components/EventModal";
+import { useEventStore } from "@stores/globalStore/stores/event/useEventStore";
+import { useEventsDataStore } from "@stores/globalStore/stores/eventsData/useEventsData";
+import { EventsMenu } from "@components/Controls/EventsMenu";
 
 /**
  * Events App
@@ -47,26 +47,13 @@ const EventsApp: React.FC = () => {
    * ========== hooks
    */
 
-  const eventsData = useSelector(state => state.calendarReducer.eventsData);
+  const { queryEventsData, eventsData } = useEventsDataStore();
 
-  const isEventModalOpen = useSelector(state => state.isEventModalOpen);
-  const dispatch = useDispatch();
+  const { isEventModalOpen } = useEventStore();
 
   const { node: menuNode1, ref: menuRef1 } = useNodeRef<HTMLDivElement>();
   const { node: menuNode2, ref: menuRef2 } = useNodeRef<HTMLDivElement>();
 
-  const {
-    mapInstance,
-    setMapCenterCoords,
-    mapCenterCoords,
-    centerMapOnClient,
-    centerMapOnAddress,
-  } = useMap();
-
-  const {
-    activeEvent,
-    isEventOpen,
-  } = useEvents();
 
   const { user } = useContext(Auth0Context);
 
@@ -81,10 +68,14 @@ const EventsApp: React.FC = () => {
   /**
    * Effects
    */
-  // Start map loaded on client's address
-  // useEffect(() => {
-  //   centerMapOnClient();
-  // }, []);
+  // On mount:
+  useEffect(() => {
+    // Start map loaded on client's address
+    // centerMapOnClient();
+
+    // Query eventsData
+    queryEventsData();
+  }, []);
 
   // Get events for logged in user or public
   useEffect(() => {
@@ -104,18 +95,18 @@ const EventsApp: React.FC = () => {
    */
 
   // Handle Active Event change
-  useEffect(() => {
-
-    // If Active Event is not set, return
-    if (!activeEvent) {
-      return;
-    }
-
-    // When an Active Event is set, set Map center on it
-
-  }, [
-    activeEvent,
-  ]);
+  // useEffect(() => {
+  //
+  //   // If Active Event is not set, return
+  //   if (!activeEvent) {
+  //     return;
+  //   }
+  //
+  //   // When an Active Event is set, set Map center on it
+  //
+  // }, [
+  //   activeEvent,
+  // ]);
 
   /**
    * Render fns
@@ -136,30 +127,30 @@ const EventsApp: React.FC = () => {
     }
     const mockEvents = Object.keys(eventsData).reduce((a: any, c: any) => [...a, eventsData[c]], []).flat();
     return mockEvents?.map((event, idx) => {
-        return (
-          <MapMarker
-            key={`marker-${event.eventId}-${idx}`}
-            event={event}
-          />
-        );
-      });
+      return (
+        <MapMarker
+          key={`marker-${event.eventId}-${idx}`}
+          event={event}
+        />
+      );
+    });
   };
 
-  const renderNewEventMarker = () => {
-    if (
-      !activeEvent?.address ||
-      !activeEvent?.coordinates ||
-      !(activeEvent.eventId && activeEvent.eventId.startsWith("new"))
-    ) {
-      return;
-    }
-    return (
-      <MapMarker
-        key={getNewEventKey(activeEvent.address)}
-        event={activeEvent}
-      />
-    );
-  };
+  // const renderNewEventMarker = () => {
+  //   if (
+  //     !activeEvent?.address ||
+  //     !activeEvent?.coordinates ||
+  //     !(activeEvent.eventId && activeEvent.eventId.startsWith("new"))
+  //   ) {
+  //     return;
+  //   }
+  //   return (
+  //     <MapMarker
+  //       key={getNewEventKey(activeEvent.address)}
+  //       event={activeEvent}
+  //     />
+  //   );
+  // };
 
   /**
    * Return JSX
@@ -170,10 +161,11 @@ const EventsApp: React.FC = () => {
       <EventsMenu menuRefs={{ menuRef1, menuRef2 }}/>
 
       <EventModal menuNode={menuNode1}/>
+
       <MapSearch menuNode={menuNode2}/>
 
       <Map>
-        {renderNewEventMarker()}
+        {/*{renderNewEventMarker()}*/}
         {renderQueriedMarkers()}
       </Map>
     </div>

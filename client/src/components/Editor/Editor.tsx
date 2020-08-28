@@ -31,7 +31,7 @@ import { getHtmlIdxFromTextIdx } from "@components/Editor/utils/getHtmlIdxFromTe
 import { renderStaticMarkup } from "@components/Editor/utils/renderStaticMarkup";
 import { useObservable } from "@utils/hooks/useObservable";
 import { editorServiceSingleton } from "@api/services/EditorService";
-import { useEditor } from "@stores/EditorStore";
+import { useEditor } from "@components/Editor/EditorStore";
 
 /**
  * Editor

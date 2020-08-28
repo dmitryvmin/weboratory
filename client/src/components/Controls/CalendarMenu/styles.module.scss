@@ -1,0 +1,49 @@
+@import "../../../styles/zIndex";
+@import "../../../styles/colors";
+
+$cursor-size: 80px;
+
+// Hide Mapbox styling for dev
+:global {
+  .mapboxgl-control-container {
+    display: none;
+  }
+}
+
+.timelineContainer {
+  position: absolute;
+  left: 0;
+  width: 100vw;
+  height: 50px;
+  background-color: $color-neutral-0;
+  filter: url('#goo');
+  z-index: $zi3;
+}
+
+.svgFilter {
+  display: none;
+}
+
+.cursor {
+  background: $color-neutral-0;
+  border-radius: 50%;
+  width: $cursor-size;
+  height: $cursor-size;
+  position: absolute;
+  bottom: 0;
+  left: calc(50% - 40px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.blob {
+  filter: url('#goo');
+  position: absolute;
+  transform: translateX(-50%) translateY(-50%) translateZ(0px);
+  left: 50%;
+  top: 50%;
+  width: 200px;
+  height: 100px;
+}

@@ -10,7 +10,6 @@ import { TPredictionsDropdown } from "@components/Events/PredictionsDropdown/typ
 import { useAddressPredictions } from "@components/Events/hooks/useAddressPredictions";
 
 // Store
-import { useMap } from "@stores/MapStore";
 import { useEvents } from "@stores/EventStore";
 
 // Utils
@@ -56,10 +55,10 @@ const PredictionsDropdown: FC<TPredictionsDropdown> = () => {
     closeSearch,
   } = useEvents();
 
-  const {
-    setMapCenterCoords,
-    easeTo,
-  } = useMap();
+  // const {
+  //   setMapCenterCoords,
+  //   easeTo,
+  // } = useMap();
 
   const predictionsRef = useRef<HTMLDivElement>(null);
 

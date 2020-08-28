@@ -1,0 +1,7 @@
+export const EVENT_MODAL_OPEN = "EVENT_MODAL_OPEN";
+export const EVENT_MODAL_CLOSED = "EVENT_MODAL_CLOSED";
+export const SET_EVENT_MODAL = "SET_EVENT_MODAL";
+export const SET_EVENT = "SET_EVENT";
+export const CREATE_EVENT = "CREATE_EVENT";
+export const UPDATE_EVENT = "UPDATE_EVENT";
+

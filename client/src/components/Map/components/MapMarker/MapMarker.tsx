@@ -2,7 +2,6 @@
 import React, { MouseEvent, useRef, FC } from "react";
 import { Marker } from "react-mapbox-gl";
 import { motion } from "framer-motion";
-import invariant from "invariant";
 
 // Styles
 import styles from "@components/Map/components/MapMarker/styles.module.scss";
@@ -12,8 +11,8 @@ import { getLngLatTuple } from "@components/Events/utils/getLngLatTuple";
 import { TMapMarkerProps } from "@components/Map/components/MapMarker/types";
 
 // Store
-import { useEvents } from "@stores/EventStore";
 import { getPositionFromTarget } from "@components/Events/utils/getPositionFromTarget";
+import { useEventStore } from "@stores/globalStore/stores/event/useEventStore";
 
 /**
  * MapMarker
@@ -23,16 +22,13 @@ const MapMarker: FC<TMapMarkerProps> = ({ event }) => {
   /**
    * Hooks
    */
-
-  /**
-   * ========== Component hooks
-   */
   const titleRef = useRef<HTMLDivElement>(null);
 
-  /**
-   * ========== Context hooks
-   */
-  const { setEvent, closeSearch } = useEvents();
+  const {
+    setEvent,
+    setEventModal,
+    setEventModalOpen,
+  } = useEventStore();
 
   /**
    * Vars
@@ -59,13 +55,12 @@ const MapMarker: FC<TMapMarkerProps> = ({ event }) => {
     // Persist event so the marker can be tied to its event
     ev.persist();
 
-    closeSearch();
+    // closeSearch();
 
-    // Set clicked marker as the new Active Event
-    setEvent({
-      ...event,
-      markerNode: ev.target,
-    }, true);
+    setEvent(event);
+    setEventModal({ markerNode: ev.target as HTMLDivElement});
+    setEventModalOpen();
+
   }
 
   /**
@@ -90,7 +85,7 @@ const MapMarker: FC<TMapMarkerProps> = ({ event }) => {
         </motion.div>
         }
         <div
-          style={{backgroundColor: color}}
+          style={{ backgroundColor: color }}
           className={styles.poi}
           onClick={handleMarker}
         />

@@ -27,14 +27,12 @@ import classNames from "./styles.module.scss";
 
 // Types
 import { SlideProps } from "./types";
-import { getStartOfPeriod } from "@components/Calendar/utils/getStartOfPeriod";
-import { getTimePeriodIdx } from "@components/Calendar/utils/getTimePeriodIdx";
-import { useEventsData } from "@stores/EventsDataStore/useEventsData";
 import { formatDateToMapKey } from "@components/Calendar/utils/formatDateToMapKey";
-import { log } from "@dmitrymin/fe-log";
 import { useCalendar } from "@components/Calendar/hooks/useCalendar";
 import { useWindowSize } from "@utils/hooks/useWindowSize";
 import { getSegmentIdxFromDate } from "@components/Calendar/utils/getSegmentIdxFromDate";
+import { useEventStore } from "@stores/globalStore/stores/event/useEventStore";
+import { useCalendarStore } from "@stores/globalStore/stores/calendar/useCalendarStore";
 
 type AnimationDefinition = VariantLabels | TargetAndTransition | any;
 
@@ -50,36 +48,32 @@ const Slide: FC<SlideProps> = ({
   slideTimePeriod,
   slideDateMap,
   slideContent,
-  slideWidth,
 }) => {
 
   /**
    * =============== Hooks ===============
    */
-  const eventsData = useSelector(state => state.calendarReducer.eventsData);
+  const {
+    inViewEventsData,
+    calTimePeriod,
+    calStartDate,
+    slideWidth,
+  } = useCalendarStore();
 
-  if (!eventsData) {
+  if (!inViewEventsData) {
     return null;
   }
 
-  const {
-    isFullScreen,
-    timePeriod: calendarTimePeriod,
-    startingDate: calendarStartingDate,
-  } = useCalendar();
-
   const controls = useAnimation();
-
-  const { windowHeight } = useWindowSize();
 
   /**
    * =============== Variables ===============
    */
-  const calendarParentTimePeriod = getParentTimePeriod(calendarTimePeriod);
-  const calendarChildTimePeriod = getChildTimePeriod(calendarTimePeriod);
-  const isContainer = slideTimePeriod === calendarParentTimePeriod;
-  const isSlide = slideTimePeriod === calendarTimePeriod;
-  const isSegment = slideTimePeriod === calendarChildTimePeriod;
+  const calParentTimePeriod = getParentTimePeriod(calTimePeriod);
+  const calChildTimePeriod = getChildTimePeriod(calTimePeriod);
+  const isContainer = slideTimePeriod === calParentTimePeriod;
+  const isSlide = slideTimePeriod === calTimePeriod;
+  const isSegment = slideTimePeriod === calChildTimePeriod;
 
   /**
    * =============== Effects ===============
@@ -124,9 +118,9 @@ const Slide: FC<SlideProps> = ({
     // const calendarFloor = getStartOfPeriod(calendarTimePeriod, calendarStartingDate);
 
     const segmentDiff = getSegDiff({
-      timePeriod: calendarTimePeriod,
+      timePeriod: calTimePeriod,
       from: slideDate,
-      to: calendarStartingDate,
+      to: calStartDate,
     });
 
     const slideX = segmentDiff * slideWidth;
@@ -178,7 +172,7 @@ const Slide: FC<SlideProps> = ({
 
     const sliderDateKey = formatDateToMapKey(slideTimePeriod, slideDate);
 
-    const segmentEvents = eventsData[sliderDateKey];
+    const segmentEvents = inViewEventsData[sliderDateKey];
 
     if (!segmentEvents || !segmentEvents.length) {
       return;
@@ -221,11 +215,10 @@ const Slide: FC<SlideProps> = ({
 
           return (
             <Slide
-              key={`${calendarTimePeriod}-${slideChildTimePeriod}-${slideChildDate}`}
+              key={`${calTimePeriod}-${slideChildTimePeriod}-${slideChildDate}`}
               slideTimePeriod={slideChildTimePeriod}
               slideDateMap={childDateMap}
               slideContent={childContent}
-              slideWidth={slideWidth}
             />
           );
         }

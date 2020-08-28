@@ -20,6 +20,7 @@ import { useWindowSize } from "@utils/hooks/useWindowSize";
 import { TCalendarProps } from "./types";
 import { CalendarMenu } from "@components/Calendar/CalendarMenu";
 import { CurrentDate } from "@components/Calendar/CurrentDate";
+import { useCalendarStore } from "@stores/globalStore/stores/calendar/useCalendarStore";
 
 // Constants
 // import { CurrentDateFormatMap } from "./constants";
@@ -33,19 +34,18 @@ const Calendar: FC<TCalendarProps> = () => {
    * Hooks
    */
   const {
-    isCalendarOpen,
-    isFullScreen,
-    currentDate,
-    timePeriod,
+    calMode,
+    calCurrentDate,
+    calTimePeriod,
     slideCount,
-  } = useCalendar();
+  } = useCalendarStore();
 
   const controls = useAnimation();
 
   const { windowHeight } = useWindowSize();
 
   const sliderContainerVariants = {
-    docked: {
+    "DOCKED": {
       opacity: 1,
       y: -300,
       height: 200,
@@ -53,14 +53,14 @@ const Calendar: FC<TCalendarProps> = () => {
         duration: 0.5,
       },
     },
-    fullScreen: {
+    "FULLSCREEN": {
       y: -windowHeight + 100,
       height: windowHeight - 200,
       transition: {
         duration: 0.5,
       },
     },
-    exit: {
+    "CLOSED": {
       opacity: 0,
       y: 0,
       transition: {
@@ -70,29 +70,9 @@ const Calendar: FC<TCalendarProps> = () => {
   };
 
   useEffect(() => {
-
-    const getCalendarVariant = () => {
-      let variant;
-      if (isFullScreen) {
-        variant = "fullScreen";
-      }
-      else {
-        if (isCalendarOpen) {
-          variant = "docked";
-        }
-        else {
-          variant = "exit";
-        }
-      }
-      return variant;
-    };
-
-    const variant = getCalendarVariant();
-    controls.start(sliderContainerVariants[variant]);
-
+    controls.start(sliderContainerVariants[calMode]);
   }, [
-    isFullScreen,
-    isCalendarOpen,
+    calMode,
   ]);
 
   /**
@@ -100,18 +80,18 @@ const Calendar: FC<TCalendarProps> = () => {
    */
   return (
     <AnimatePresence>
-      {(isCalendarOpen || isFullScreen) && (
+      {(calMode !== "CLOSED") && (
         <>
           <motion.div
             className={classNames.calendarContainer}
             animate={controls}
-            initial="exit"
-            exit="exit"
+            initial="CLOSED"
+            exit="CLOSED"
             variants={sliderContainerVariants}
           >
             <div className={classNames.calendarDateLabel}>
               <Text style="label1">
-                {formatDateRange(timePeriod, currentDate, slideCount)}
+                {formatDateRange(calTimePeriod, calCurrentDate, slideCount)}
               </Text>
             </div>
             <div className={classNames.sliderContainer}>

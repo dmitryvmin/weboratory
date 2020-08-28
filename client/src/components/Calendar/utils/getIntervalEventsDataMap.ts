@@ -1,28 +1,39 @@
-import { EventsDataMap } from "@components/Calendar/common/types";
 import { TimeTable } from "@components/Calendar/hooks/useTimeTable/TimeTable";
-import { getEventsForTimePeriodInterval } from "@components/Calendar/utils/getEventsForTimePeriodInterval";
+import {
+  getEventsForTimePeriodInterval,
+  MockEventsDataType,
+} from "@components/Calendar/utils/getEventsForTimePeriodInterval";
+import { CalendarEvent, TimePeriod } from "@components/Calendar/common/types";
 
-function getIntervalEventsDataMap(
-  calendarTimePeriod,
-  calendarDate,
+type GetIntervalEventsDataMapProps = {
+  calTimePeriod: TimePeriod;
+  calDate: Date;
+  visibleSlideCount?: number;
+  bufferSlideCount?: number;
+  eventsData: CalendarEvent[];
+}
+
+function getIntervalEventsDataMap({
+  calTimePeriod,
+  calDate,
   visibleSlideCount,
-  eventsData
-): EventsDataMap {
+  bufferSlideCount,
+  eventsData,
+}: GetIntervalEventsDataMapProps): MockEventsDataType {
 
   const { floorDate, ceilingDate } = TimeTable.getTimeTableDates({
-    calendarTimePeriod,
-    calendarDate,
+    calTimePeriod,
+    calDate,
     visibleSlideCount,
+    bufferSlideCount,
   });
 
-  const eventsDataMap = getEventsForTimePeriodInterval({
-    timePeriod: calendarTimePeriod,
+  return getEventsForTimePeriodInterval({
+    timePeriod: calTimePeriod,
     intervalStart: floorDate,
     intervalEnd: ceilingDate,
     eventsData,
   });
-
-  return eventsDataMap;
 }
 
-export {getIntervalEventsDataMap};
+export { getIntervalEventsDataMap };

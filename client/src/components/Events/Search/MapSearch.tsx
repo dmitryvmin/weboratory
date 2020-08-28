@@ -10,7 +10,6 @@ import { getPositionFromTarget } from "@components/Events/utils/getPositionFromT
 import classNames from "./styles.module.scss";
 
 // Store
-import { useMap } from "@stores/MapStore";
 import { useEvents } from "@stores/EventStore";
 
 // Components
@@ -20,6 +19,7 @@ import { Close, Plus } from "@components/UI/Icon";
 // Constants
 import { MENU_SIZE, PADDING_1, TIMELINE_HEIGHT } from "@common/constants";
 import { PredictionsDropdown } from "../PredictionsDropdown";
+import { useMapStore } from "@stores/globalStore/stores/map/useMapStore";
 
 type EventSearchCriteriaLabel = "Event @" | "Event #" | "Event ⓘ";
 type EventSearchCriteriaValue = "address" | "tag" | "info";
@@ -63,11 +63,13 @@ const MapSearch: FC<any> = ({ menuNode }) => {
     setSearchedAddressTo,
   } = useEvents();
 
-  const {
-    mapZoom,
-    setMapZoom,
-    centerMapOnAddress,
-  } = useMap();
+  // const {
+  //   mapZoom,
+  //   setMapZoom,
+  //   centerMapOnAddress,
+  // } = useMap();
+
+  const { centerMapOnAddress } = useMapStore();
 
   /**
    * ========== Component hooks

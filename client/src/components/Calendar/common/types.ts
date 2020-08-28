@@ -20,9 +20,8 @@ export type Interval = {
 }
 
 export type CalendarEvent = {
-  color: string;
   time: Date;
-} & Partial<Omit<IEvent, "time">>;
+} & Partial<IEvent>;
 
 export type EventsDataMap = {
   [timestamp: string]: CalendarEvent[];

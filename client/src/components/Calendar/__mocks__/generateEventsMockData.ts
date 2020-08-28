@@ -10,6 +10,7 @@ import { getToday } from "@components/Calendar/utils/getToday";
 
 // Types
 import { CalendarEvent } from "@components/Calendar/common/types";
+import { SeattleLngLat } from "@stores/globalStore/stores/map/mapConstants";
 
 // Generates an array of Date objects of length [num]
 // that fall within the [start] - [end] timeframe
@@ -28,9 +29,9 @@ function generateEventsMockData(
     const title = getRandomString();
     const color = getRandomHEX();
     const {latitude, longitude} = randomLocation.randomCirclePoint({
-      latitude: 47.620422,
-      longitude: -122.349358,
-    }, 1000);
+      latitude: SeattleLngLat.lat,
+      longitude: SeattleLngLat.lng,
+    }, 10000);
 
     events.push({
       title,

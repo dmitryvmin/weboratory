@@ -32,6 +32,7 @@ function getEventMap(
 
     // Event item
     const calendarEvent: CalendarEvent = data[i];
+
     const distanceFromStart = getTimeDifference(markerStart, calendarEvent.time, segmentPeriod);
 
     // If nothing has been inserted at slot [distanceFromStart], add the event

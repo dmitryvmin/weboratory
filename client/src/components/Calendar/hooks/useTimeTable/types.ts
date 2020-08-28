@@ -3,9 +3,10 @@ import { CalendarEvent, DateMap, TimePeriod } from "@components/Calendar/common/
 export type TimeTablePeriodType = CalendarEvent[] | undefined[] | undefined | 0;
 
 export type GetTimeTableDatesProps = {
-  calendarDate: Date;
-  calendarTimePeriod: TimePeriod;
+  calDate: Date;
+  calTimePeriod: TimePeriod;
   visibleSlideCount?: number;
+  bufferSlideCount?: number;
 }
 
 export type TimeTableDatesType = {
@@ -23,8 +24,8 @@ export type TimeTableMapsType = {
 }
 
 export type CreateTimeTableProps = {
-  calendarDate: Date;
-  calendarTimePeriod: TimePeriod;
+  calDate: Date;
+  calTimePeriod: TimePeriod;
   visibleSlideCount: number;
   timeTable?: TimeTableType;
 }
@@ -33,11 +34,11 @@ export type FillTimeTableProps = {
   timeTable: TimeTableType;
   timeTableDates: TimeTableDatesType;
   timeTableMaps: TimeTableMapsType;
-  calendarTimePeriod: TimePeriod;
+  calTimePeriod: TimePeriod;
 }
 
 export type FillWholeProps = {
-  calendarTimePeriod: TimePeriod;
+  calTimePeriod: TimePeriod;
   timePeriod: TimePeriod;
   date: Date;
 }
@@ -47,7 +48,7 @@ export type TimeTableType = {
 }
 
 export type FillIntervalProps = {
-  calendarTimePeriod: TimePeriod;
+  calTimePeriod: TimePeriod;
   timeTableDates: TimeTableDatesType;
   intervalTimePeriod: TimePeriod;
   intervalStart: Date;
