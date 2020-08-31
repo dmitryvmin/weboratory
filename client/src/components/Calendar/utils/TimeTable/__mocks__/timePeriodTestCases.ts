@@ -1,5 +1,5 @@
 import { TimePeriod } from "@components/Calendar/common/types";
-import { TestDateMapsType, getTestDateMaps } from "@components/Calendar/hooks/useTimeTable/utils/getTestDateMaps";
+import { getTestDateMaps, TestDateMapsType } from "@components/Calendar/utils/TimeTable/utils/getTestDateMaps";
 
 type TimePeriodTestCaseType = {
   timePeriod: TimePeriod;

@@ -2,8 +2,10 @@
 import { combineEpics, ofType } from "redux-observable";
 import { catchError, switchMap } from "rxjs/operators";
 import { EMPTY } from "rxjs";
-import { MY_STATE } from "@stores/globalStore/stores/search/searchConstants";
+
+// App
 import { setSystemError } from "@stores/globalStore/stores/system/systemActions";
+import { MY_STATE } from "@common/MyStore/searchConstants";
 
 // App
 const myEpic = (action$) => {

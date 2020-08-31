@@ -2,20 +2,22 @@
 import { combineEpics, ofType } from "redux-observable";
 import { catchError, switchMap } from "rxjs/operators";
 import { EMPTY } from "rxjs";
-import { MY_STATE } from "@stores/globalStore/stores/search/searchConstants";
-import { setSystemError } from "@stores/globalStore/stores/system/systemActions";
 
 // App
-const myEpic = (action$) => {
+import { SEARCH_MODE } from "@stores/globalStore/stores/search/searchConstants";
+import { setSystemError } from "@stores/globalStore/stores/system/systemActions";
+
+// Epics
+const searchIsOpenEpic = (action$) => {
   return action$.pipe(
-    ofType(MY_STATE),
+    ofType(SEARCH_MODE),
     switchMap(() => EMPTY),
     catchError(err => Promise.resolve(setSystemError(err.message))),
   );
 };
 
 const myEpics = combineEpics(
-  myEpic,
+  searchIsOpenEpic,
 );
 
 export { myEpics };

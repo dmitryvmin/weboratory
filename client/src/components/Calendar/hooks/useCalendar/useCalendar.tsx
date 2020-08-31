@@ -57,8 +57,6 @@ const useCalendar = (): UseCalendar => {
       }
     }
 
-    console.log("@@", newVisState);
-
     setState((s) => ({
         ...s,
         ...newVisState,
@@ -160,18 +158,6 @@ const useCalendar = (): UseCalendar => {
       currentDate,
     }));
   }
-
-  // log("======= useCalendar ======",
-  //   isOpen,
-  //   timePeriod,
-  //   xDistance,
-  //   intervalData,
-  //   slideCount,
-  //   slideWidth,
-  //   startingDate,
-  //   currentDate,
-  //   isFullScreen,
-  // );
 
   /**
    * useCalendar hook state and functions

@@ -1,4 +1,4 @@
-import { MY_STATE } from "@stores/globalStore/stores/search/searchConstants";
+import { MY_STATE } from "@common/MyStore/searchConstants";
 
 export function setMyState() {
   return {

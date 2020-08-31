@@ -1,5 +1,5 @@
-import { myInitialState } from "@stores/globalStore/stores/search/searchDefaults";
-import { MY_STATE } from "@stores/globalStore/stores/search/searchConstants";
+import { myInitialState } from "@common/MyStore/searchDefaults";
+import { MY_STATE } from "@common/MyStore/searchConstants";
 
 function myReducer(state = myInitialState, action) {
   switch (action.type) {

@@ -1,5 +1,6 @@
-import { MyStateType } from "@stores/globalStore/stores/search/types";
+import { SearchStateType } from "@stores/globalStore/stores/search/types";
 
-export const myInitialState: MyStateType = {
-  myState: undefined,
+export const searchInitialState: SearchStateType = {
+  searchMode: "CLOSED",
+  searchedAddress: undefined,
 };

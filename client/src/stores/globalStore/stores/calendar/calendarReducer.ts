@@ -1,5 +1,5 @@
 // App
-import { calenderInitialState } from "@stores/globalStore/stores/calendar/calendarInitialState";
+import { calenderInitialState } from "@stores/globalStore/stores/calendar/calendarDefaults";
 import {
   CAL_CURRENT_DATE,
   CAL_START_DATE,
@@ -11,7 +11,7 @@ import {
   SLIDE_WIDTH,
   CAL_MODE,
   TOGGLE_CAL_OPEN,
-  TOGGLE_CAL_CLOSED,
+  TOGGLE_CAL_CLOSED, CAL_TIMETABLE, TIMETABLE_INTERVALS,
 } from "@stores/globalStore/stores/calendar/calendarConstants";
 import { deriveCalMode } from "@stores/globalStore/stores/calendar/utils/deriveCalMode";
 
@@ -22,6 +22,18 @@ function calendarReducer(state = calenderInitialState, action) {
       return ({
         ...state,
         calMode: action.calMode,
+      });
+
+    case CAL_TIMETABLE:
+      return ({
+        ...state,
+        timeTable: action.timeTable,
+      });
+
+    case TIMETABLE_INTERVALS:
+      return ({
+        ...state,
+        timeTableIntervals: action.timeTableIntervals,
       });
 
     case TOGGLE_CAL_OPEN:

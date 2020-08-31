@@ -6,10 +6,12 @@ const calenderInitialState: CalendarStateType = {
   calTimePeriod: "DAY",
   calStartDate: getToday(),
   calCurrentDate: getToday(),
-  slideCount: 1,
-  slideWidth: 300,
+  slideCount: undefined,
+  slideWidth: undefined,
   inViewEventsData: undefined,
   sliderXDistance: undefined,
+  timeTable: undefined,
+  timeTableIntervals: undefined,
 };
 
 export {calenderInitialState};

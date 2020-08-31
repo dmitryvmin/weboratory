@@ -39,3 +39,8 @@ export type DateMap = {
   HOUR: number;
   MINUTE: number;
 }
+
+export type CalendarIntervalData = {
+  data: IEvent[];
+  dataMap: EventsDataMap;
+}

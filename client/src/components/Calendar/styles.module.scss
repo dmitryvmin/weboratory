@@ -7,18 +7,6 @@
   position: absolute;
 }
 
-.calendarDateLabel {
-  position: absolute;
-  z-index: $zi4;
-  top: -$size_4;
-  left: 20px;
-  display: flex;
-  align-items: center;
-  border-radius: $bradius_1 $bradius_1 0 0;
-  background-color: $color-white;
-  padding: 2px 5px;
-}
-
 .sliderContainer {
   z-index: $zi2;
   width: calc(100vw - 40px);
@@ -50,15 +38,5 @@
 .dragContainer {
   height: 200px;
   border-radius: $bradius_1;
-}
-
-.calendarTimePeriod {
-  position: absolute;
-  display: flex;
-  align-items: center;
-  left: $size_4;
-  bottom: 1px;
-  z-index: $zi4;
-  height: 50px;
 }
 

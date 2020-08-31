@@ -6,7 +6,6 @@ import { getChildTimePeriod } from "@components/Calendar/utils/getChildTimePerio
 import { getBaseDate } from "@components/Calendar/utils/getBaseDate";
 import { getDateAdjustedBy } from "@components/Calendar/utils/getDateAdjustedBy";
 import { getSegmentIdxFromDate } from "@components/Calendar/utils/getSegmentIdxFromDate";
-import { setToPath } from "@components/Calendar/hooks/useTimeTable/utils/setToPath";
 
 // Constants
 import { SLIDER_BUFFER, TimePeriodMap } from "@components/Calendar/constants";
@@ -18,9 +17,15 @@ import {
   GetTimeTableDatesProps,
   TimeTableDatesType,
   GetTimeTableMapsProps,
-  TimeTableMapsType, FillTimeTableProps, FillWholeProps, TimeTableType,
-} from "@components/Calendar/hooks/useTimeTable/types";
+  TimeTableMapsType,
+  FillTimeTableProps,
+  FillWholeProps,
+  TimeTableType,
+  TimeTableIntervalType, TimeTableIntervalCollectionType,
+} from "./types";
 import { isWithinInterval } from "date-fns";
+import { setToPath } from "@components/Calendar/utils/TimeTable/utils/setToPath";
+import { formatDateToMapKey } from "@components/Calendar/utils/formatDateToMapKey";
 
 /**
  * TimeTable Class:
@@ -37,10 +42,10 @@ class TimeTable {
   /**
    * Dates Utility
    */
-  public static getTimeTableDates({
+  public static getTimeTableFloorCeilingDates({
     calDate,
     calTimePeriod,
-    visibleSlideCount = 1,
+    visibleSlideCount,
     bufferSlideCount = SLIDER_BUFFER,
   }: GetTimeTableDatesProps): TimeTableDatesType {
 
@@ -54,6 +59,47 @@ class TimeTable {
       floorDate: timeTableFloorDate,
       ceilingDate: timeTableCeilingDate,
     });
+  }
+
+  public static getTimeTableIntervalDates({
+    calDate,
+    calTimePeriod,
+    visibleSlideCount,
+    bufferSlideCount = SLIDER_BUFFER,
+  }: GetTimeTableDatesProps): TimeTableIntervalCollectionType {
+
+    // Results objects
+    const intervalArray: TimeTableIntervalType[] = [];
+    // Number of visible slides plus left and right buffer slides;
+    const intervalCount: number = visibleSlideCount + (bufferSlideCount * 2);
+    // We start count at startDate, ignoring left buffer slides
+    const startOffset = -bufferSlideCount;
+
+    for (let i = startOffset; i < intervalCount + startOffset; i++) {
+
+      const timeRangeStart = getDateAdjustedBy(calDate, calTimePeriod, i);
+      const timeRangeEnd = getDateAdjustedBy(calDate, calTimePeriod, i);
+      const timeTableFloorDate = getBaseDate(timeRangeStart, calTimePeriod, "floor");
+      const timeTableCeilingDate = getBaseDate(timeRangeEnd, calTimePeriod, "ceiling");
+
+      let intervalType;
+      if (i < 0 || i >= visibleSlideCount) {
+        intervalType = `BUFFER_${i}`;
+      }
+      else {
+        intervalType = `VISIBLE_${i};`
+      }
+
+      const interval = {
+        intervalType,
+        start: timeTableFloorDate,
+        end: timeTableCeilingDate,
+      };
+
+      intervalArray.push(interval);
+    }
+
+    return intervalArray;
   }
 
   /**
@@ -274,7 +320,7 @@ class TimeTable {
   }: CreateTimeTableProps): TimeTableType {
 
     // Get timeTable props
-    const timeTableDates = this.getTimeTableDates({ calDate, calTimePeriod, visibleSlideCount });
+    const timeTableDates = this.getTimeTableFloorCeilingDates({ calDate, calTimePeriod, visibleSlideCount });
     const timeTableMaps = this.getTimeTableMaps(timeTableDates);
 
     // Fill out the table
@@ -285,12 +331,7 @@ class TimeTable {
       timeTable: timeTable ?? {},
     });
 
-    console.log(
-      "@@ TimeTable",
-      // timeTableDates,
-      // timeTableMaps,
-      _timeTable,
-    );
+    console.log("@@ TimeTable", _timeTable);
 
     return _timeTable;
   }

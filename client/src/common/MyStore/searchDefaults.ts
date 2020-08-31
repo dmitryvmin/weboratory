@@ -1,4 +1,4 @@
-import { MyStateType } from "@stores/globalStore/stores/search/types";
+import { MyStateType } from "@common/MyStore/types";
 
 export const myInitialState: MyStateType = {
   myState: undefined,

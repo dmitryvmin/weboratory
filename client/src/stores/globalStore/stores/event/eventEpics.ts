@@ -1,6 +1,6 @@
 // Libs
 import { combineEpics, ofType } from "redux-observable";
-import { catchError, map, mergeMap, switchMap } from "rxjs/operators";
+import { catchError, map, switchMap } from "rxjs/operators";
 import { EMPTY } from "rxjs";
 
 // App
@@ -8,7 +8,6 @@ import {
   CREATE_EVENT,
   EVENT_MODAL_CLOSED,
   EVENT_MODAL_OPEN,
-  SET_EVENT_MODAL,
 } from "@stores/globalStore/stores/event/eventConstants";
 import { EventUtils } from "@stores/globalStore/stores/event/EventUtils";
 import { setEvent } from "@stores/globalStore/stores/event/eventActions";

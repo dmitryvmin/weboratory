@@ -19,7 +19,7 @@ import {
   getSlideWidth,
   getCalStartDate,
   getCalTimePeriod,
-  getInViewEventsData, getSliderXDistance, getCalMode,
+  getInViewEventsData, getSliderXDistance, getCalMode, getTimeTable,
 } from "@stores/globalStore/stores/calendar/calendarSelectors";
 
 /**
@@ -43,6 +43,7 @@ export function useCalendarStore() {
   const calStartDate = useSelector(getCalStartDate);
   const sliderXDistance = useSelector(getSliderXDistance);
   const calMode = useSelector(getCalMode);
+  const timeTable = useSelector(getTimeTable);
 
   /**
    * Dispatchers
@@ -92,7 +93,7 @@ export function useCalendarStore() {
     [dispatch],
   );
 
-  return {
+  return ({
     calMode,
     inViewEventsData,
     calTimePeriod,
@@ -101,6 +102,7 @@ export function useCalendarStore() {
     slideCount,
     slideWidth,
     sliderXDistance,
+    timeTable,
     queryInViewEventsData: _queryInViewEventsData,
     setCalCurrentDate: _setCalCurrentDate,
     setCalStartDate: _setCalStartDate,
@@ -110,5 +112,5 @@ export function useCalendarStore() {
     setSliderXDistance: _setSliderXDistance,
     setCalOpen: _setCalOpen,
     setCalClosed: _setCalClosed,
-  };
+  });
 }

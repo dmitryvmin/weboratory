@@ -1,1 +1,1 @@
-export const getMyState = state => state.myReducer.myState;
+export const getSearchMode = state => state.searchReduce.getSearchMode;

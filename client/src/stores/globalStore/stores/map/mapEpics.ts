@@ -1,21 +1,15 @@
 // Libs
-import invariant from "invariant";
 import { combineEpics, ofType } from "redux-observable";
 import { catchError, map, switchMap, mergeMap } from "rxjs/operators";
-import { of } from "rxjs";
+import { EMPTY, of } from "rxjs";
 
 // App
 import { getClientPosition } from "@components/Events/utils/getClientPosition";
 import { setSystemError } from "@stores/globalStore/stores/system/systemActions";
-import {
-  MAP_CENTER_ON_ADDRESS,
-  MAP_CENTER_ON_CLIENT,
-  MAP_CENTER_ON_COORDS,
-} from "@stores/globalStore/stores/map/mapConstants";
-import { setMapCenterCoords } from "@stores/globalStore/stores/map/mapActions";
+import { MAP_CENTER_ON_CLIENT } from "@stores/globalStore/stores/map/mapConstants";
+import { setMapCenter } from "@stores/globalStore/stores/map/mapActions";
 import { geocodeQuery } from "@components/Events/utils/geocodeQuery";
 import { MapUtils } from "@stores/globalStore/stores/map/MapUtils";
-
 
 const centerMapOnClientEpic = (action$) => {
   return action$.pipe(
@@ -23,7 +17,7 @@ const centerMapOnClientEpic = (action$) => {
     switchMap(action =>
       of(getClientPosition()),
     ),
-    map(setMapCenterCoords),
+    map(setMapCenter),
     catchError(err => Promise.resolve(setSystemError(err.message))),
   );
 };
@@ -36,12 +30,11 @@ const centerMapOnAddressEpic = (action$, state$) => {
       return of(geocodeQuery(address));
     }),
     map((coords: any) => {
-      debugger;
       return MapUtils.mapFlyTo({
         mapInstance: state$.mapInstance,
         coords,
         speed: 1,
-      })
+      });
     }),
     catchError(err => Promise.resolve(setSystemError(err.message))),
   );
@@ -67,7 +60,7 @@ export { mapEpics };
 // };
 //
 // const centerMapOnCoords = (coords: TLngLat) => {
-//   setMapCenterCoords(coords);
+//   setMapCenter(coords);
 // };
 
 // const centerMapOnAddress = async (
@@ -85,7 +78,7 @@ export { mapEpics };
 //     return;
 //   }
 //
-//   // setMapCenterCoords(lngLat);
+//   // setMapCenter(lngLat);
 //   mapInstance.flyTo({
 //     center: getLngLatTuple(lngLat),
 //     speed: 1,
@@ -94,5 +87,5 @@ export { mapEpics };
 // };
 //
 // const centerMapOnCoords = (coords: TLngLat) => {
-//   setMapCenterCoords(coords);
+//   setMapCenter(coords);
 // };

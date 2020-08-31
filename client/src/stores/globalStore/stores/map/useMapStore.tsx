@@ -2,13 +2,18 @@
 import { useCallback, useContext } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { TLngLat } from "@common/types";
-import { getMapCenterCoords, getMapInstance, getMapRef, getMapZoom } from "@stores/globalStore/stores/map/mapSelectors";
-import { MapZoomType } from "@stores/globalStore/stores/map/types";
+import {
+  getAnimationOptions,
+  getMapCenterCoords, getMapFlyToOptions,
+  getMapInstance,
+  getMapRef,
+  getMapZoom,
+} from "@stores/globalStore/stores/map/mapSelectors";
 import {
   centerMapOnAddress,
-  setMapCenterCoords, setMapInstance,
+  setMapInstance, setMapMoveActive,
   setMapRef,
-  setMapZoom,
+  setMapZoom, setMapZoomActive,
 } from "@stores/globalStore/stores/map/mapActions";
 
 /**
@@ -25,6 +30,8 @@ export function useMapStore() {
   const mapInstance = useSelector(getMapInstance);
   const mapRef = useSelector(getMapRef);
   const mapZoom = useSelector(getMapZoom);
+  const animationOptions = useSelector(getAnimationOptions);
+  const flyToOptions = useSelector(getMapFlyToOptions);
 
   const _centerMapOnAddress = useCallback(
     (address: string) => dispatch(centerMapOnAddress(address)),
@@ -32,7 +39,17 @@ export function useMapStore() {
   );
 
   const _setMapZoom = useCallback(
-    (mapZoom: MapZoomType) => dispatch(setMapZoom(mapZoom)),
+    (mapZoom: number) => dispatch(setMapZoom(mapZoom)),
+    [dispatch],
+  );
+
+  const _setMapMoveActive = useCallback(
+    (mapMoveActive: boolean) => dispatch(setMapMoveActive(mapMoveActive)),
+    [dispatch],
+  );
+
+  const _setMapZoomActive = useCallback(
+    (mapZoomActive: boolean) => dispatch(setMapZoomActive(mapZoomActive)),
     [dispatch],
   );
 
@@ -57,8 +74,12 @@ export function useMapStore() {
   return {
     mapCenterCoords,
     mapZoom,
+    animationOptions,
+    flyToOptions,
     setMapRef: _setMapRef,
     centerMapOnAddress: _centerMapOnAddress,
     setMapInstance: _setMapInstance,
+    setMapMoveActive: _setMapMoveActive,
+    setMapZoomActive: _setMapZoomActive,
   };
 }

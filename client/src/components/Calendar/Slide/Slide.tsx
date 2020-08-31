@@ -97,7 +97,7 @@ const Slide: FC<SlideProps> = ({
   const slideDate = getDateFromMap(slideDateMap);
 
   const className = cn(
-    classNames.slideBase,
+    classNames.slide,
     isContainer && classNames.isContainer,
     isSlide && classNames.isSlide,
   );

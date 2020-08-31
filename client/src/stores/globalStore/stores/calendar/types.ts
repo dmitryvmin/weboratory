@@ -1,6 +1,14 @@
 import { EventsDataMap, TimePeriod } from "@components/Calendar/common/types";
+import { TimeTable } from "@components/Calendar/utils/TimeTable";
+import { TimeTableIntervalType } from "@components/Calendar/utils/TimeTable/types";
 
 export type CalendarMode = "CLOSED" | "DOCKED" | "FULLSCREEN";
+
+type MoveInfoType = {
+  distance: number | undefined;
+  velocity?: number | undefined;
+  duration?: number | undefined;
+};
 
 export type CalendarStateType = {
   calMode: CalendarMode;
@@ -8,11 +16,9 @@ export type CalendarStateType = {
   calStartDate: Date;
   calCurrentDate: Date;
   inViewEventsData: EventsDataMap | undefined;
-  sliderXDistance: {
-    distance: number | undefined;
-    velocity?: number | undefined;
-    duration?: number | undefined;
-  } | undefined;
-  slideCount: number;
-  slideWidth: number;
+  sliderXDistance: MoveInfoType | undefined;
+  slideCount: number | undefined;
+  slideWidth: number | undefined;
+  timeTable: TimeTable | undefined;
+  timeTableIntervals: TimeTableIntervalType[] | undefined;
 }

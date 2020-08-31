@@ -1,43 +1,33 @@
 // Libs
 import React, { FC, useEffect } from "react";
 import { motion, AnimatePresence, useAnimation } from "framer-motion";
-import { format } from "date-fns";
 
 // Styles
 import classNames from "./styles.module.scss";
 
 // Components
-import { Text } from "@components/UI/Text";
 import { Slider } from "@components/Calendar/Slider";
-import { useCalendar } from "@components/Calendar/hooks/useCalendar";
-import { formatDateRange } from "@components/Calendar/utils/formatDateRange";
-
-// Utils
-import { getDateAdjustedBy } from "@components/Calendar/utils/getDateAdjustedBy";
-
-// Calendar
-import { useWindowSize } from "@utils/hooks/useWindowSize";
-import { TCalendarProps } from "./types";
 import { CalendarMenu } from "@components/Calendar/CalendarMenu";
-import { CurrentDate } from "@components/Calendar/CurrentDate";
+
+// Hooks
+import { useWindowSize } from "@utils/hooks/useWindowSize";
 import { useCalendarStore } from "@stores/globalStore/stores/calendar/useCalendarStore";
 
-// Constants
-// import { CurrentDateFormatMap } from "./constants";
+// Types
+import { CalendarPropType } from "@components/Calendar/types";
+import { DateLabel } from "@components/Calendar/DateLabel";
+import { TimePeriodLabel } from "./TimePeriodLabel";
 
 /**
  * Calendar
  */
-const Calendar: FC<TCalendarProps> = () => {
+const Calendar: FC<CalendarPropType> = () => {
 
   /**
    * Hooks
    */
   const {
     calMode,
-    calCurrentDate,
-    calTimePeriod,
-    slideCount,
   } = useCalendarStore();
 
   const controls = useAnimation();
@@ -89,11 +79,7 @@ const Calendar: FC<TCalendarProps> = () => {
             exit="CLOSED"
             variants={sliderContainerVariants}
           >
-            <div className={classNames.calendarDateLabel}>
-              <Text style="label1">
-                {formatDateRange(calTimePeriod, calCurrentDate, slideCount)}
-              </Text>
-            </div>
+            <DateLabel/>
             <div className={classNames.sliderContainer}>
               <Slider/>
             </div>
@@ -118,26 +104,7 @@ const Calendar: FC<TCalendarProps> = () => {
           >
             <CalendarMenu/>
           </motion.div>
-          <motion.div
-            className={classNames.calendarTimePeriod}
-            initial={{ opacity: 0 }}
-            animate={{
-              opacity: 1,
-              y: 0,
-              transition: {
-                duration: 0.5,
-              },
-            }}
-            exit={{
-              opacity: 0,
-              y: 50,
-              transition: {
-                duration: 0.5,
-              },
-            }}
-          >
-            <CurrentDate/>
-          </motion.div>
+          <TimePeriodLabel/>
         </>
       )}
     </AnimatePresence>

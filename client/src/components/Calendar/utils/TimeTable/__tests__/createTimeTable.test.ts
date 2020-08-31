@@ -1,12 +1,12 @@
 // Libs
 import { getDaysInMonth } from "date-fns";
 
-// Calendar hooks
-import { TimeTable } from "@components/Calendar/hooks/useTimeTable/TimeTable";
-import { getFromPath } from "@components/Calendar/hooks/useTimeTable/utils/getFromPath";
+// Utils
+import { TimeTable } from "@components/Calendar/utils/TimeTable";
+import { getFromPath } from "@components/Calendar/utils/TimeTable/utils/getFromPath";
 
 // Types
-import { timePeriodTestCases } from "@components/Calendar/hooks/useTimeTable/__mocks__/timePeriodTestCases";
+import { timePeriodTestCases } from "@components/Calendar/utils/TimeTable/__mocks__/timePeriodTestCases";
 
 describe("TimeTable class test", () => {
 
@@ -19,8 +19,8 @@ describe("TimeTable class test", () => {
 
       // given
       const timeTable = TimeTable.createTimeTable({
-        calendarDate: dateMaps.curDate.floor!,
-        calendarTimePeriod: timePeriod,
+        calDate: dateMaps.curDate.floor!,
+        calTimePeriod: timePeriod,
         visibleSlideCount: 1,
       });
 

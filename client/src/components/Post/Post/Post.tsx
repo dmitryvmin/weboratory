@@ -23,7 +23,7 @@ import { PostTags } from "@components/Post/PostTags";
 
 // Utils
 import { checkIfSelected } from "./utils";
-import { EditorProvider } from "@stores/EditorStore";
+import { EditorProvider } from "@components/Editor/EditorStore";
 
 const transition = {
   duration: 0.5,

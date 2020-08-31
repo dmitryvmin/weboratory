@@ -1,7 +1,8 @@
-import { MY_STATE } from "@stores/globalStore/stores/search/searchConstants";
+import { SEARCH_MODE } from "@stores/globalStore/stores/search/searchConstants";
 
-export function setMyState() {
+export function setIsSearchOpen(searchMode) {
   return {
-    type: MY_STATE,
+    type: SEARCH_MODE,
+    searchMode,
   };
 }

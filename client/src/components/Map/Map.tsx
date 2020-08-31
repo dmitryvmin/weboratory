@@ -1,21 +1,26 @@
 // Libs
-import React, { FC, useCallback } from "react";
+import React, { FC, memo, useCallback, useEffect, useMemo, useState } from "react";
 
 // Styles
 import "mapbox-gl/dist/mapbox-gl.css";
 import styles from "./styles.module.scss";
 
 // Types
-import { TMapProps } from "@components/Map/types";
+import { MapPropsRefState } from "@components/Map/types";
 
 // Constants
 import { Mapbox } from "@components/Map/constants";
 import { useMapStore } from "@stores/globalStore/stores/map/useMapStore";
+import { useEventsDataStore } from "@stores/globalStore/stores/eventsData/useEventsData";
+import { MapMarker } from "@components/Map/components/MapMarker/MapMarker";
+import { haveMapCenterCoordsChanged } from "@components/Map/utils/haveMapCenterCoordsChanged";
+import { hasMapZoomChanged } from "@components/Map/utils/hasMapZoomChanged";
+import { haveMapChildrenChanged } from "@components/Map/utils/haveMapChildrenChanged";
 
 /**
  * Map
  */
-const Map: FC<TMapProps> = ({ children }) => {
+const Map: FC<{}> = memo(() => {
 
   /**
    * Hooks
@@ -25,10 +30,97 @@ const Map: FC<TMapProps> = ({ children }) => {
     mapCenterCoords,
     setMapRef,
     setMapInstance,
+    setMapMoveActive,
+    setMapZoomActive,
+    animationOptions,
+    flyToOptions,
   } = useMapStore();
+
+  const { eventsData } = useEventsDataStore();
+
+  const [refState, setRefState] = useState<MapPropsRefState>();
 
   // Save Map ref for imperative map control
   const mapRef = useCallback(setMapRef, []);
+
+  function _setMapInstance(instance) {
+
+    setMapInstance(instance);
+
+    instance.on("movestart", function() {
+      setMapMoveActive(true);
+    });
+
+    instance.on("moveend", function() {
+      setMapMoveActive(false);
+    });
+
+    instance.on("zoomstart", function() {
+      setMapZoomActive(true);
+    });
+
+    instance.on("zoomend", function() {
+      setMapZoomActive(false);
+    });
+  }
+
+  // // Check whether map should re-render
+  // useEffect(() => {
+  //
+  //   // Compare props
+  //   const mapCenterCoordsChanged = haveMapCenterCoordsChanged(mapCenterCoords, refState?.mapCenterCoords);
+  //   const mapZoomChanged = hasMapZoomChanged(mapZoom, refState?.mapZoom);
+  //   const mapChildrenChanged = haveMapChildrenChanged(eventsData, refState?.children);
+  //
+  //   // If props haven't changed, skip render
+  //   if (
+  //     !mapCenterCoordsChanged &&
+  //     !mapZoomChanged &&
+  //     !mapChildrenChanged
+  //   ) {
+  //     return;
+  //   }
+  //
+  //   // If props have changes, create a new object filling in props that changed
+  //   const newRefState = {
+  //     // ...refState,
+  //     ...(mapCenterCoordsChanged && { mapCenterCoords }),
+  //     ...(mapZoomChanged && { mapZoom }),
+  //     ...(mapChildrenChanged && { children: eventsData }),
+  //   };
+  //
+  //   setRefState(newRefState);
+  //
+  // }, [
+  //   mapCenterCoords,
+  //   mapZoom,
+  //   eventsData,
+  //   // mapRef,
+  // ]);
+
+  const renderQueriedMarkers = () => {
+    // return events$
+    //   // ?.filter((event) => event.event_id !== activeEvent?.event_id)
+    //   ?.map((event, idx) => {
+    //     return (
+    //       <MapMarker
+    //         key={`marker-${event.eventId}-${idx}`}
+    //         event={event}
+    //       />
+    //     );
+    //   });
+    if (!eventsData) {
+      return;
+    }
+    return eventsData?.map((event, idx) => {
+      return (
+        <MapMarker
+          key={`marker-${event.eventId}-${idx}`}
+          event={event}
+        />
+      );
+    });
+  };
 
   return (
     <Mapbox
@@ -36,16 +128,41 @@ const Map: FC<TMapProps> = ({ children }) => {
       center={mapCenterCoords}
       zoom={[mapZoom]}
       pitch={[45]}
-      style="mapbox://styles/mapbox/streets-v11"
+      style="mapbox://styles/mapbox/streets-v8"
       className={styles.map}
-      animationOptions={{
-        duration: 2000,
-      }}
-      onStyleLoad={setMapInstance}
+      animationOptions={animationOptions}
+      flyToOptions={flyToOptions}
+      onStyleLoad={_setMapInstance}
     >
-      {children}
+      {renderQueriedMarkers()}
     </Mapbox>
   );
-};
+  /**
+   * Return memoized Mapbox component to avoid restarting flyTo
+   * animation when context changes
+   */
+  // return useMemo(() => {
+  //
+  //   console.log("========================= mapZoom", mapZoom);
+  //
+  //   return (
+  //     <Mapbox
+  //       ref={mapRef}
+  //       center={mapCenterCoords}
+  //       zoom={[mapZoom]}
+  //       pitch={[45]}
+  //       style="mapbox://styles/mapbox/streets-v10"
+  //       className={styles.map}
+  //       animationOptions={animationOptions}
+  //       onStyleLoad={_setMapInstance}
+  //       flyToOption={flyToOption}
+  //     >
+  //       {renderQueriedMarkers()}
+  //     </Mapbox>
+  //   );
+  // }, [
+  //   refState,
+  // ]);
+});
 
 export { Map };

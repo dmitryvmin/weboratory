@@ -1,1 +1,2 @@
-export const MY_STATE = "MY_STATE";
+export const SEARCH_MODE = "SEARCH_MODE";
+export const SEARCHED_ADDRESS = "SEARCHED_ADDRESS";

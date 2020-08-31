@@ -6,3 +6,4 @@ export const getCalStartDate = state => state.calendarReducer.calStartDate;
 export const getSliderXDistance = state => state.calendarReducer.sliderXDistance;
 export const getSlideCount = state => state.calendarReducer.slideCount;
 export const getSlideWidth = state => state.calendarReducer.slideWidth;
+export const getTimeTable = state => state.calendarReducer.timeTable;

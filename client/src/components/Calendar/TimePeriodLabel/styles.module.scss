@@ -1,0 +1,23 @@
+@import "../../../styles/sizes";
+@import "../../../styles/colors";
+@import "../../../styles/zIndex";
+
+.calendarLabel {
+  > div {
+    user-select: none;
+  }
+}
+
+.timePeriod {
+  text-transform: capitalize;
+}
+
+.calendarTimePeriod {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  left: $size_4;
+  bottom: 1px;
+  z-index: $zi4;
+  height: 50px;
+}

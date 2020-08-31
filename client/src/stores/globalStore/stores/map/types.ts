@@ -1,23 +1,25 @@
 import { TCoords, TLngLat } from "@common/types";
-import { PaddingOptions } from "react-mapbox-gl/lib/map";
+import { AnimationOptions, EaseToOptions, FlyToOptions, Map, PaddingOptions } from "mapbox-gl";
 
 export type MapStateType = {
   mapCenterCoords: TCoords;
-  mapInstance: undefined | MapInstance;
+  mapInstance: Map | undefined;
   mapRef: MapRef;
-  mapZoom: MapZoomType;
+  mapZoom: number;
+  mapPadding?: PaddingOptions;
   mapZoomActive: boolean;
   mapMoveActive: boolean;
+  animationOptions: Partial<AnimationOptions>;
+  flyToOptions?: FlyToOptions;
 }
 
 // CameraOptions, AnimationOptions
 export type MapMoveOptionsType = {
+  mapInstance: Map;
   coords?: TLngLat;
-  padding?: Partial<PaddingOptions>;
-  zoom?: MapZoomType;
-  speed?: number;
-} & { mapInstance: MapInstance };
+};
 
-type MapInstance = any;
-type MapRef = any;
-export type MapZoomType = number;
+export type MapEaseToOptionsType = EaseToOptions & MapMoveOptionsType & {padding?: Partial<PaddingOptions>};
+export type MapFlyToOptionsType = FlyToOptions & MapMoveOptionsType & {padding?: Partial<PaddingOptions>};
+
+type MapRef = HTMLElement | null;

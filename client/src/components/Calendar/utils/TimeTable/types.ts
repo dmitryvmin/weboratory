@@ -1,11 +1,12 @@
-import { CalendarEvent, DateMap, TimePeriod } from "@components/Calendar/common/types";
+import { CalendarEvent, CalendarIntervalData, DateMap, TimePeriod } from "@components/Calendar/common/types";
+import { IEvent } from "@common/types";
 
 export type TimeTablePeriodType = CalendarEvent[] | undefined[] | undefined | 0;
 
 export type GetTimeTableDatesProps = {
   calDate: Date;
   calTimePeriod: TimePeriod;
-  visibleSlideCount?: number;
+  visibleSlideCount: number;
   bufferSlideCount?: number;
 }
 
@@ -14,6 +15,15 @@ export type TimeTableDatesType = {
   floorDate: Date;
   ceilingDate: Date;
 }
+
+export type TimeTableIntervalType = {
+  intervalType: string;
+  start: Date;
+  end: Date;
+  data?: CalendarIntervalData;
+};
+
+export type TimeTableIntervalCollectionType = TimeTableIntervalType[];
 
 export type GetTimeTableMapsProps = TimeTableDatesType;
 

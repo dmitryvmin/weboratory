@@ -1,5 +1,5 @@
 // App
-import { calenderInitialState } from "@stores/globalStore/stores/calendar/calendarInitialState";
+import { calenderInitialState } from "@stores/globalStore/stores/calendar/calendarDefaults";
 import { MAIN_MENU_STATE } from "@stores/globalStore/stores/controls/controlsConstants";
 
 function controlsReducer(state = calenderInitialState, action) {

@@ -8,7 +8,7 @@ import {
   QUERY_IN_VIEW_EVENTS_DATA,
   IN_VIEW_EVENTS_DATA, CAL_MODE,
   TOGGLE_CAL_OPEN,
-  TOGGLE_CAL_CLOSED, CAL_TIME_PERIOD,
+  TOGGLE_CAL_CLOSED, CAL_TIME_PERIOD, CAL_TIMETABLE, TIMETABLE_INTERVALS,
 } from "@stores/globalStore/stores/calendar/calendarConstants";
 import { CalendarMode } from "@stores/globalStore/stores/calendar/types";
 
@@ -16,6 +16,20 @@ export function setCalTimePeriod(calTimePeriod: TimePeriod) {
   return {
     type: CAL_TIME_PERIOD,
     calTimePeriod,
+  };
+}
+
+export function setTimeTable(timeTable) {
+  return {
+    type: CAL_TIMETABLE,
+    timeTable,
+  };
+}
+
+export function setTimeTableIntervals(timeTableIntervals) {
+  return {
+    type: TIMETABLE_INTERVALS,
+    timeTableIntervals,
   };
 }
 

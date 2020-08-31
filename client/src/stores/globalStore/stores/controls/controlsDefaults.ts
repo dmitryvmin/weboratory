@@ -1,7 +1,7 @@
 import { ControlsType } from "@stores/globalStore/stores/controls/types";
 
-const controlsInitialState: ControlsType = {
+const controlsDefaults: ControlsType = {
   mainMenuState: "OPEN",
 };
 
-export {controlsInitialState};
+export {controlsDefaults};

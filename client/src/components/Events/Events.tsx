@@ -47,9 +47,7 @@ const EventsApp: React.FC = () => {
    * ========== hooks
    */
 
-  const { queryEventsData, eventsData } = useEventsDataStore();
-
-  const { isEventModalOpen } = useEventStore();
+  const { queryEventsData } = useEventsDataStore();
 
   const { node: menuNode1, ref: menuRef1 } = useNodeRef<HTMLDivElement>();
   const { node: menuNode2, ref: menuRef2 } = useNodeRef<HTMLDivElement>();
@@ -111,30 +109,7 @@ const EventsApp: React.FC = () => {
   /**
    * Render fns
    */
-  const renderQueriedMarkers = () => {
-    // return events$
-    //   // ?.filter((event) => event.event_id !== activeEvent?.event_id)
-    //   ?.map((event, idx) => {
-    //     return (
-    //       <MapMarker
-    //         key={`marker-${event.eventId}-${idx}`}
-    //         event={event}
-    //       />
-    //     );
-    //   });
-    if (!eventsData) {
-      return;
-    }
-    const mockEvents = Object.keys(eventsData).reduce((a: any, c: any) => [...a, eventsData[c]], []).flat();
-    return mockEvents?.map((event, idx) => {
-      return (
-        <MapMarker
-          key={`marker-${event.eventId}-${idx}`}
-          event={event}
-        />
-      );
-    });
-  };
+
 
   // const renderNewEventMarker = () => {
   //   if (
@@ -164,10 +139,7 @@ const EventsApp: React.FC = () => {
 
       <MapSearch menuNode={menuNode2}/>
 
-      <Map>
-        {/*{renderNewEventMarker()}*/}
-        {renderQueriedMarkers()}
-      </Map>
+      <Map />
     </div>
   );
 };

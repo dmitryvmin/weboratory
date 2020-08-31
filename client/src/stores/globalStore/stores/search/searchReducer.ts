@@ -1,13 +1,13 @@
-import { myInitialState } from "@stores/globalStore/stores/search/searchDefaults";
-import { MY_STATE } from "@stores/globalStore/stores/search/searchConstants";
+import { searchInitialState } from "@stores/globalStore/stores/search/searchDefaults";
+import { SEARCH_MODE } from "@stores/globalStore/stores/search/searchConstants";
 
-function myReducer(state = myInitialState, action) {
+function searchReducer(state = searchInitialState, action) {
   switch (action.type) {
 
-    case MY_STATE:
+    case SEARCH_MODE:
       return ({
         ...state,
-        myState: action.myState,
+        searchMode: action.searchMode,
       });
 
     default:
@@ -15,4 +15,4 @@ function myReducer(state = myInitialState, action) {
   }
 }
 
-export { myReducer };
+export { searchReducer };

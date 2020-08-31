@@ -5,10 +5,10 @@ import { getDateAdjustedBy } from "@components/Calendar/utils/getDateAdjustedBy"
 function formatDateRange(
   timePeriod: TimePeriod,
   date: Date,
-  slideCount = 1,
+  slideCount,
 ): string {
 
-  const dateEnd = slideCount > 1
+  const dateEnd = slideCount > 0
     ? getDateAdjustedBy(date, timePeriod, slideCount)
     : undefined;
   let dateString = "";

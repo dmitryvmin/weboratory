@@ -1,17 +1,18 @@
 // Libs
 import { combineEpics, ofType } from "redux-observable";
-import { catchError, map, mergeMap, switchMap } from "rxjs/operators";
+import { mergeMap } from "rxjs/operators";
 // App
 import {
   CAL_CURRENT_DATE,
   QUERY_IN_VIEW_EVENTS_DATA,
-  CAL_TIME_PERIOD, SLIDE_COUNT,
+  CAL_TIME_PERIOD,
+  SLIDE_COUNT,
 } from "@stores/globalStore/stores/calendar/calendarConstants";
-import { getIntervalEventsDataMap } from "@components/Calendar/utils/getIntervalEventsDataMap";
-import { mockEventsData } from "@components/Calendar/__mocks__/mockEventsData";
+import { EMPTY, of } from "rxjs";
+import { TimeTable } from "@components/Calendar/utils/TimeTable";
+import { setInViewEventsData, setTimeTable } from "@stores/globalStore/stores/calendar/calendarActions";
 import { setEventsData } from "@stores/globalStore/stores/eventsData/eventsDataActions";
-import { of } from "rxjs";
-import { setInViewEventsData } from "@stores/globalStore/stores/calendar/calendarActions";
+import { getIntervalsData } from "@components/Calendar/utils/getIntervalsData";
 
 const getInlViewDataEpic = (action$, state$) => {
 
@@ -28,26 +29,43 @@ const getInlViewDataEpic = (action$, state$) => {
         calTimePeriod,
         calCurrentDate,
         slideCount,
+        timeTable,
+        timeTableIntervals,
       } = state$.value.calendarReducer;
 
-      const { eventsDataMap: calendarEvents } = getIntervalEventsDataMap({
-        calTimePeriod,
+      if (
+        !calTimePeriod ||
+        !calCurrentDate ||
+        !slideCount
+      ) {
+        return EMPTY;
+      }
+
+      const _timeTable = TimeTable.createTimeTable({
         calDate: calCurrentDate,
+        calTimePeriod,
         visibleSlideCount: slideCount,
-        eventsData: mockEventsData,
+        timeTable,
       });
 
-      const { eventsDataArray: mapEvents } = getIntervalEventsDataMap({
+      const timeTableIntervalDates = TimeTable.getTimeTableIntervalDates({
         calTimePeriod,
         calDate: calCurrentDate,
         visibleSlideCount: slideCount,
-        eventsData: mockEventsData,
-        bufferSlideCount: 0,
+        bufferSlideCount: 1,
       });
+
+      const intervalsData = getIntervalsData(timeTableIntervalDates, calTimePeriod);
+
+      const calendarData = intervalsData.reduce((acc, cur) => ({...acc, ...cur.dataMap}), {});
+      const mapData = intervalsData
+        .filter((interval) => !interval.intervalType.includes("BUFFER"))
+        .reduce((acc, cur) => [...acc, ...cur.data], []);
 
       return of(
-        setEventsData(mapEvents),
-        setInViewEventsData(calendarEvents),
+        setTimeTable(_timeTable),
+        setEventsData(mapData),
+        setInViewEventsData(calendarData),
       );
     }),
   );

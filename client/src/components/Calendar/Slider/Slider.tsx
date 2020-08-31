@@ -19,7 +19,6 @@ import { useWindowSize } from "@utils/hooks/useWindowSize";
 import classNames from "./styles.module.scss";
 
 // Hooks
-import { useTimeTable } from "@components/Calendar/hooks/useTimeTable/useTimeTable";
 import { useCalendar } from "@components/Calendar/hooks/useCalendar";
 
 // Constants
@@ -57,16 +56,11 @@ const Slider: FC<SliderProps> = memo(() => {
     setSlideCount,
     setCalCurrentDate,
     setCalTimePeriod,
+    timeTable,
     setCalStartDate,
     setSliderXDistance,
     queryInViewEventsData,
   } = useCalendarStore();
-
-  const timeTable = useTimeTable({
-    currentDate: calCurrentDate,
-    timePeriod: calTimePeriod,
-    slideCount: slideCount,
-  });
 
   /**
    * Component hooks
@@ -119,7 +113,7 @@ const Slider: FC<SliderProps> = memo(() => {
     const slideWidth = (windowWidth - (2 * SLIDER_MARGIN)) / visibleSlides;
 
     setSlideCount(visibleSlides);
-    setSlideWidth(slideWidth)
+    setSlideWidth(slideWidth);
 
   }, [
     windowWidth,
@@ -231,7 +225,6 @@ const Slider: FC<SliderProps> = memo(() => {
           setDragStatus(DRAG_STATUS.DRAG_ENDED);
         }
         setSpring({
-          // x: down ? mx : 0,
           x: mx,
         });
 

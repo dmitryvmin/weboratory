@@ -10,7 +10,7 @@ import { getToday } from "@components/Calendar/utils/getToday";
 
 // Types
 import { CalendarEvent } from "@components/Calendar/common/types";
-import { SeattleLngLat } from "@stores/globalStore/stores/map/mapConstants";
+import { SeattleLngLat } from "@stores/globalStore/stores/map/mapDefaults";
 
 // Generates an array of Date objects of length [num]
 // that fall within the [start] - [end] timeframe

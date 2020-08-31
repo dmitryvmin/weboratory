@@ -8,8 +8,8 @@ import classNames from "@components/Editor/styles.module.scss";
 import { Button } from "@components/UI/Button";
 import { convertSelectionTo } from "@components/Editor/utils/convertSelectionTo";
 import { insertCodeBlock } from "@components/Editor/utils/insertCodeBlock";
-import { useEditor } from "@stores/EditorStore";
 import { ChevronLeft, ChevronRight } from "@components/UI/Icon";
+import { useEditor } from "@components/Editor/EditorStore";
 
 /**
  * Render
