@@ -6,14 +6,22 @@ import {
   MAP_CENTER_ON_CLIENT,
   MAP_FLY_TO,
   MAP_INSTANCE,
+  MAP_MARKER_REF,
+  MAP_MARKER_REFS,
   MAP_MOVE_ACTIVE,
   MAP_PADDING,
-  MAP_REF, MAP_ZOOM,
+  MAP_REF,
+  MAP_ZOOM,
   MAP_ZOOM_ACTIVE,
 } from "@stores/globalStore/stores/map/mapConstants";
 
 // Types
-import { MapMoveOptionsType } from "@stores/globalStore/stores/map/types";
+import {
+  MapMoveOptionsType,
+  MSAnimationOptions,
+  MSMapMarkerRef,
+  MSMapMarkerRefs,
+} from "@stores/globalStore/stores/map/types";
 
 export function setMapInstance(mapInstance) {
   return {
@@ -43,6 +51,20 @@ export function setMapRef(mapRef) {
   };
 }
 
+export function setMapMarkerRef(mapMarkerRef: MSMapMarkerRef) {
+  return {
+    type: MAP_MARKER_REF,
+    mapMarkerRef,
+  };
+}
+
+export function setMapMarkerRefs(mapMarkerRefs: MSMapMarkerRefs) {
+  return {
+    type: MAP_MARKER_REFS,
+    mapMarkerRefs,
+  };
+}
+
 export function setMapZoom(mapZoom) {
   return {
     type: MAP_ZOOM,
@@ -50,7 +72,7 @@ export function setMapZoom(mapZoom) {
   };
 }
 
-export function setMapAnimation(animationOption) {
+export function setMapAnimation(animationOption: MSAnimationOptions) {
   return {
     type: MAP_ANIMATION_OPTIONS,
     animationOption,

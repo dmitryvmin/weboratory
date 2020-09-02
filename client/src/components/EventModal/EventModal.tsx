@@ -23,6 +23,11 @@ import { ModalContent } from "./ModalContent";
 import { useEventStore } from "@stores/globalStore/stores/event/useEventStore";
 import { getIsEventModalOpen } from "@stores/globalStore/stores/event/eventSelectors";
 
+const transitionEventModal = {
+  duration: 0.5,
+  type: "tween",
+};
+
 /**
  * Event Modal
  */
@@ -34,6 +39,8 @@ const EventModal: FC<any> = ({ menuNode }) => {
   const modalRef = useRef<HTMLDivElement>(null);
 
   const {
+    setEventModalAnimStart,
+    setEventModalAnimEnd,
     isEventModalOpen,
     eventModal,
     event,
@@ -67,9 +74,7 @@ const EventModal: FC<any> = ({ menuNode }) => {
       x: getPositionFromTarget(n)?.x,
       y: getPositionFromTarget(n)?.y,
       borderRadius: "50%",
-      transition: {
-        type: "tween",
-      },
+      transition: transitionEventModal,
     }),
     closedOnMenuItem: {
       width: MENU_SIZE,
@@ -77,9 +82,7 @@ const EventModal: FC<any> = ({ menuNode }) => {
       x: menuBBox?.x,
       y: menuBBox?.y,
       borderRadius: "50%",
-      transition: {
-        type: "tween",
-      },
+      transition: transitionEventModal,
     },
     closedOnMenuOrigin: {
       width: MENU_SIZE,
@@ -87,9 +90,7 @@ const EventModal: FC<any> = ({ menuNode }) => {
       x: (windowWidth / 2) - (MENU_SIZE / 2),
       y: windowHeight - TIMELINE_HEIGHT,
       borderRadius: "50%",
-      transition: {
-        type: "tween",
-      },
+      transition: transitionEventModal,
     },
     openedOnCenter: {
       width: (windowWidth < 520) ? "calc(100% - 20px)" : 500,
@@ -98,9 +99,7 @@ const EventModal: FC<any> = ({ menuNode }) => {
       left: (windowWidth < 600) ? "50%" : "unset",
       y: (windowHeight / 2) - 150,
       borderRadius: 2,
-      transition: {
-        type: "tween",
-      },
+      transition: transitionEventModal,
     },
     openedOnTop: {
       width: (windowWidth < 520) ? "calc(100% - 20px)" : 500,
@@ -109,9 +108,7 @@ const EventModal: FC<any> = ({ menuNode }) => {
       left: (windowWidth < 600) ? "50%" : "unset",
       y: (windowHeight / 2) - 300,
       borderRadius: 2,
-      transition: {
-        type: "tween",
-      },
+      transition: transitionEventModal,
     },
     openedOnBottom: {
       width: (windowWidth < 520) ? "calc(100% - 20px)" : 500,
@@ -120,9 +117,7 @@ const EventModal: FC<any> = ({ menuNode }) => {
       left: (windowWidth < 600) ? "50%" : "unset",
       y: (windowHeight / 2) - 50,
       borderRadius: 2,
-      transition: {
-        type: "tween",
-      },
+      transition: transitionEventModal,
     },
   };
 
@@ -210,6 +205,8 @@ const EventModal: FC<any> = ({ menuNode }) => {
           className={classNames.eventModal}
           initial={getInitialPosition()}
           exit={getExitPosition()}
+          onAnimationComplete={setEventModalAnimEnd}
+          onAnimationStart={setEventModalAnimStart}
         >
           <ModalContent centerModalOn={centerModalOn}/>
         </motion.div>

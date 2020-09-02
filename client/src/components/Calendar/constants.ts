@@ -1,26 +1,9 @@
 // App
-import { CalendarState } from "@components/Calendar/store/types";
-import { getToday } from "@components/Calendar/utils/getToday";
 import { TimePeriod } from "@components/Calendar/common/types";
 
 export const SLIDER_MARGIN = 20;
 
 export const SLIDER_BUFFER = 1;
-
-export const CalendarInitState: CalendarState = {
-  timePeriod: "DAY",
-  isCalendarOpen: true,
-  isFullScreen: false,
-  xDistance: {
-    distance: undefined,
-    velocity: undefined,
-  },
-  startingDate: getToday(),
-  currentDate: getToday(),
-  intervalData: undefined,
-  slideCount: 1,
-  slideWidth: 400,
-};
 
 export const TimeFormatMap: {[key in TimePeriod]: string} = {
   "SECOND": "ss",
@@ -38,6 +21,15 @@ export const TimePeriodMap: TimePeriod[] = [
   "HOUR",
   "MINUTE",
 ];
+
+export const SegmentTimeFormatMap: {[key in TimePeriod]: string} = {
+  "SECOND": "s",
+  "MINUTE": "m",
+  "HOUR": "H",
+  "DAY": "d",
+  "MONTH": "MMM",
+  "YEAR": "yyyy",
+}
 
 export const DateFormatMap: {[key in TimePeriod]: string} = {
   "SECOND": "p",

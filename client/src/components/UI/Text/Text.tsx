@@ -1,5 +1,8 @@
 // Libs
-import React, { FC } from "react";
+import React, { FC, JSXElementConstructor, ReactComponentElement, ReactElement, ReactNode } from "react";
+
+// Utils
+import { cn } from "@utils/css/getClassName";
 
 // Styles
 import classNames from "./styles.module.scss";
@@ -12,23 +15,26 @@ const Text: FC<TextProps> = ({
   style = "p1",
   brightness,
   className,
+  el = "p",
 }) => {
 
+  const El: any = el as any;
+
   const getStyles = () => {
-    return ([
+    return cn(
       classNames[style],
-      (brightness === "dark") ?? classNames.colorDark,
-      (brightness === "dark") ?? classNames.colorLight,
-    ].join(" "));
+      (brightness === "dark") && classNames.colorDark,
+      (brightness === "light") && classNames.colorLight,
+    );
   };
 
   return (
-    <div
+    <El
       {...className && {className}}
       className={getStyles()}
     >
       {children}
-    </div>
+    </El>
   );
 };
 

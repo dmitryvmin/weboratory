@@ -1,0 +1,34 @@
+@import "../../../../styles/radius";
+@import "../../../../styles/shadows";
+@import "../../../../styles/sizes";
+@import "../../../../styles/colors";
+
+.Track {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 84px;
+  height: 34px;
+  margin: 4px 2px;
+  //border: 1px solid #7b7b7b;
+  border-radius: 2px;
+}
+
+.SelMenu {
+  position: relative;
+}
+
+.Item {
+  background-color: $color-primary;
+  border-radius: $bradius_1;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 4px;
+  margin-top: 4px;
+
+  > p {
+    margin-top: 7px;
+    text-align: center;
+    width: 100%;
+  }
+}

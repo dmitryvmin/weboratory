@@ -6,10 +6,12 @@ import randomLocation from "random-location";
 import { getRandomHEX } from "@utils/test/getRandomHEX";
 import { getRandomDate } from "@utils/test/getRandomDate";
 import { getRandomString } from "@utils/test/getRandomString";
-import { getToday } from "@components/Calendar/utils/getToday";
+import { getToday } from "@utils/date/getToday";
 
 // Types
 import { CalendarEvent } from "@components/Calendar/common/types";
+
+// Constants
 import { SeattleLngLat } from "@stores/globalStore/stores/map/mapDefaults";
 
 // Generates an array of Date objects of length [num]
@@ -38,6 +40,7 @@ function generateEventsMockData(
       time,
       color,
       coordinates: { lat: latitude, lng: longitude },
+      eventId: title,
     });
   }
 

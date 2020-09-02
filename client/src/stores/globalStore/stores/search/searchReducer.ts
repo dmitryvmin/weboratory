@@ -1,5 +1,5 @@
 import { searchInitialState } from "@stores/globalStore/stores/search/searchDefaults";
-import { SEARCH_MODE } from "@stores/globalStore/stores/search/searchConstants";
+import { SEARCH_BY, SEARCH_MODE, SEARCHED_ADDRESS } from "@stores/globalStore/stores/search/searchConstants";
 
 function searchReducer(state = searchInitialState, action) {
   switch (action.type) {
@@ -8,6 +8,18 @@ function searchReducer(state = searchInitialState, action) {
       return ({
         ...state,
         searchMode: action.searchMode,
+      });
+
+    case SEARCHED_ADDRESS:
+      return ({
+        ...state,
+        searchedAddress: action.searchedAddress,
+      });
+
+    case SEARCH_BY:
+      return ({
+        ...state,
+        searchBy: action.searchBy,
       });
 
     default:

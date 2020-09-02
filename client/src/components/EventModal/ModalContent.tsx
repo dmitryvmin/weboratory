@@ -5,31 +5,25 @@ import { motion, usePresence } from "framer-motion";
 // Styles
 import styles from "./styles.module.scss";
 
-// Utils
-
 // Components
 import { Button } from "@components/UI/Button";
 import { Close, Calendar, Map, MapPin } from "@components/UI/Icon";
 
-// Services
-
-// Utils
-
-// Types
+// Constants
+import { SEARCH_MIN } from "@stores/EventStore";
 
 // Store
-import { SEARCH_MIN } from "@stores/EventStore";
 import { eventsInstance } from "@components/Events/eventsInstance";
-import { useCalendar } from "@components/Calendar/hooks/useCalendar";
 import { useMapStore } from "@stores/globalStore/stores/map/useMapStore";
 import { useEventStore } from "@stores/globalStore/stores/event/useEventStore";
+import { useCalendarStore } from "@stores/globalStore/stores/calendar/useCalendarStore";
 
 const ModalContent: FC<any> = ({ centerModalOn }) => {
 
   /**
    * ========== Context hooks
    */
-  const { setCalendarIsOpen } = useCalendar();
+  const { setCalOpen } = useCalendarStore();
 
   const { centerMapOnAddress } = useMapStore();
 
@@ -141,7 +135,7 @@ const ModalContent: FC<any> = ({ centerModalOn }) => {
 
         <div className={styles.timeInput}>
           <Calendar
-            onClick={() => setCalendarIsOpen(true)}
+            onClick={setCalOpen}
             className={styles.timeBtn}
           />
           <input

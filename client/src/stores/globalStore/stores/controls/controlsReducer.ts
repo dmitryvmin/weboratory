@@ -1,15 +1,15 @@
 // App
-import { calenderInitialState } from "@stores/globalStore/stores/calendar/calendarDefaults";
-import { MAIN_MENU_STATE } from "@stores/globalStore/stores/controls/controlsConstants";
+import { MAIN_MENU_MODE } from "@stores/globalStore/stores/controls/controlsConstants";
+import { controlsInitState } from "@stores/globalStore/stores/controls/controlsDefaults";
 
-function controlsReducer(state = calenderInitialState, action) {
+function controlsReducer(state = controlsInitState, action) {
 
   switch (action.type) {
 
-    case MAIN_MENU_STATE:
+    case MAIN_MENU_MODE:
       return ({
         ...state,
-        calStartDate: action.calStartDate,
+        mainMenuMode: action.mainMenuMode,
       });
 
     default:

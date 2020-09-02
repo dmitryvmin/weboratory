@@ -1,6 +1,7 @@
 @import "../../../styles/sizes";
 @import "../../../styles/colors";
 @import "../../../styles/zIndex";
+@import "../../../styles/radius";
 
 .calendarLabel {
   > div {
@@ -16,8 +17,10 @@
   position: absolute;
   display: flex;
   align-items: center;
-  left: $size_4;
-  bottom: 1px;
+  right: $size_4;
+  top: -$size_4;
   z-index: $zi4;
-  height: 50px;
+  border-radius: $bradius_1 $bradius_1 0 0;
+  background-color: $color-white;
+  padding: 2px 5px;
 }

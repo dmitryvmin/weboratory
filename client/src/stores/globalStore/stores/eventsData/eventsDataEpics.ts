@@ -11,8 +11,15 @@ import { EventsDataStateType } from "@stores/globalStore/stores/eventsData/types
 import { TLngLat } from "@common/types";
 import { MapStateType } from "@stores/globalStore/stores/map/types";
 import { MAP_INSTANCE } from "@stores/globalStore/stores/map/mapConstants";
-import { setMapCenter, setMapFlyToOptions, setMapPadding, setMapZoom } from "@stores/globalStore/stores/map/mapActions";
+import {
+  setMapAnimation,
+  setMapCenter,
+  setMapFlyToOptions,
+  setMapPadding,
+  setMapZoom,
+} from "@stores/globalStore/stores/map/mapActions";
 import { MapUtils } from "@stores/globalStore/stores/map/MapUtils";
+import { mapEasingFunctions } from "@stores/globalStore/stores/map/mapDefaults";
 
 export function fetchEventsDataEpic(action$) {
   return action$.pipe(
@@ -43,15 +50,16 @@ export function fitMapToEventsBoundsEpic(action$, state$) {
 
         else {
           const bounds = findEventsBoundingBox(coordinates);
-          const padding = { top: 10, bottom: 300, left: 10, right: 10 };
+          const padding = { top: 50, bottom: 50, left: 50, right: 50 };
           const newCameraTransform = mapInstance.cameraForBounds(bounds, {
             padding,
           });
+
           if (!newCameraTransform) {
             return EMPTY;
           }
 
-          // MapUtils.easeMapTo({
+          // MapUtils.mapFlyTo({
           //   mapInstance,
           //   ...newCameraTransform,
           //   padding,
@@ -60,6 +68,11 @@ export function fitMapToEventsBoundsEpic(action$, state$) {
           return of(
             setMapZoom(newCameraTransform.zoom),
             setMapCenter(newCameraTransform.center),
+            // setMapAnimation({
+            //   animate: true,
+            //   duration: 1000,
+            //   easing: mapEasingFunctions.easeOutQuint,
+            // }),
             // setMapFlyToOptions(newCameraTransform),
             // setMapPadding(padding),
           );

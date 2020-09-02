@@ -1,0 +1,19 @@
+@import "../../../styles/sizes";
+@import "../../../styles/colors";
+@import "../../../styles/zIndex";
+
+.zoomnBtn {
+  margin: $size_2;
+  cursor: pointer;
+}
+
+.zoomnBtnDisabled {
+  cursor: default;
+  color: $color-disabled;
+}
+
+.MapMenuContainer {
+  position: absolute;
+  right: 10px;
+  bottom: 0;
+}

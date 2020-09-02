@@ -8,10 +8,11 @@ import { Text } from "@components/UI/Text";
 import classNames from "./styles.module.scss";
 
 // Utils
-import { formatDateRange } from "@components/Calendar/utils/formatDateRange";
+import { formatDateRange } from "@utils/date/formatDateRange";
 
 // Hooks
 import { useCalendarStore } from "@stores/globalStore/stores/calendar/useCalendarStore";
+import { useSliderStore } from "@stores/globalStore/stores/slider/useSliderStore";
 
 /**
  * Controls Calendar zoom
@@ -24,9 +25,9 @@ export const DateLabel = () => {
   const {
     calCurrentDate,
     calTimePeriod,
-    slideCount,
   } = useCalendarStore();
 
+  const { slideCount} = useSliderStore();
   /**
    * JSX
    */

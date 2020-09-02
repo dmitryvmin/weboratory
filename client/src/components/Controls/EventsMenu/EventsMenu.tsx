@@ -1,6 +1,6 @@
 // Libs
-import React, { FC, useRef, ChangeEvent, useEffect } from "react";
-import { AnimatePresence, motion, useAnimation } from "framer-motion";
+import React, { FC, useRef } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 
 // Components
 import { Search, Plus, User } from "@components/UI/Icon";
@@ -12,55 +12,11 @@ import { useWindowSize } from "@utils/hooks/useWindowSize";
 import classNames from "./styles.module.scss";
 
 // Store
-import { useEvents } from "@stores/EventStore";
-import { MENU_SIZE, PADDING_1, PADDING_2, TIMELINE_HEIGHT } from "@common/constants";
-import styles from "@components/Navigation/NavigationMenu/styles.module.scss";
-import { NavLink } from "react-router-dom";
-import { getTransformValues } from "@components/Navigation/NavigationMenu/utils/getTransformValues";
-import { useNodeRef } from "@utils/hooks/useNodeRef";
-
-const MenuItem: FC<any> = ({
-  item,
-  idx,
-  count,
-}) => {
-  return (
-    <motion.div
-      ref={item.ref}
-      onClick={item.onClick}
-      initial={{
-        x: MENU_SIZE / 2,
-        y: MENU_SIZE / 2,
-        scale: 0,
-      }}
-      animate={{
-        x: item.position.x,
-        y: item.position.y,
-        scale: 1,
-        transition: {
-          duration: 0.1,
-          delay: 0.04 * idx,
-          ease: "easeOut",
-        },
-      }}
-      exit={{
-        x: MENU_SIZE / 2,
-        y: MENU_SIZE / 2,
-        scale: 0,
-        transition: {
-          duration: 0.1,
-          delay: (count - idx + 1) * .04,
-          ease: "easeOut",
-        },
-      }}
-      className={classNames.menuItemBase}
-      whileHover={{ scale: 1.1 }}
-      whileTap={{ scale: 0.90 }}
-    >
-      {item.icon}
-    </motion.div>
-  );
-};
+import { MENU_SIZE, PADDING_2 } from "@common/constants";
+import { useEventStore } from "@stores/globalStore/stores/event/useEventStore";
+import { useSearchStore } from "@stores/globalStore/stores/search/useSearchStore";
+import { useControlsStore } from "@stores/globalStore/stores/controls/useControlsStore";
+import { MenuItem } from "@components/Controls/EventsMenu/components/MenuItem";
 
 /**
  *
@@ -70,27 +26,24 @@ const EventsMenu: FC<any> = ({menuRefs}) => {
   const {menuRef1, menuRef2} = menuRefs;
 
   /**
-   * ========== Context hooks
+   * ========== Hooks
    */
-  const {
-    isEventOpen,
-    openEvent,
-    closeEvent,
-    startNewEvent,
-    setIsMenuOpenTo,
-    isMenuOpen,
-    setIsSearchOpen,
-  } = useEvents();
 
   /**
-   * ========== State hooks
+   * App state hooks
+   */
+  const { startNewEvent } = useEventStore();
+  const { openSearch } = useSearchStore();
+  const { isMainMenuOpen } = useControlsStore();
+
+  /**
+   * Local state hooks
    */
   const containerRef = useRef<HTMLDivElement>(null);
-
   const inputRef = useRef<HTMLInputElement>(null);
 
   /**
-   * ========== Util hooks
+   * Util hooks
    */
   const { windowWidth, windowHeight } = useWindowSize();
 
@@ -108,7 +61,7 @@ const EventsMenu: FC<any> = ({menuRefs}) => {
       label: "Explore",
       icon: <Search/>,
       position: { x: 0, y: -80 },
-      onClick: () => setIsSearchOpen(true),
+      onClick: openSearch,
       ref: menuRef2,
     },
     {
@@ -121,14 +74,14 @@ const EventsMenu: FC<any> = ({menuRefs}) => {
   /**
    * Handlers
    */
-  const handleMenu = () => {
-    if (!isEventOpen) {
-      startNewEvent();
-    }
-    if (isEventOpen) {
-      closeEvent();
-    }
-  };
+  // const handleMenu = () => {
+  //   if (!isEventOpen) {
+  //     startNewEvent();
+  //   }
+  //   if (isEventOpen) {
+  //     closeEvent();
+  //   }
+  // };
 
   /**
    * Framer variants
@@ -146,10 +99,6 @@ const EventsMenu: FC<any> = ({menuRefs}) => {
       display: "none",
       opacity: 0,
     },
-  };
-
-  const getMenuIcon = () => {
-    return <Plus/>;
   };
 
   const styles = {
@@ -180,7 +129,7 @@ const EventsMenu: FC<any> = ({menuRefs}) => {
       className={classNames.eventsMenu}
     >
       <AnimatePresence initial={false}>
-        {isMenuOpen && menuItems.map((item, idx) => {
+        {isMainMenuOpen && menuItems.map((item, idx) => {
             return (
               <MenuItem
                 key={`menuItem-${idx}`}

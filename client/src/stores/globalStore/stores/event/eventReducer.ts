@@ -1,23 +1,18 @@
 import {
-  EVENT_MODAL_CLOSED,
-  EVENT_MODAL_OPEN,
-  SET_EVENT, SET_EVENT_MODAL, UPDATE_EVENT,
+  EVENT_MODAL_MODE,
+  SET_EVENT,
+  SET_EVENT_MODAL,
+  UPDATE_EVENT,
 } from "@stores/globalStore/stores/event/eventConstants";
 import { eventInitialState } from "@stores/globalStore/stores/event/eventDefaults";
 
 function eventReducer(state = eventInitialState, action) {
   switch (action.type) {
 
-    case EVENT_MODAL_OPEN:
+    case EVENT_MODAL_MODE:
       return ({
         ...state,
-        isEventModalOpen: true,
-      });
-
-    case EVENT_MODAL_CLOSED:
-      return ({
-        ...state,
-        isEventModalOpen: false,
+        eventModalMode: action.eventModalMode,
       });
 
     case SET_EVENT:
@@ -38,7 +33,6 @@ function eventReducer(state = eventInitialState, action) {
     case SET_EVENT_MODAL:
       return ({
         ...state,
-        isEventModalOpen: true,
         eventModal: action.eventModal,
       });
 

@@ -1,8 +1,8 @@
 import { EventModalType, EventPropsType, EventStateType } from "@stores/globalStore/stores/event/types";
-import { getToday } from "@components/Calendar/utils/getToday";
+import { getToday } from "@utils/date/getToday";
 
 export const eventInitialState: EventStateType = {
-  isEventModalOpen: false,
+  eventModalMode: "CLOSED",
   eventModal: undefined,
   event: undefined,
 };

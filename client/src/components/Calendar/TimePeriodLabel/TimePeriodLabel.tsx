@@ -6,7 +6,7 @@ import { motion, AnimatePresence, useAnimation } from "framer-motion";
 import {Text} from "@components/UI/Text";
 
 // Hooks
-import { useCalendar } from "@components/Calendar/hooks/useCalendar/useCalendar";
+import { useCalendarStore } from "@stores/globalStore/stores/calendar/useCalendarStore";
 
 // Styles
 import classNames from "./styles.module.scss";
@@ -20,9 +20,9 @@ export const TimePeriodLabel = () => {
    * Hooks
    */
   const {
-    timePeriod,
-    currentDate,
-  } = useCalendar();
+    calTimePeriod,
+    calCurrentDate,
+  } = useCalendarStore();
 
   /**
    * Return JSX
@@ -52,7 +52,7 @@ export const TimePeriodLabel = () => {
         >
           {/*{format(currentDate, CurrentDateFormatMap[timePeriod])}*/}
           <span className={classNames.timePeriod}>
-          {`${timePeriod.toLowerCase()}`}
+          {`${calTimePeriod.toLowerCase()}`}
         </span>
         </Text>
       </>

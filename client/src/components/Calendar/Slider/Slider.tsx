@@ -6,11 +6,8 @@ import React, {
   memo,
   useEffect,
 } from "react";
-import { useSpring, animated } from "react-spring";
+import { useSpring, animated, SpringValue } from "react-spring";
 import { useGesture } from "react-use-gesture";
-import { useSelector, useDispatch } from "react-redux";
-import { format } from "date-fns";
-import { motion } from "framer-motion";
 
 // Utils
 import { useWindowSize } from "@utils/hooks/useWindowSize";
@@ -18,24 +15,27 @@ import { useWindowSize } from "@utils/hooks/useWindowSize";
 // Styles
 import classNames from "./styles.module.scss";
 
-// Hooks
-import { useCalendar } from "@components/Calendar/hooks/useCalendar";
-
-// Constants
-import { CurrentDateFormatMap, SLIDER_MARGIN } from "@components/Calendar/constants";
-import { DRAG_STATUS } from "@common/constants";
-
 // Components
 import { Slide } from "@components/Calendar/Slide/Slide";
-import { Text } from "@components/UI/Text";
+
+// Store
+import { useCalendarStore } from "@stores/globalStore/stores/calendar/useCalendarStore";
+
+// Utils
+import { getStartOfPeriod } from "@utils/date/getStartOfPeriod";
+import { getDateAdjustedBy } from "@utils/date/getDateAdjustedBy";
+import { getDateFromMap } from "@utils/date/getDateFromMap";
+
+// Constants
+import { SLIDER_MARGIN } from "@components/Calendar/constants";
+import { DRAG_STATUS } from "@common/constants";
 
 // Types
 import { SliderProps } from "@components/Calendar/Slider/types";
-import { getDateAdjustedBy } from "@components/Calendar/utils/getDateAdjustedBy";
-import { getDateFromMap } from "@components/Calendar/utils/getDateFromMap";
 import { TimePeriod } from "@components/Calendar/common/types";
-import { getStartOfPeriod } from "@components/Calendar/utils/getStartOfPeriod";
-import { useCalendarStore } from "@stores/globalStore/stores/calendar/useCalendarStore";
+import { cn } from "@utils/css/getClassName";
+import { useSliderStore } from "@stores/globalStore/stores/slider/useSliderStore";
+import { useTimetableStore } from "@stores/globalStore/stores/timetable/utils/useTimetableStore";
 
 /**
  * Slider
@@ -48,19 +48,23 @@ const Slider: FC<SliderProps> = memo(() => {
   const {
     calTimePeriod,
     calCurrentDate,
-    calStartDate,
+    setCalCurrentDate,
+    setCalStartDate,
+  } = useCalendarStore();
+
+  const {
+    setSlideCount,
+    setSlideWidth,
+    setSliderXDistance,
     slideCount,
     slideWidth,
     sliderXDistance,
-    setSlideWidth,
-    setSlideCount,
-    setCalCurrentDate,
-    setCalTimePeriod,
+  } = useSliderStore();
+
+  const {
     timeTable,
-    setCalStartDate,
-    setSliderXDistance,
     queryInViewEventsData,
-  } = useCalendarStore();
+  } = useTimetableStore();
 
   /**
    * Component hooks
@@ -238,6 +242,34 @@ const Slider: FC<SliderProps> = memo(() => {
     },
     );
 
+  // Avoid setting SlideContainer to "{transform: none}" when x value is 0
+  function formatTranslateCSSProp(x: SpringValue<number>) {
+    if (x.get() === 0) {
+      return ({ transform: "translate3d(0px, 0px, 0px)" });
+    }
+    else {
+      return ({ x });
+    }
+  }
+
+  // function getCursorCSSProp() {
+  //   if (dragStatus === DRAG_STATUS.DRAG_STARTED) {
+  //     return ({ cursor: "grabbing" });
+  //   }
+  //   else {
+  //     return ({ cursor: "pointer" });
+  //   }
+  // }
+
+  function getClassNames() {
+    return cn(
+      classNames.SlidesContainer,
+      (dragStatus === DRAG_STATUS.DRAG_STARTED)
+        ? classNames.cursorDrag
+        : classNames.cursorDefault,
+    )
+  }
+
   /**
    * =============== JSX ===============
    */
@@ -274,19 +306,19 @@ const Slider: FC<SliderProps> = memo(() => {
    * Render Component
    */
   return (
-    <div
-      {...dragBind()}
-      ref={dragContainerRef}
-      className={classNames.dragContainer}
-    >
-      <animated.div
-        className={classNames.slidesContainer}
-        style={{
-          x,
-        }}
+    <div className={classNames.SliderContainer}>
+      <div
+        {...dragBind()}
+        ref={dragContainerRef}
+        className={classNames.DragContainer}
       >
-        {renderTimetable()}
-      </animated.div>
+        <animated.div
+          className={getClassNames()}
+          style={formatTranslateCSSProp(x)}
+        >
+          {renderTimetable()}
+        </animated.div>
+      </div>
     </div>
   );
 });

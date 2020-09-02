@@ -1,14 +1,11 @@
 // Libs
-import React, { useEffect, useRef, useContext, useMemo } from "react";
-import { history } from "../../router";
-import { useQuery } from "@apollo/client";
-import { useSelector, useDispatch } from "react-redux";
+import React, { useEffect } from "react";
+import { useAuth0 } from "@auth0/auth0-react";
 
 // styles
 import styles from "./styles.module.scss";
 
 // Utils
-import { Auth0Context } from "@utils/hooks/useAuth0";
 import { useObservable } from "@utils/hooks/useObservable";
 
 // Types
@@ -16,23 +13,16 @@ import { IEvent } from "@common/types";
 
 // Components
 import { Map } from "@components/Map";
-import { MapMarker } from "@components/Map/components/MapMarker/MapMarker";
-import { MapSearch } from "@components/Events/Search/MapSearch";
+import { EventsMenu } from "@components/Controls/EventsMenu";
+import { MapSearch } from "@components/MapSearch/MapSearch";
+import { EventModal } from "@components/EventModal";
 
 // Utils
+import { useNodeRef } from "@utils/hooks/useNodeRef";
 
 // Store
-import { useEvents } from "@stores/EventStore";
-
-// Constants
-import { getNewEventKey } from "@components/Events/utils/getEventKey";
-
-import { eventsInstance } from "@components/Events/eventsInstance";
-import { useNodeRef } from "@utils/hooks/useNodeRef";
-import { EventModal } from "@components/EventModal";
-import { useEventStore } from "@stores/globalStore/stores/event/useEventStore";
 import { useEventsDataStore } from "@stores/globalStore/stores/eventsData/useEventsData";
-import { EventsMenu } from "@components/Controls/EventsMenu";
+import { eventsInstance } from "@components/Events/eventsInstance";
 
 /**
  * Events App
@@ -46,14 +36,13 @@ const EventsApp: React.FC = () => {
   /**
    * ========== hooks
    */
-
   const { queryEventsData } = useEventsDataStore();
 
   const { node: menuNode1, ref: menuRef1 } = useNodeRef<HTMLDivElement>();
+
   const { node: menuNode2, ref: menuRef2 } = useNodeRef<HTMLDivElement>();
 
-
-  const { user } = useContext(Auth0Context);
+  const { user } = useAuth0();
 
   /**
    * ========== Component hooks
@@ -61,6 +50,7 @@ const EventsApp: React.FC = () => {
     // const eventsInstance = useMemo(() => new eventsService(), []);
 
   const events$ = useObservable<IEvent[]>(eventsInstance.onEvents());
+
   const event$ = useObservable<IEvent>(eventsInstance.onEvent());
 
   /**

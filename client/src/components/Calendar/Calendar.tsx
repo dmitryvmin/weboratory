@@ -7,7 +7,6 @@ import classNames from "./styles.module.scss";
 
 // Components
 import { Slider } from "@components/Calendar/Slider";
-import { CalendarMenu } from "@components/Calendar/CalendarMenu";
 
 // Hooks
 import { useWindowSize } from "@utils/hooks/useWindowSize";
@@ -35,22 +34,22 @@ const Calendar: FC<CalendarPropType> = () => {
   const { windowHeight } = useWindowSize();
 
   const sliderContainerVariants = {
-    "DOCKED": {
+    DOCKED: {
       opacity: 1,
-      y: -300,
+      y: -290,
       height: 200,
       transition: {
         duration: 0.5,
       },
     },
-    "FULLSCREEN": {
+    FULLSCREEN: {
       y: -windowHeight + 100,
       height: windowHeight - 200,
       transition: {
         duration: 0.5,
       },
     },
-    "CLOSED": {
+    CLOSED: {
       opacity: 0,
       y: 0,
       transition: {
@@ -79,32 +78,10 @@ const Calendar: FC<CalendarPropType> = () => {
             exit="CLOSED"
             variants={sliderContainerVariants}
           >
-            <DateLabel/>
-            <div className={classNames.sliderContainer}>
-              <Slider/>
-            </div>
+            {/*<DateLabel/>*/}
+            <Slider/>
+            {/*<TimePeriodLabel/>*/}
           </motion.div>
-          <motion.div
-            className={classNames.calendarMenuContainer}
-            initial={{ opacity: 0 }}
-            animate={{
-              opacity: 1,
-              y: 0,
-              transition: {
-                duration: 0.5,
-              },
-            }}
-            exit={{
-              opacity: 0,
-              y: 50,
-              transition: {
-                duration: 0.5,
-              },
-            }}
-          >
-            <CalendarMenu/>
-          </motion.div>
-          <TimePeriodLabel/>
         </>
       )}
     </AnimatePresence>

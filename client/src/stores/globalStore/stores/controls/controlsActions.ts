@@ -1,13 +1,9 @@
-import { MAIN_MENU_STATE } from "@stores/globalStore/stores/controls/controlsConstants";
-import { MainMenuStateType } from "@stores/globalStore/stores/controls/types";
+import { MAIN_MENU_MODE } from "@stores/globalStore/stores/controls/controlsConstants";
+import { MainMenuModeType } from "@stores/globalStore/stores/controls/types";
 
-function setMainMenuState(mainMenuState: MainMenuStateType) {
+export function setMainMenuMode(mainMenuMode: MainMenuModeType) {
   return {
-    type: MAIN_MENU_STATE,
-    mainMenuState,
+    type: MAIN_MENU_MODE,
+    mainMenuMode,
   };
 }
-
-export {
-  setMainMenuState,
-};

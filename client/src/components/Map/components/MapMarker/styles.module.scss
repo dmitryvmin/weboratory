@@ -1,15 +1,9 @@
 @import "../../../../styles/radius";
 
 .poi {
-  //background-color: blue;
-  width: 30px;
-  height: 30px;
   display: block;
-  left: -5px;
-  top: -5px;
   position: relative;
-  border-radius: 1.5rem 1.5rem 0;
-  transform: rotate(45deg);
+  border-radius: 50% 50% 0;
   border: 1px solid #FFFFFF;
   cursor: pointer;
 

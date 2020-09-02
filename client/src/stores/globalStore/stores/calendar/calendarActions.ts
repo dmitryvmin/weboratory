@@ -1,16 +1,14 @@
+import { CalendarMode, SegmentType } from "@stores/globalStore/stores/calendar/types";
 import { TimePeriod } from "@components/Calendar/common/types";
-import {
+import { calendarConstants } from "@stores/globalStore/stores/calendar/calendarConstants";
+
+const {
   CAL_CURRENT_DATE,
   CAL_START_DATE,
-  SLIDE_COUNT,
-  SLIDE_WIDTH,
-  SLIDER_X_DISTANCE,
-  QUERY_IN_VIEW_EVENTS_DATA,
-  IN_VIEW_EVENTS_DATA, CAL_MODE,
-  TOGGLE_CAL_OPEN,
-  TOGGLE_CAL_CLOSED, CAL_TIME_PERIOD, CAL_TIMETABLE, TIMETABLE_INTERVALS,
-} from "@stores/globalStore/stores/calendar/calendarConstants";
-import { CalendarMode } from "@stores/globalStore/stores/calendar/types";
+  CAL_MODE,
+  CAL_TIME_PERIOD,
+  HOVERED_SEGMENT,
+} = calendarConstants;
 
 export function setCalTimePeriod(calTimePeriod: TimePeriod) {
   return {
@@ -19,17 +17,10 @@ export function setCalTimePeriod(calTimePeriod: TimePeriod) {
   };
 }
 
-export function setTimeTable(timeTable) {
+export function setHoveredSegment(hoveredSegment: SegmentType) {
   return {
-    type: CAL_TIMETABLE,
-    timeTable,
-  };
-}
-
-export function setTimeTableIntervals(timeTableIntervals) {
-  return {
-    type: TIMETABLE_INTERVALS,
-    timeTableIntervals,
+    type: HOVERED_SEGMENT,
+    hoveredSegment,
   };
 }
 
@@ -37,18 +28,6 @@ export function setCalMode(calMode: CalendarMode) {
   return {
     type: CAL_MODE,
     calMode,
-  };
-}
-
-export function setCalOpen() {
-  return {
-    type: TOGGLE_CAL_OPEN,
-  };
-}
-
-export function setCalClosed() {
-  return {
-    type: TOGGLE_CAL_CLOSED,
   };
 }
 
@@ -63,39 +42,5 @@ export function setCalCurrentDate(calCurrentDate: Date) {
   return {
     type: CAL_CURRENT_DATE,
     calCurrentDate,
-  };
-}
-
-export function setSlideCount(slideCount: number) {
-  return {
-    type: SLIDE_COUNT,
-    slideCount,
-  };
-}
-
-export function setSlideWidth(slideWidth: number) {
-  return {
-    type: SLIDE_WIDTH,
-    slideWidth,
-  };
-}
-
-export function setInViewEventsData(inViewEventsData) {
-  return {
-    type: IN_VIEW_EVENTS_DATA,
-    inViewEventsData,
-  };
-}
-
-export function setSliderXDistance(sliderXDistance) {
-  return {
-    type: SLIDER_X_DISTANCE,
-    sliderXDistance,
-  };
-}
-
-export function queryInViewEventsData() {
-  return {
-    type: QUERY_IN_VIEW_EVENTS_DATA,
   };
 }

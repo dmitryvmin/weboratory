@@ -1,59 +1,67 @@
 import {
   SET_EVENT,
-  CREATE_EVENT,
-  EVENT_MODAL_CLOSED,
-  EVENT_MODAL_OPEN,
   SET_EVENT_MODAL,
   UPDATE_EVENT,
+  START_NEW_EVENT,
+  EVENT_MODAL_MODE,
+  OPEN_EVENT_FROM_MARKER, EVENT_MODAL_ANIM_END, EVENT_MODAL_ANIM_START,
 } from "@stores/globalStore/stores/event/eventConstants";
 import { EventModalType, EventPropsType } from "@stores/globalStore/stores/event/types";
 import { IEvent } from "@common/types";
 
-function setEventModalOpen() {
+export function setEventModalMode(eventModalMode) {
   return {
-    type: EVENT_MODAL_OPEN,
+    type: EVENT_MODAL_MODE,
+    eventModalMode,
   };
 }
 
-function setEventModalClosed() {
-  return {
-    type: EVENT_MODAL_CLOSED,
-  };
-}
-
-function setEvent(event: IEvent) {
+export function setEvent(event: IEvent) {
   return {
     type: SET_EVENT,
     event,
   };
 }
 
-function setEventModal(eventModal: EventModalType) {
+export function setEventModal(eventModal: EventModalType) {
   return {
     type: SET_EVENT_MODAL,
     eventModal,
   };
 }
 
-function createEvent(event: IEvent) {
+export function openEventFromMarker(event: EventPropsType, eventModal: EventModalType) {
   return {
-    type: CREATE_EVENT,
+    type: OPEN_EVENT_FROM_MARKER,
     event,
+    eventModal,
   };
 }
 
-function updateEvent(event: EventPropsType) {
+export function startNewEvent() {
+  return {
+    type: START_NEW_EVENT,
+  };
+}
+
+export function updateEvent(event: EventPropsType) {
   return {
     type: UPDATE_EVENT,
     event,
   };
 }
 
-export {
-  setEventModalOpen,
-  setEventModalClosed,
-  setEvent,
-  createEvent,
-  setEventModal,
-  updateEvent,
-};
+export function setEventModalAnimStart() {
+  return {
+    type: EVENT_MODAL_ANIM_START,
+  };
+}
+
+export function setEventModalAnimEnd() {
+  return {
+    type: EVENT_MODAL_ANIM_END,
+  };
+}
+
+
+

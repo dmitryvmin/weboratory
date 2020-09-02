@@ -4,12 +4,13 @@ import ReactDOM from "react-dom";
 import { BrowserRouter as Router } from "react-router-dom";
 import { ApolloProvider, ApolloClient, createHttpLink, InMemoryCache } from "@apollo/client";
 import { Provider } from "react-redux";
+import { Auth0Provider, useAuth0 } from "@auth0/auth0-react";
 
 // App
 import "./index.scss";
 import App from "./App";
 import history from "./utils/history";
-import { Auth0Provider } from "@utils/hooks/useAuth0";
+
 import { getEnv } from "@configs/env";
 import { configureStore } from "@stores/globalStore";
 
@@ -27,27 +28,20 @@ const client = new ApolloClient({
   cache,
 });
 
-const onRedirectCallback = (appState: any) => {
-  history.push(
-    appState && appState.targetUrl
-      ? appState.targetUrl
-      : window.location.pathname,
-  );
-};
+const domain = getEnv("AUTH_DOMAIN");
 
 const Root = ({ store }) => (
   <Provider store={store}>
     <ApolloProvider client={client}>
       <Router>
         <Auth0Provider
-          domain={getEnv("AUTH_DOMAIN")}
-          client_id={process.env.REACT_APP_AUTH_CLIENT_ID}
-          redirect_uri={window.location.origin}
-          onRedirectCallback={onRedirectCallback}
+          // domain={domain}
+          clientId={process.env.REACT_APP_AUTH_CLIENT_ID!}
+          // redirect_uri={window.location.origin}
+          domain="weboratory.auth0.com"
+          redirectUri={window.location.origin}
         >
-          {/*<Auth0LockProvider>*/}
           <App/>
-          {/*</Auth0LockProvider>*/}
         </Auth0Provider>
       </Router>
     </ApolloProvider>

@@ -1,5 +1,6 @@
 // Libs
-import React, { FC, memo, useCallback, useEffect, useMemo, useState } from "react";
+import React, { FC, memo, useCallback, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 // Styles
 import "mapbox-gl/dist/mapbox-gl.css";
@@ -13,9 +14,6 @@ import { Mapbox } from "@components/Map/constants";
 import { useMapStore } from "@stores/globalStore/stores/map/useMapStore";
 import { useEventsDataStore } from "@stores/globalStore/stores/eventsData/useEventsData";
 import { MapMarker } from "@components/Map/components/MapMarker/MapMarker";
-import { haveMapCenterCoordsChanged } from "@components/Map/utils/haveMapCenterCoordsChanged";
-import { hasMapZoomChanged } from "@components/Map/utils/hasMapZoomChanged";
-import { haveMapChildrenChanged } from "@components/Map/utils/haveMapChildrenChanged";
 
 /**
  * Map
@@ -114,10 +112,17 @@ const Map: FC<{}> = memo(() => {
     }
     return eventsData?.map((event, idx) => {
       return (
+        // <motion.div
+        //   key={`marker-${event.eventId}`}
+        //   initial={{opacity: 0}}
+        //   animate={{opacity: 1}}
+        //   exit={{opacity: 0}}
+        // >
         <MapMarker
           key={`marker-${event.eventId}-${idx}`}
           event={event}
         />
+        // </motion.div>
       );
     });
   };
@@ -128,7 +133,8 @@ const Map: FC<{}> = memo(() => {
       center={mapCenterCoords}
       zoom={[mapZoom]}
       pitch={[45]}
-      style="mapbox://styles/mapbox/streets-v8"
+      style="mapbox://styles/dmitrym/ckekc3x0c07fd19nyc74d7nr1"
+      // style="mapbox://styles/mapbox/streets-v8"
       className={styles.map}
       animationOptions={animationOptions}
       flyToOptions={flyToOptions}

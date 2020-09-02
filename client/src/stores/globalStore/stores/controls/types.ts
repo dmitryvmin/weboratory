@@ -1,5 +1,5 @@
-export type MainMenuStateType = "OPEN";
+export type MainMenuModeType = "OPEN" | "CLOSED";
 
 export type ControlsType = {
-  mainMenuState: MainMenuStateType;
+  mainMenuMode: MainMenuModeType;
 }

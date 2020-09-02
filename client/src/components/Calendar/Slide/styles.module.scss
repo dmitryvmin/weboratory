@@ -51,10 +51,12 @@
 .slideLabel {
   position: absolute;
   font-weight: 600;
-  //background-color: $color-neutral-0;
+  background-color: $color-neutral-0;
   margin: 2px;
   border-radius: $bradius_1;
   padding: 2px 5px;
+  bottom: 0;
+  z-index: $zi1;
 
   > div {
     user-select: none;
@@ -64,5 +66,4 @@
 .segmentLabel {
   text-align: center;
   margin-top: 5px;
-  //mix-blend-mode: screen;
 }

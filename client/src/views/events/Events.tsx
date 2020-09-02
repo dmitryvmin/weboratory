@@ -6,12 +6,13 @@ import ReactDependentScript from "react-dependent-script";
 import { PageContainer } from "@components/Page";
 import { Calendar } from "@components/Calendar";
 import { EventsApp } from "@components/Events";
+import { TimelineMenu } from "@components/Controls/TimelineMenu";
 
-// App
-import { CalendarProvider } from "@components/Calendar/store";
+// Stores
 import { EventsProvider } from "@stores/EventStore";
+
+// Constants
 import { GOOGLE_MAPS_API } from "../../constants";
-import { Timeline } from "@components/Controls/CalendarMenu";
 
 /**
  * Events Page
@@ -19,15 +20,13 @@ import { Timeline } from "@components/Controls/CalendarMenu";
 const Events = () => {
   return (
     <ReactDependentScript scripts={[GOOGLE_MAPS_API]}>
-      <CalendarProvider>
-        <EventsProvider>
-          <PageContainer>
-            <EventsApp/>
-            <Calendar/>
-            <Timeline/>
-          </PageContainer>
-        </EventsProvider>
-      </CalendarProvider>
+      <EventsProvider>
+        <PageContainer>
+          <EventsApp/>
+          <Calendar/>
+          <TimelineMenu/>
+        </PageContainer>
+      </EventsProvider>
     </ReactDependentScript>
   );
 };

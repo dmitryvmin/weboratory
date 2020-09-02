@@ -1,38 +1,40 @@
 // Libs
-import React, { CSSProperties, FC, memo, useEffect, useState } from "react";
+import React, { HTMLAttributes, DetailedHTMLProps, FC } from "react";
 import { motion, MotionStyle, TargetAndTransition, useAnimation, VariantLabels } from "framer-motion";
 import { format } from "date-fns";
 import { useSelector } from "react-redux";
 
 // Utils
-import { getSegDiff } from "../utils/getSegDiff";
 import { cn } from "@utils/css/getClassName";
+import { getChildTimePeriod } from "@utils/date/getChildTimePeriod";
+import { getDateFromMap } from "@utils/date/getDateFromMap";
+import { getParentTimePeriod } from "@utils/date/getParentTimePeriod";
+import { getEndOfPeriod } from "@utils/date/getEndOfPeriod";
+import { formatDateToMapKey } from "@utils/date/formatDateToMapKey";
+import { getSegDiff } from "@utils/date/getSegDiff";
 
 // UI
 import { Text } from "@components/UI/Text";
 
 // Calendar
-import { Dot } from "@components/Calendar/EventDot";
+import { CalendarMarker } from "@components/Calendar/CalendarMarker";
 
 // Constants
-import { DateFormatMap, SLIDER_MARGIN } from "@components/Calendar/constants";
+import { DateFormatMap, SegmentTimeFormatMap, SLIDER_MARGIN } from "@components/Calendar/constants";
 
 // Utils
-import { getDateFromMap } from "@components/Calendar/utils/getDateFromMap";
-import { getParentTimePeriod } from "@components/Calendar/utils/getParentTimePeriod";
-import { getChildTimePeriod } from "@components/Calendar/utils/getChildTimePeriod";
+
 
 // Styles
 import classNames from "./styles.module.scss";
 
 // Types
 import { SlideProps } from "./types";
-import { formatDateToMapKey } from "@components/Calendar/utils/formatDateToMapKey";
-import { useCalendar } from "@components/Calendar/hooks/useCalendar";
-import { useWindowSize } from "@utils/hooks/useWindowSize";
-import { getSegmentIdxFromDate } from "@components/Calendar/utils/getSegmentIdxFromDate";
-import { useEventStore } from "@stores/globalStore/stores/event/useEventStore";
+
+// Store
 import { useCalendarStore } from "@stores/globalStore/stores/calendar/useCalendarStore";
+import { useTimetableStore } from "@stores/globalStore/stores/timetable/utils/useTimetableStore";
+import { useSliderStore } from "@stores/globalStore/stores/slider/useSliderStore";
 
 type AnimationDefinition = VariantLabels | TargetAndTransition | any;
 
@@ -54,11 +56,14 @@ const Slide: FC<SlideProps> = ({
    * =============== Hooks ===============
    */
   const {
-    inViewEventsData,
     calTimePeriod,
     calStartDate,
-    slideWidth,
+    setHoveredSegment,
   } = useCalendarStore();
+
+  const { inViewEventsData } = useTimetableStore();
+
+  const { slideWidth } = useSliderStore();
 
   if (!inViewEventsData) {
     return null;
@@ -70,10 +75,22 @@ const Slide: FC<SlideProps> = ({
    * =============== Variables ===============
    */
   const calParentTimePeriod = getParentTimePeriod(calTimePeriod);
+
   const calChildTimePeriod = getChildTimePeriod(calTimePeriod);
+
   const isContainer = slideTimePeriod === calParentTimePeriod;
+
   const isSlide = slideTimePeriod === calTimePeriod;
+
   const isSegment = slideTimePeriod === calChildTimePeriod;
+
+  const slideDate = getDateFromMap(slideDateMap);
+
+  const className = cn(
+    classNames.slide,
+    isContainer && classNames.isContainer,
+    isSlide && classNames.isSlide,
+  );
 
   /**
    * =============== Effects ===============
@@ -92,15 +109,23 @@ const Slide: FC<SlideProps> = ({
   // ]);
 
   /**
-   * =============== Variables ===============
+   * Handlers
    */
-  const slideDate = getDateFromMap(slideDateMap);
-
-  const className = cn(
-    classNames.slide,
-    isContainer && classNames.isContainer,
-    isSlide && classNames.isSlide,
-  );
+  function getParams() {
+    if (isSegment) {
+      const params: DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> = {};
+      params.onMouseEnter = () => {
+        return setHoveredSegment({
+          startDate: slideDate,
+          endDate: getEndOfPeriod(slideTimePeriod, slideDate),
+        });
+      };
+      params.onMouseLeave = () => {
+        return setHoveredSegment(undefined);
+      };
+      return params;
+    }
+  }
 
   /**
    * Utils
@@ -143,29 +168,35 @@ const Slide: FC<SlideProps> = ({
    * =============== JSX ===============
    */
   function renderSlideLabel() {
-    if (isSlide) {
-      const dateFormat = DateFormatMap[slideTimePeriod];
-      const formattedDate = format(slideDate, dateFormat);
-      return (
-        <div className={classNames.slideLabel}>
-          <Text style="label1">
-            {`${formattedDate}`}
-          </Text>
-        </div>
-      );
+    if (!isSlide) {
+      return;
     }
+    const dateFormat = DateFormatMap[slideTimePeriod];
+    const formattedDate = format(slideDate, dateFormat);
+
+    return (
+      <div className={classNames.slideLabel}>
+        <Text style="label1">
+          {`${formattedDate}`}
+        </Text>
+      </div>
+    );
   }
 
   function renderSegmentLabel() {
-    if (isSegment) {
-      return (
-        <div className={classNames.segmentLabel}>
-          <Text style="label3">
-            {getSegmentIdxFromDate(slideTimePeriod, slideDate)}
-          </Text>
-        </div>
-      );
+    if (!isSegment || slideTimePeriod === "MINUTE") {
+      return;
     }
+    const dateFormat = SegmentTimeFormatMap[slideTimePeriod];
+    const formattedDate = format(slideDate, dateFormat);
+
+    return (
+      <div className={classNames.segmentLabel}>
+        <Text style="label3">
+          {`${formattedDate}`}
+        </Text>
+      </div>
+    );
   }
 
   function renderEvents() {
@@ -180,7 +211,7 @@ const Slide: FC<SlideProps> = ({
 
     return segmentEvents.map((event, idx) => {
       return (
-        <Dot
+        <CalendarMarker
           key={`${slideTimePeriod}-${slideDate}-${idx}`}
           event={event}
         />
@@ -250,7 +281,9 @@ const Slide: FC<SlideProps> = ({
     <div
       className={className}
       style={getStyle()}
+      {...getParams()}
     >
+      {renderSlideLabel()}
       {renderSegmentLabel()}
       {renderContent()}
     </div>

@@ -1,7 +1,7 @@
 /**
  * Utility Class
  */
-class ComponentUtils {
+class SearchUtils {
 
   /**
    */
@@ -11,4 +11,4 @@ class ComponentUtils {
 
 }
 
-export { ComponentUtils };
+export { SearchUtils };

@@ -16,4 +16,5 @@ export type TextProps = {
   style?: TextStyle;
   brightness?: "light" | "dark";
   className?: string;
+  el?: "p" | "span" | "h1" | "h2" | "h3";
 }

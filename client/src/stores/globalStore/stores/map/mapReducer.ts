@@ -4,7 +4,7 @@ import {
   MAP_CENTER_ON_ADDRESS,
   MAP_CENTER_ON_CLIENT,
   MAP_FLY_TO,
-  MAP_INSTANCE,
+  MAP_INSTANCE, MAP_MARKER_REFS,
   MAP_MOVE_ACTIVE,
   MAP_PADDING,
   MAP_REF,
@@ -34,6 +34,12 @@ function mapReducer(state = MapInitialState, action) {
       return ({
         ...state,
         mapRef: action.mapRef,
+      });
+
+    case MAP_MARKER_REFS:
+      return ({
+        ...state,
+        mapMarkerRefs: action.mapMarkerRefs,
       });
 
     case MAP_ZOOM:

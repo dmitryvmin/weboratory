@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 export type IIntersectionObserverHook = {
   threshold: number;
@@ -7,9 +7,10 @@ export type IIntersectionObserverHook = {
 }
 
 const useIntersectionObserver = (
-  ref,
+  ref: any,
   { threshold, root, rootMargin }: IIntersectionObserverHook,
 ) => {
+
   // configure the state
   const [state, setState] = useState<any>({
     inView: false,
@@ -17,34 +18,43 @@ const useIntersectionObserver = (
     entry: undefined,
   });
 
-  const observer = new IntersectionObserver(
-    (entries, observerInstance) => {
-      // checks to see if the element is intersecting
-      if (entries[0].intersectionRatio > 0) {
-        // if it is update the state, we set triggered as to not re-observe the element
-        setState({
-          inView: true,
-          triggered: true,
-          entry: observerInstance,
-        });
-        // unobserve the element
-        observerInstance.unobserve(ref.current);
-      }
+  const observer = useMemo(() => {
+    if (!ref || !root) {
       return;
-    },
-    {
-      threshold: threshold || 0,
-      root: root || null,
-      rootMargin: rootMargin || "0%",
-    },
-  );
+    }
+    return createObserver();
+  }, [ref, root])
+
+  function createObserver(){
+    return new IntersectionObserver(
+      (entries, observerInstance) => {
+        // checks to see if the element is intersecting
+        if (entries[0].intersectionRatio > 0) {
+          // if it is update the state, we set triggered as to not re-observe the element
+          setState({
+            inView: true,
+            triggered: true,
+            entry: observerInstance,
+          });
+          // unobserve the element
+          observerInstance?.unobserve(ref);
+        }
+        return;
+      },
+      {
+        threshold: threshold || 0,
+        root: root || null,
+        rootMargin: rootMargin || "0%",
+      },
+    );
+  }
 
   useEffect(() => {
     // check that the element exists, and has not already been triggered
-    if (ref.current && !state.triggered) {
-      observer.observe(ref.current);
+    if (ref && !state.triggered && observer) {
+      observer.observe(ref);
     }
-  });
+  }, [ref, root]);
 
   return [state.inView, state.entry];
 };

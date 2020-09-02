@@ -18,6 +18,7 @@ export const Auth0Provider = ({
   onRedirectCallback = DEFAULT_REDIRECT_CALLBACK,
   ...initOptions
 }: any) => {
+
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [user, setUser] = useState();
   const [auth0Client, setAuth0] = useState<Auth0Client>();
@@ -59,6 +60,7 @@ export const Auth0Provider = ({
       return;
     }
     setPopupOpen(true);
+
     try {
       await auth0Client.loginWithPopup(params);
     }

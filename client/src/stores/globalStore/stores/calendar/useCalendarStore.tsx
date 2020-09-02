@@ -1,26 +1,29 @@
 // Libs
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-// App
-import {
-  queryInViewEventsData,
-  setCalCurrentDate,
-  setSlideCount,
-  setSlideWidth,
-  setCalStartDate,
-  setCalTimePeriod,
-  setSliderXDistance, setCalOpen, setCalClosed,
-} from "@stores/globalStore/stores/calendar/calendarActions";
-import { TimePeriod } from "@components/Calendar/common/types";
+// Store
 import {
   getCalCurrentDate,
-  getSlideCount,
-  getSlideWidth,
   getCalStartDate,
   getCalTimePeriod,
-  getInViewEventsData, getSliderXDistance, getCalMode, getTimeTable,
+  getCalMode,
+  getHoveredSegment,
 } from "@stores/globalStore/stores/calendar/calendarSelectors";
+import {
+  setCalCurrentDate,
+  setCalStartDate,
+  setCalTimePeriod,
+  setCalMode, setHoveredSegment,
+} from "@stores/globalStore/stores/calendar/calendarActions";
+
+// Types
+import { SegmentType } from "@stores/globalStore/stores/calendar/types";
+import { TimePeriod } from "@components/Calendar/common/types";
+
+// Utils
+import { getParentTimePeriod } from "@utils/date/getParentTimePeriod";
+import { getChildTimePeriod } from "@utils/date/getChildTimePeriod";
 
 /**
  * Map store facade
@@ -35,24 +38,35 @@ export function useCalendarStore() {
   /**
    * Selectors
    */
-  const inViewEventsData = useSelector(getInViewEventsData);
-  const slideCount = useSelector(getSlideCount);
-  const slideWidth = useSelector(getSlideWidth);
   const calTimePeriod = useSelector(getCalTimePeriod);
+
   const calCurrentDate = useSelector(getCalCurrentDate);
+
   const calStartDate = useSelector(getCalStartDate);
-  const sliderXDistance = useSelector(getSliderXDistance);
+
   const calMode = useSelector(getCalMode);
-  const timeTable = useSelector(getTimeTable);
+
+  const hoveredSegment: SegmentType = useSelector(getHoveredSegment);
+
+  const isCalAtMinPeriod = useMemo(
+    () => calTimePeriod === "HOUR",
+    [
+      dispatch,
+      calTimePeriod,
+    ],
+  );
+
+  const isCalAtMaxPeriod = useMemo(
+    () => calTimePeriod === "YEAR",
+    [
+      dispatch,
+      calTimePeriod,
+    ],
+  );
 
   /**
    * Dispatchers
    */
-  const _queryInViewEventsData = useCallback(
-    () => dispatch(queryInViewEventsData()),
-    [dispatch],
-  );
-
   const _setCalCurrentDate = useCallback(
     (date: Date) => dispatch(setCalCurrentDate(date)),
     [dispatch],
@@ -63,54 +77,73 @@ export function useCalendarStore() {
     [dispatch],
   );
 
-  const _setSliderXDistance = useCallback(
-    (sliderXDistance) => dispatch(setSliderXDistance(sliderXDistance)),
-    [dispatch],
-  );
-
   const _setCalTimePeriod = useCallback(
     (timePeriod: TimePeriod) => dispatch(setCalTimePeriod(timePeriod)),
     [dispatch],
   );
 
-  const _setSlideCount = useCallback(
-    (slideCount: number) => dispatch(setSlideCount(slideCount)),
+  const setCalOpen = useCallback(
+    () => dispatch(setCalMode("DOCKED")),
     [dispatch],
   );
 
-  const _setSlideWidth = useCallback(
-    (slideWidth: number) => dispatch(setSlideWidth(slideWidth)),
+  const setCalClosed = useCallback(
+    () => dispatch(setCalMode("CLOSED")),
     [dispatch],
   );
 
-  const _setCalOpen = useCallback(
-    () => dispatch(setCalOpen()),
+  const _setHoveredSegment = useCallback(
+    (hoveredSegment) => dispatch(setHoveredSegment(hoveredSegment)),
     [dispatch],
   );
 
-  const _setCalClosed = useCallback(
-    () => dispatch(setCalClosed()),
-    [dispatch],
+  const calPeriodZoomIn = useCallback(
+    () => {
+      // If we can't zoom in any more, return
+      if (isCalAtMinPeriod) {
+        return;
+      }
+      const timePeriod = getChildTimePeriod(calTimePeriod);
+      return dispatch(setCalTimePeriod(timePeriod));
+     },
+    [
+      dispatch,
+      calTimePeriod,
+      isCalAtMinPeriod,
+    ],
+  );
+
+  const calPeriodZoomOut = useCallback(
+    () => {
+      // If we can't zoom out any more, return
+      if (isCalAtMaxPeriod) {
+        return;
+      }
+      const timePeriod = getParentTimePeriod(calTimePeriod);
+      return dispatch(setCalTimePeriod(timePeriod));
+    },
+    [
+      dispatch,
+      calTimePeriod,
+      isCalAtMaxPeriod,
+    ],
   );
 
   return ({
     calMode,
-    inViewEventsData,
     calTimePeriod,
     calCurrentDate,
     calStartDate,
-    slideCount,
-    slideWidth,
-    sliderXDistance,
-    timeTable,
-    queryInViewEventsData: _queryInViewEventsData,
+    isCalAtMaxPeriod,
+    isCalAtMinPeriod,
+    calPeriodZoomIn,
+    calPeriodZoomOut,
+    hoveredSegment,
     setCalCurrentDate: _setCalCurrentDate,
     setCalStartDate: _setCalStartDate,
     setCalTimePeriod: _setCalTimePeriod,
-    setSlideCount: _setSlideCount,
-    setSlideWidth: _setSlideWidth,
-    setSliderXDistance: _setSliderXDistance,
-    setCalOpen: _setCalOpen,
-    setCalClosed: _setCalClosed,
+    setHoveredSegment: _setHoveredSegment,
+    setCalOpen,
+    setCalClosed,
   });
 }

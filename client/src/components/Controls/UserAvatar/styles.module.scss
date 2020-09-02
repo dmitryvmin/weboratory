@@ -1,0 +1,39 @@
+@import "../../../styles/zIndex";
+@import "../../../styles/colors";
+@import "../../../styles/shadows";
+
+.UserAvatar {
+  position: absolute;
+  z-index: $zi2;
+  border-radius: 50%;
+  background-color: $color-neutral-0;
+  box-shadow: $shadow_1;
+  width: 100px;
+  height: 100px;
+  top: 10px;
+  left: 10px;
+}
+
+.Avatar {
+  height: 100px;
+  width: 100px;
+  border-radius: 50%;
+}
+
+.Image {
+  max-width: inherit;
+  @keyframes loaded {
+    0% {
+      opacity: 0.1;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  &.loaded:not(.has-error) {
+    animation: loaded 300ms ease-in-out;
+  }
+  &.has-error {
+    content: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkqAcAAIUAgUW0RjgAAAAASUVORK5CYII=');
+  }
+}

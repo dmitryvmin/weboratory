@@ -1,15 +1,33 @@
 // Libs
 import { useCallback } from "react";
-import { useSelector, useDispatch } from "react-redux";
 import {
+  useSelector,
+  useDispatch,
+} from "react-redux";
+
+// Actions
+import {
+  openEventFromMarker,
   setEvent,
-  setEventModal,
-  setEventModalClosed,
-  setEventModalOpen, updateEvent,
+  setEventModal, setEventModalAnimEnd, setEventModalAnimStart,
+  setEventModalMode,
+  startNewEvent,
+  updateEvent,
 } from "@stores/globalStore/stores/event/eventActions";
-import { getEvent, getEventModal, getIsEventModalOpen } from "@stores/globalStore/stores/event/eventSelectors";
+
+// Selectors
+import {
+  getEvent,
+  getEventModal,
+  getIsEventModalOpen,
+} from "@stores/globalStore/stores/event/eventSelectors";
+
+// Types
 import { IEvent } from "@common/types";
-import { EventModalType, EventPropsType } from "@stores/globalStore/stores/event/types";
+import {
+  EventModalType,
+  EventPropsType,
+} from "@stores/globalStore/stores/event/types";
 
 /**
  * Map store facade
@@ -24,9 +42,11 @@ export function useEventStore() {
   /**
    * Selectors
    */
-  const isEventModalOpen = useSelector(getIsEventModalOpen);
-  const eventModal = useSelector(getEventModal);
-  const event = useSelector(getEvent);
+  const isEventModalOpen: boolean = useSelector(getIsEventModalOpen);
+
+  const eventModal: EventModalType = useSelector(getEventModal);
+
+  const event: IEvent = useSelector(getEvent);
 
   /**
    * Dispatchers
@@ -48,12 +68,34 @@ export function useEventStore() {
   );
 
   const _setEventModalClosed = useCallback(
-    () => dispatch(setEventModalClosed()),
+    () => dispatch(setEventModalMode("CLOSED")),
     [dispatch],
   );
 
   const _setEventModalOpen = useCallback(
-    () => dispatch(setEventModalOpen()),
+    () => dispatch(setEventModalMode("OPEN")),
+    [dispatch],
+  );
+
+  const _startNewEvent = useCallback(
+    () => dispatch(startNewEvent()),
+    [dispatch],
+  );
+
+  const _openEventFromMarker = useCallback(
+    (event: EventPropsType, eventModal: EventModalType) => {
+      return dispatch(openEventFromMarker(event, eventModal));
+    },
+    [dispatch],
+  );
+
+  const _setEventModalAnimStart = useCallback(
+    () => dispatch(setEventModalAnimStart()),
+    [dispatch],
+  );
+
+  const _setEventModalAnimEnd = useCallback(
+    () => dispatch(setEventModalAnimEnd()),
     [dispatch],
   );
 
@@ -63,6 +105,10 @@ export function useEventStore() {
     setEventModal: _setEventModal,
     setEventModalOpen: _setEventModalOpen,
     setEventModalClosed: _setEventModalClosed,
+    startNewEvent: _startNewEvent,
+    openEventFromMarker: _openEventFromMarker,
+    setEventModalAnimEnd: _setEventModalAnimEnd,
+    setEventModalAnimStart: _setEventModalAnimStart,
     isEventModalOpen,
     eventModal,
     event,

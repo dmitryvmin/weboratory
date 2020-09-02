@@ -7,13 +7,13 @@ import { motion } from "framer-motion";
 import {User} from "@components/UI/Icon";
 
 // Utils
-import { useAuth0 } from "../../../utils/hooks/useAuth0";
 
 // Styles
 import classnames from "./styles.module.scss";
 import { Button } from "@components/UI/Button";
 import { useWindowSize } from "@utils/hooks/useWindowSize";
 import { NavigationMenu } from "@components/Navigation/NavigationMenu";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const transition = {
   duration: 1,
@@ -40,16 +40,22 @@ const items: INavItem[] = [
   // { icon: null, to: "/design", label: "Design" },
   // { icon: null, to: "/projects", label: "Projects" },
   { icon: null, to: "/events", label: "Events" },
-  {
-    icon: <User />,
-    to: "/profile",
-    label: "Profile",
-  },
+  // {
+  //   icon: <User />,
+  //   to: "/profile",
+  //   label: "Profile",
+  // },
 ];
 
 const Nav = () => {
   const location = useLocation();
-  const { isAuthenticated, loginWithPopup, logout } = useAuth0();
+
+  const {
+    isAuthenticated,
+    loginWithPopup,
+    logout,
+  } = useAuth0();
+
   const { windowWidth } = useWindowSize();
 
   const renderDesktop = () => {
@@ -73,7 +79,7 @@ const Nav = () => {
           {!isAuthenticated && (
             <Button
               className={classnames.logInBtn}
-              onClick={() => loginWithPopup({})}
+              onClick={loginWithPopup}
             >
               Log in
             </Button>
@@ -81,7 +87,7 @@ const Nav = () => {
           {isAuthenticated &&
           <Button
             className={classnames.logInBtn}
-            onClick={() => logout()}
+            onClick={() => logout({ returnTo: window.location.origin })}
           >
             Log out
           </Button>

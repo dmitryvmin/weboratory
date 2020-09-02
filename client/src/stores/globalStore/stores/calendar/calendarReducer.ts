@@ -1,19 +1,13 @@
 // App
 import { calenderInitialState } from "@stores/globalStore/stores/calendar/calendarDefaults";
-import {
+import {calendarConstants} from "@stores/globalStore/stores/calendar/calendarConstants";
+const {
   CAL_CURRENT_DATE,
   CAL_START_DATE,
   CAL_TIME_PERIOD,
-  IN_VIEW_EVENTS_DATA,
-  QUERY_IN_VIEW_EVENTS_DATA,
-  SLIDER_X_DISTANCE,
-  SLIDE_COUNT,
-  SLIDE_WIDTH,
   CAL_MODE,
-  TOGGLE_CAL_OPEN,
-  TOGGLE_CAL_CLOSED, CAL_TIMETABLE, TIMETABLE_INTERVALS,
-} from "@stores/globalStore/stores/calendar/calendarConstants";
-import { deriveCalMode } from "@stores/globalStore/stores/calendar/utils/deriveCalMode";
+  HOVERED_SEGMENT,
+} = calendarConstants;
 
 function calendarReducer(state = calenderInitialState, action) {
   switch (action.type) {
@@ -24,52 +18,16 @@ function calendarReducer(state = calenderInitialState, action) {
         calMode: action.calMode,
       });
 
-    case CAL_TIMETABLE:
+    case HOVERED_SEGMENT:
       return ({
         ...state,
-        timeTable: action.timeTable,
-      });
-
-    case TIMETABLE_INTERVALS:
-      return ({
-        ...state,
-        timeTableIntervals: action.timeTableIntervals,
-      });
-
-    case TOGGLE_CAL_OPEN:
-      return ({
-        ...state,
-        calMode: deriveCalMode(state.calMode, true) ?? state.calMode,
-      });
-
-    case TOGGLE_CAL_CLOSED:
-      return ({
-        ...state,
-        calMode: deriveCalMode(state.calMode, false) ?? state.calMode,
+        hoveredSegment: action.hoveredSegment,
       });
 
     case CAL_TIME_PERIOD:
       return ({
         ...state,
         calTimePeriod: action.calTimePeriod,
-      });
-
-    case SLIDE_WIDTH:
-      return ({
-        ...state,
-        slideWidth: action.slideWidth,
-      });
-
-    case SLIDE_COUNT:
-      return ({
-        ...state,
-        slideCount: action.slideCount,
-      });
-
-    case SLIDER_X_DISTANCE:
-      return ({
-        ...state,
-        sliderXDistance: action.sliderXDistance,
       });
 
     case CAL_START_DATE:
@@ -82,17 +40,6 @@ function calendarReducer(state = calenderInitialState, action) {
       return ({
         ...state,
         calCurrentDate: action.calCurrentDate,
-      });
-
-    case IN_VIEW_EVENTS_DATA:
-      return ({
-        ...state,
-        inViewEventsData: action.inViewEventsData,
-      });
-
-    case QUERY_IN_VIEW_EVENTS_DATA:
-      return ({
-        ...state,
       });
 
     default:
