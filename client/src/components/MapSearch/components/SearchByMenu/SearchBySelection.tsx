@@ -56,7 +56,7 @@ export const SearchBySelection = () => {
   /**
    * ========== Component hooks
    */
-  const [isSelMenuOpen, setSelMenuTo] = useState<boolean>(false);
+  const [isSelMenuOpen, setSelMenuTo] = useState<boolean>(true);
 
   const [isDragActive, setDragActiveTo] = useState(false);
 
@@ -103,7 +103,9 @@ export const SearchBySelection = () => {
     const activeIdx = getItemIdx(searchBy);
     const activeYOffset = getMenuOffsetForItem(activeIdx);
 
-    menuY.set(activeYOffset);
+    const curY = menuY.get();
+
+    menuY.set(curY + activeYOffset);
   }, [
     searchBy,
   ]);
@@ -111,9 +113,6 @@ export const SearchBySelection = () => {
   // useEffect(() => {
   //
   //   menuY.onChange(latest => {
-  //
-  //
-  //
   //   });
   //
   // }, [
@@ -123,27 +122,6 @@ export const SearchBySelection = () => {
   /**
    * ========== Utils
    */
-  // function handleOnDrag(event, info) {
-  //   const y = info.offset.y;
-  //
-  //   for (let i = 0; i < EventSearchCriteria.length; i++) {
-  //     const thisItem = EventSearchCriteria[i];
-  //     const target = itemHeight * 1;
-  //     // const y = menuY.get();
-  //
-  //     if (y < target - 15 && target - 30 < y) {
-  //
-  //       console.log("================", y, target);
-  //
-  //       const activeIdx = getItemIdx(searchBy);
-  //       const activeYOffset = getMenuOffsetForItem(activeIdx);
-  //
-  //       menuY.set(activeYOffset);
-  //       break;
-  //     }
-  //   }
-  // }
-
   // function handleItemClick(item) {
   //   if (!isSelMenuOpen) {
   //     return;
@@ -163,16 +141,16 @@ export const SearchBySelection = () => {
     // if (isDragActive) {
     //   return;
     // }
-    setDragActiveTo(true);
-    setSelMenuTo(true);
+    // setDragActiveTo(true);
+    // setSelMenuTo(true);
   }
 
   function handleMouseLeave() {
     // if (!isDragActive) {
     //   return;
     // }
-    setDragActiveTo(false);
-    setSelMenuTo(false);
+    // setDragActiveTo(false);
+    // setSelMenuTo(false);
   }
 
   function handleDragEnd() {
@@ -184,7 +162,7 @@ export const SearchBySelection = () => {
     // setDragActiveTo(false);
   }
 
-  console.log("$$$$", isDragActive);
+  console.log("$$$$", menuY);
 
   /**
    * ========== JSX
@@ -196,18 +174,21 @@ export const SearchBySelection = () => {
       onMouseEnter={handleMouseEnter}
     >
       <motion.div
-        drag={isDragActive ? "y" : false}
+        drag="y"
+        // drag={isDragActive ? "y" : false}
         style={{
           y: menuY,
           x: 1,
         }}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        // onDrag={handleOnDrag}
+        onDrag={(event, info) => {
+           menuY.set(info.offset.y);
+        }}
         // Cant be dragged further than...
         dragConstraints={{
-          top: -(itemCount % 2) * itemHeight - 8,
-          bottom: (itemCount + 1) * itemHeight + 12,
+          top: 0,
+          bottom: 185,
         }}
         // style={{
         //   height: menuHeight,

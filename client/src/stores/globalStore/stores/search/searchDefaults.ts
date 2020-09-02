@@ -3,7 +3,7 @@ import { EventSearchCriterium, SearchStateType } from "@stores/globalStore/store
 export const searchInitialState: SearchStateType = {
   searchMode: "OPEN",
   searchedAddress: undefined,
-  searchBy: "tags",
+  searchBy: "info",
 };
 
 export const EventSearchCriteria: EventSearchCriterium[] = [
