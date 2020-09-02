@@ -20,13 +20,13 @@ import { checkIsMarkerHovered } from "@components/Map/components/MapMarker/utils
 import { useMapStore } from "@stores/globalStore/stores/map/useMapStore";
 
 const transitionMarkerIn = {
-  ease: "easeInOut",
+  ease: "easeIn",
   duration: 0.3,
 };
 
 const transitionMarkerBounce = {
   yoyo: Infinity,
-  ease: "easeInOut",
+  ease: "easeIn",
   duration: 1,
 };
 
@@ -74,10 +74,6 @@ const MapMarker: FC<TMapMarkerProps> = ({ event }) => {
     time,
   } = event;
 
-  if (!coordinates) {
-    return null;
-  }
-
   const markerCoordsTuple = getLngLatTuple(coordinates);
 
   const titleBBox = getPositionFromTarget(titleRef.current);
@@ -85,12 +81,21 @@ const MapMarker: FC<TMapMarkerProps> = ({ event }) => {
   const isMarkerHovered = checkIsMarkerHovered(time, hoveredSegment);
 
   const POIVariants = {
+    closed: {
+      x: -5,
+      y: -5,
+      width: 30,
+      height: 30,
+      rotate: 45,
+      scale: 0.1,
+    },
     default: {
       x: -5,
       y: -5,
       width: 30,
       height: 30,
       rotate: 45,
+      scale: 1,
     },
     hovered: {
       x: -5,
@@ -102,25 +107,39 @@ const MapMarker: FC<TMapMarkerProps> = ({ event }) => {
     },
     bounce: {
       y: -10,
+      rotate: 45,
       transition: transitionMarkerBounce,
     },
   };
 
   const TitleVariants = {
-    default: {
-      x: titleBBox?.width ? -titleBBox.width / 2 + 10 : 0,
+    closed: (bbox) => ({
+      x: "-50%",
+      // x: bbox?.width ? -bbox.width / 2 : 0,
+      y: -30,
+      scale: 0.1,
+    }),
+    default: (bbox) => ({
+      x: "-50%",
+      // x: bbox?.width ? -bbox.width / 2 : 0,
       y: -40,
-    },
-    hovered: {
-      x: titleBBox?.width ? -titleBBox.width / 2 + 15 : 0,
-      y: -50,
+      scale: 1,
       transition: transitionMarkerIn,
-    },
-    bounce: {
-      x: titleBBox?.width ? -titleBBox.width / 2 + 15 : 0,
+    }),
+    hovered: (bbox) => ({
+      x: "-50%",
+      // x: bbox?.width ? -bbox.width / 2 : 0,
+      y: -50,
+      scale: 1,
+      transition: transitionMarkerIn,
+    }),
+    bounce: (bbox) => ({
+      x: "-50%",
+      // x: bbox?.width ? -bbox.width / 2 : 0,
       y: -45,
+      scale: 1,
       transition: transitionMarkerBounce,
-    },
+    }),
   };
 
   /**
@@ -207,12 +226,15 @@ const MapMarker: FC<TMapMarkerProps> = ({ event }) => {
       anchor="bottom"
     >
       <>
-        {title &&
+        {(title) &&
         <motion.div
           ref={titleRef}
           animate={TitleControls}
           className={styles.title}
           custom={titleBBox}
+          variants={TitleVariants}
+          initial="closed"
+          exit="closed"
         >
           {title}
         </motion.div>
@@ -225,6 +247,9 @@ const MapMarker: FC<TMapMarkerProps> = ({ event }) => {
           animate={POIControls}
           className={styles.poi}
           onClick={handleMarker}
+          variants={POIVariants}
+          initial="closed"
+          exit="closed"
         >
         </motion.div>
         {isMarkerHovered && <div className={styles.pulse}/>}
