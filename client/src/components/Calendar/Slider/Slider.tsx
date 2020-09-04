@@ -36,6 +36,7 @@ import { TimePeriod } from "@components/Calendar/common/types";
 import { cn } from "@utils/css/getClassName";
 import { useSliderStore } from "@stores/globalStore/stores/slider/useSliderStore";
 import { useTimetableStore } from "@stores/globalStore/stores/timetable/utils/useTimetableStore";
+import { ValueOf } from "@utils/ts";
 
 /**
  * Slider
@@ -71,7 +72,7 @@ const Slider: FC<SliderProps> = memo(() => {
    */
   const [slidesTraveled, setSlidesTraveled] = useState<number>(0);
 
-  const [dragStatus, setDragStatus] = useState(DRAG_STATUS.NONE);
+  const [dragStatus, setDragStatus] = useState(DRAG_STATUS.INACTIVE);
 
   const slidesTraveledRef = useRef<number>(0);
 
@@ -222,11 +223,11 @@ const Slider: FC<SliderProps> = memo(() => {
       onDrag: ({ down, movement: [mx, my], first, last }) => {
         if (first) {
           isDragging.current = true;
-          setDragStatus(DRAG_STATUS.DRAG_STARTED);
+          setDragStatus(DRAG_STATUS.ACTIVE);
         }
         else if (last) {
           requestAnimationFrame(() => (isDragging.current = false));
-          setDragStatus(DRAG_STATUS.DRAG_ENDED);
+          setDragStatus(DRAG_STATUS.INACTIVE);
         }
         setSpring({
           x: mx,
@@ -253,7 +254,7 @@ const Slider: FC<SliderProps> = memo(() => {
   }
 
   // function getCursorCSSProp() {
-  //   if (dragStatus === DRAG_STATUS.DRAG_STARTED) {
+  //   if (dragStatus === DRAG_STATUS.ACTIVE) {
   //     return ({ cursor: "grabbing" });
   //   }
   //   else {
@@ -264,7 +265,7 @@ const Slider: FC<SliderProps> = memo(() => {
   function getClassNames() {
     return cn(
       classNames.SlidesContainer,
-      (dragStatus === DRAG_STATUS.DRAG_STARTED)
+      (dragStatus === DRAG_STATUS.ACTIVE)
         ? classNames.cursorDrag
         : classNames.cursorDefault,
     )

@@ -1,1 +1,1 @@
-export * from "./SearchBySelection";
+export * from "./SearchByMenu";

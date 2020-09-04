@@ -1,8 +1,11 @@
 // Libs
 import React, { FC, useContext, useEffect, useRef, useState, Suspense } from "react";
 import { motion, motionValue, useAnimation, useMotionValue } from "framer-motion";
+import { useAuth0 } from "@auth0/auth0-react";
+import { log } from "@dmitrymin/fe-log";
 
 // Components
+import { LazyImage } from "@components/Controls/UserAvatar/Image";
 
 // Styles
 import classNames from "./styles.module.scss";
@@ -12,12 +15,7 @@ import classNames from "./styles.module.scss";
 // Store
 
 // Types
-export type ITimeline = any;
 import { UserAvatarProps } from "@components/Controls/UserAvatar/types";
-import { Auth0Context } from "@utils/hooks/useAuth0";
-import { log } from "@dmitrymin/fe-log";
-import { useAuth0 } from "@auth0/auth0-react";
-import { LazyImage } from "@components/Controls/UserAvatar/Image";
 
 /**
  * Timeline Controls

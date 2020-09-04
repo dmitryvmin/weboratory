@@ -4,30 +4,32 @@
 @import "../../../../styles/colors";
 
 .Track {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 84px;
-  height: 35px;
-  margin: 4px 2px;
-  //border: 1px solid #7b7b7b;
-  border-radius: 2px;
+  //position: absolute;
+  //bottom: $size_1;
+  margin-left: $size_2;
+  width: 80px;
+  height: 40px;
 }
 
-.SelMenu {
-  position: relative;
+.Menu {
+  //position: relative;
+  //cursor: grab;
 }
 
 .Item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ItemInner {
   background-color: $color-primary;
   border-radius: $bradius_1;
   display: flex;
-  justify-content: center;
-  margin-bottom: 4px;
-  margin-top: 4px;
+  align-items: center;
+  width: 100%;
 
   > p {
-    margin-top: 7px;
     text-align: center;
     width: 100%;
   }

@@ -127,7 +127,7 @@ const EventsApp: React.FC = () => {
 
       <EventModal menuNode={menuNode1}/>
 
-      <MapSearch menuNode={menuNode2}/>
+      {menuNode2 && <MapSearch menuNode={menuNode2}/>}
 
       <Map />
     </div>

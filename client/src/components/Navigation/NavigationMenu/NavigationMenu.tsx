@@ -13,7 +13,7 @@ import { INavItem } from "@components/Navigation/Nav/Nav";
 import styles from "../NavigationMenu/styles.module.scss";
 
 // Common
-import { MENU_SIZE } from "@common/constants";
+import { SIZE_5 } from "@common/constants";
 
 import { NavigationMenuItem } from "@components/Navigation/NavigationMenu/types";
 import { getTransformValues } from "@components/Navigation/NavigationMenu/utils/getTransformValues";
@@ -44,13 +44,13 @@ const MenuItem: FC<NavigationMenuItem> = ({
   return (
     <motion.div
       initial={{
-        x: MENU_SIZE / 2,
-        y: MENU_SIZE / 2,
+        x: SIZE_5 / 2,
+        y: SIZE_5 / 2,
         scale: 0,
       }}
       animate={{
-        x: [MENU_SIZE / 2, ...xTransform],
-        y: [MENU_SIZE / 2, ...yTransform],
+        x: [SIZE_5 / 2, ...xTransform],
+        y: [SIZE_5 / 2, ...yTransform],
         scale: [0, 1],
         transition: {
           duration: 0.1,
@@ -59,8 +59,8 @@ const MenuItem: FC<NavigationMenuItem> = ({
         },
       }}
       exit={{
-        x: [...xTransform.reverse(), MENU_SIZE / 2],
-        y: [...yTransform.reverse(), MENU_SIZE / 2],
+        x: [...xTransform.reverse(), SIZE_5 / 2],
+        y: [...yTransform.reverse(), SIZE_5 / 2],
         scale: [1, 0],
         transition: {
           duration: 0.1,

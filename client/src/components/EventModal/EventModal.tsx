@@ -18,7 +18,7 @@ import { useEvents } from "@stores/EventStore";
 import { getPositionFromTarget } from "@components/Events/utils/getPositionFromTarget";
 
 // Constants
-import { MENU_SIZE, PADDING_1, PADDING_2, TIMELINE_HEIGHT } from "@common/constants";
+import { SIZE_5 } from "@common/constants";
 import { ModalContent } from "./ModalContent";
 import { useEventStore } from "@stores/globalStore/stores/event/useEventStore";
 import { getIsEventModalOpen } from "@stores/globalStore/stores/event/eventSelectors";
@@ -77,18 +77,18 @@ const EventModal: FC<any> = ({ menuNode }) => {
       transition: transitionEventModal,
     }),
     closedOnMenuItem: {
-      width: MENU_SIZE,
-      height: MENU_SIZE,
+      width: SIZE_5,
+      height: SIZE_5,
       x: menuBBox?.x,
       y: menuBBox?.y,
       borderRadius: "50%",
       transition: transitionEventModal,
     },
     closedOnMenuOrigin: {
-      width: MENU_SIZE,
-      height: MENU_SIZE,
-      x: (windowWidth / 2) - (MENU_SIZE / 2),
-      y: windowHeight - TIMELINE_HEIGHT,
+      width: SIZE_5,
+      height: SIZE_5,
+      x: (windowWidth / 2) - (SIZE_5 / 2),
+      y: windowHeight - SIZE_5,
       borderRadius: "50%",
       transition: transitionEventModal,
     },

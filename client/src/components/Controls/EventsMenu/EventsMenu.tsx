@@ -12,7 +12,7 @@ import { useWindowSize } from "@utils/hooks/useWindowSize";
 import classNames from "./styles.module.scss";
 
 // Store
-import { MENU_SIZE, PADDING_2 } from "@common/constants";
+import { SIZE_5, SIZE_2 } from "@common/constants";
 import { useEventStore } from "@stores/globalStore/stores/event/useEventStore";
 import { useSearchStore } from "@stores/globalStore/stores/search/useSearchStore";
 import { useControlsStore } from "@stores/globalStore/stores/controls/useControlsStore";
@@ -102,8 +102,8 @@ const EventsMenu: FC<any> = ({menuRefs}) => {
   };
 
   const styles = {
-    x: (windowWidth / 2) - (MENU_SIZE / 2),
-    y: windowHeight - MENU_SIZE - PADDING_2,
+    x: (windowWidth / 2) - (SIZE_5 / 2),
+    y: windowHeight - SIZE_5 - SIZE_2,
   };
 
   /**

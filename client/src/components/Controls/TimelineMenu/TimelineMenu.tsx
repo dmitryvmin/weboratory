@@ -17,7 +17,7 @@ import styles from "./styles.module.scss";
 import { useWindowSize } from "@utils/hooks/useWindowSize";
 
 // Constants
-import { TIMELINE_HEIGHT, DRAG_STATUS } from "@common/constants";
+import { SIZE_5, DRAG_STATUS } from "@common/constants";
 
 // Store
 import { useControlsStore } from "@stores/globalStore/stores/controls/useControlsStore";
@@ -55,7 +55,7 @@ const TimelineMenu: FC<ITimeline> = () => {
   /**
    * Component hooks
    */
-  const [dragStatus, setDragStatus] = useState(DRAG_STATUS.NONE);
+  const [dragStatus, setDragStatus] = useState(DRAG_STATUS.INACTIVE);
 
   const constraintsRef = useRef<HTMLDivElement>(null);
 
@@ -82,12 +82,12 @@ const TimelineMenu: FC<ITimeline> = () => {
     };
 
   const handleDragStart = (event, info) => {
-    setDragStatus(DRAG_STATUS.DRAG_STARTED);
+    setDragStatus(DRAG_STATUS.ACTIVE);
   };
 
   const handleDragEnd = (event, info) => {
     isDragging.current = false;
-    setDragStatus(DRAG_STATUS.DRAG_ENDED);
+    setDragStatus(DRAG_STATUS.INACTIVE);
   };
 
   /**
@@ -100,7 +100,7 @@ const TimelineMenu: FC<ITimeline> = () => {
         ref={constraintsRef}
         className={styles.timelineContainer}
         style={{
-          top: windowHeight - TIMELINE_HEIGHT,
+          top: windowHeight - SIZE_5,
         }}
       >
         <SVGBlob/>

@@ -3,7 +3,7 @@ import React, { FC } from "react";
 import { motion } from "framer-motion";
 
 // App
-import { MENU_SIZE } from "@common/constants";
+import { SIZE_5 } from "@common/constants";
 import classNames from "./styles.module.scss";
 import {MenuItemPropsType} from "./types";
 
@@ -17,8 +17,8 @@ export const MenuItem: FC<MenuItemPropsType> = ({
       ref={item.ref}
       onClick={item.onClick}
       initial={{
-        x: MENU_SIZE / 2,
-        y: MENU_SIZE / 2,
+        x: SIZE_5 / 2,
+        y: SIZE_5 / 2,
         scale: 0,
       }}
       animate={{
@@ -32,8 +32,8 @@ export const MenuItem: FC<MenuItemPropsType> = ({
         },
       }}
       exit={{
-        x: MENU_SIZE / 2,
-        y: MENU_SIZE / 2,
+        x: SIZE_5 / 2,
+        y: SIZE_5 / 2,
         scale: 0,
         transition: {
           duration: 0.1,

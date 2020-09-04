@@ -1,10 +1,26 @@
-export const MENU_SIZE = 50;
-export const TIMELINE_HEIGHT = 50;
-export const PADDING_1 = 10;
-export const PADDING_2 = 20;
+export const SIZE_1 = 10;
+export const SIZE_2 = 20;
+export const SIZE_3 = 30;
+export const SIZE_4 = 40;
+export const SIZE_5 = 50;
 
 export const DRAG_STATUS = {
-  NONE: "none",
-  DRAG_STARTED: "drag started",
-  DRAG_ENDED: "drag ended",
+  ACTIVE: "ACTIVE",
+  INACTIVE: "INACTIVE",
+  // STARTED: "drag started",
+  // ENDED: "drag ended",
+};
+
+export const TRANS_MAP = {
+  LINEAR: "linear",
+  EASE_IN: "easeIn",
+  EASE_OUT: "easeOut",
+  EASE_IN_OUT: "easeInOut",
+  CIRC_IN: "circIn",
+  CIRC_OUT: "circOut",
+  CIRC_IN_OUT: "circInOut",
+  BACK_IN: "backIn",
+  BACK_OUT: "backOut",
+  BACK_IN_OUT: "backInOut",
+  ANTICIPATE: "anticipate",
 };

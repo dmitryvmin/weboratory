@@ -1,6 +1,6 @@
 // Libs
 import React, { FC, useRef, ChangeEvent, useState, useEffect } from "react";
-import { AnimatePresence, motion, useAnimation } from "framer-motion";
+import { AnimatePresence, motion, useAnimation, VariantLabels } from "framer-motion";
 
 // Utils
 import { useWindowSize } from "@utils/hooks/useWindowSize";
@@ -18,21 +18,44 @@ import { useMapStore } from "@stores/globalStore/stores/map/useMapStore";
 import { useMutationObserver } from "@utils/hooks/useMutationObserver";
 import { Close, Plus } from "@components/UI/Icon";
 import { PredictionsDropdown } from "./components/PredictionsDropdown";
-import { SearchBySelection } from "./components/SearchByMenu";
+import { SearchByMenu } from "./components/SearchByMenu";
 
 // Constants
-import { MENU_SIZE, PADDING_1, TIMELINE_HEIGHT } from "@common/constants";
+import { SIZE_5, TRANS_MAP } from "@common/constants";
+import {
+  HEIGHT_SEARCH_CLOSED,
+  WIDTH_SEARCH_CLOSED,
+  WIDTH_SEARCH_OPEN,
+  HEIGHT_SEARCH_OPEN,
+} from "@components/MapSearch/constants";
+
+// Types
+import { MapSearchProps } from "@components/MapSearch/types";
+
+const transitionSearchContainer = {
+  ease: TRANS_MAP.EASE_IN_OUT,
+  duration: 0.5,
+};
+
+const transitionInput = {
+  delay: 0.5,
+}
+
+const transitionCloseBtn = {
+  delay: 0.5,
+}
 
 /**
  * Map address search
  */
-const MapSearch: FC<any> = ({ menuNode }) => {
+const MapSearch: FC<MapSearchProps> = ({ menuNode }) => {
 
   /**
    * ========== Store hooks
    */
   const {
     setSearchedAddress,
+    searchedAddress,
     openSearch,
     closeSearch,
     isSearchOpen,
@@ -48,8 +71,6 @@ const MapSearch: FC<any> = ({ menuNode }) => {
   /**
    * ========== Component hooks
    */
-  const containerRef = useRef<HTMLDivElement>(null);
-
   const inputRef = useRef<HTMLInputElement>(null);
 
   /**
@@ -72,18 +93,88 @@ const MapSearch: FC<any> = ({ menuNode }) => {
    */
   const menuBBox = getPositionFromTarget(menuNode);
 
-  /**
-   * Handlers
-   */
-  function handleSearch(ev: ChangeEvent<HTMLInputElement>) {
-
-    // Get input search value
-    const address = (ev.currentTarget as HTMLInputElement).value;
-
-    setSearchedAddress(address);
-
-    centerMapOnAddress(address);
+  if (!menuBBox) {
+    return null;
   }
+
+  /**
+   * Framer variants
+   */
+  const containerVariants = {
+    initial: {
+      borderRadius: "50%",
+      width: WIDTH_SEARCH_CLOSED,
+      height: HEIGHT_SEARCH_CLOSED,
+      x: menuBBox.x,
+      y: menuBBox.y,
+    },
+    closedOnOrigin: {
+      borderRadius: [2, "50%"],
+      width: [
+        WIDTH_SEARCH_OPEN,
+        WIDTH_SEARCH_CLOSED,
+        WIDTH_SEARCH_CLOSED,
+      ],
+      height: HEIGHT_SEARCH_CLOSED,
+      x: [
+        (windowWidth / 2) - (WIDTH_SEARCH_OPEN / 2),
+        menuBBox.x,
+        menuBBox.x,
+      ],
+      y: [
+        (windowHeight / 2) + (HEIGHT_SEARCH_OPEN / 2),
+        menuBBox.y,
+      ],
+      transition: transitionSearchContainer,
+    },
+    openOnCenter: {
+      borderRadius: ["50%", 2],
+      width: [
+        WIDTH_SEARCH_CLOSED,
+        WIDTH_SEARCH_CLOSED,
+        WIDTH_SEARCH_OPEN,
+      ],
+      height: HEIGHT_SEARCH_OPEN,
+      x: [
+        menuBBox.x,
+        menuBBox.x,
+        (windowWidth / 2) - (WIDTH_SEARCH_OPEN / 2),
+      ],
+      y: [
+        menuBBox.y,
+        (windowHeight / 2) + (HEIGHT_SEARCH_OPEN / 2),
+      ],
+      transition: transitionSearchContainer,
+    },
+  };
+
+  const inputVariants = {
+    closed: {
+      opacity: 0,
+      transitionEnd: {
+        display: "none",
+      },
+    },
+    open: {
+      display: "inherit",
+      opacity: 1,
+      transition: transitionInput,
+    },
+  };
+
+  const closeBtnVariants = {
+    closed: {
+      scale: 0,
+      transitionEnd: {
+        display: "none",
+      },
+    },
+    open: {
+      display: "inherit",
+      scale: 1,
+      transition: transitionCloseBtn,
+    },
+  };
 
   /**
    * Effects
@@ -93,12 +184,7 @@ const MapSearch: FC<any> = ({ menuNode }) => {
       containerAnimation.start(containerVariants.openOnCenter);
     }
     else {
-      if (isMainMenuOpen) {
-        containerAnimation.start(containerVariants.closedOnMenuItem);
-      }
-      else {
-        containerAnimation.start(containerVariants.closedOnMenuOrigin);
-      }
+      containerAnimation.start(containerVariants.closedOnOrigin);
     }
   }, [
     isSearchOpen,
@@ -115,72 +201,18 @@ const MapSearch: FC<any> = ({ menuNode }) => {
     inputRef.current.focus();
   }
 
-  function getInitialContainerVariant() {
-    if (isMainMenuOpen) {
-      return containerVariants.closedOnMenuItem;
-    }
-    else {
-      return containerVariants.closedOnMenuOrigin;
-    }
-  }
-
   /**
-   * Framer variants
+   * Handlers
    */
-  const containerVariants = {
-    closedOnMenuItem: {
-      borderRadius: "50%",
-      width: MENU_SIZE,
-      height: MENU_SIZE,
-      x: menuBBox?.x,
-      y: menuBBox?.y,
-      transition: {
-        type: "tween",
-      },
-    },
-    closedOnMenuOrigin: {
-      borderRadius: "50%",
-      width: MENU_SIZE,
-      height: MENU_SIZE,
-      x: (windowWidth / 2) - (MENU_SIZE / 2),
-      y: windowHeight - TIMELINE_HEIGHT,
-      transition: {
-        type: "tween",
-      },
-    },
-    openOnCenter: {
-      borderRadius: "2px",
-      width: 300,
-      height: 40,
-      x: "calc(50vw - 150px)",
-      y: "calc(50vh + 32px)",
-      transition: {
-        type: "tween",
-      },
-    },
-  };
+  function handleSearch(ev: ChangeEvent<HTMLInputElement>) {
 
-  const inputVariants = {
-    closed: {
-      transitionEnd: {
-        display: "none",
-      },
-    },
-    open: {
-      display: "flex",
-    },
-  };
+    // Get input search value
+    const address = (ev.currentTarget as HTMLInputElement).value;
 
-  const buttonVariants = {
-    closed: {
-      display: "flex",
-    },
-    open: {
-      transitionEnd: {
-        display: "none",
-      },
-    },
-  };
+    setSearchedAddress(address);
+
+    centerMapOnAddress(address);
+  }
 
   /**
    * Return JSX
@@ -190,43 +222,39 @@ const MapSearch: FC<any> = ({ menuNode }) => {
       className={classNames.searchContainer}
       animate={containerAnimation}
       variants={containerVariants}
-      initial={getInitialContainerVariant()}
+      initial="initial"
+      exit="closedOnOrigin"
     >
-      <div
-        className={classNames.searchInput}
-        ref={containerRef}
-      >
-        <SearchBySelection/>
-        {/*<motion.div*/}
-        {/*  onClick={openSearch}*/}
-        {/*  // animate={plusBtnAnimation}*/}
-        {/*  // animate={isSearchOpen ? "open" : "closed"}*/}
-        {/*  // variants={buttonVariants}*/}
-        {/*  className={classNames.addBtn}*/}
-        {/*>*/}
-        {/*  <Plus/>*/}
-        {/*</motion.div>*/}
-        <motion.input
-          ref={inputRef}
-          // animate={searchInputAnimation}
-          // animate={isSearchOpen ? "open" : "closed"}
-          // variants={inputVariants}
-          // value={searchedAddress}
-          onChange={handleSearch}
-        />
-        <motion.div
-          // animate={closeBtnAnimation}
-          // animate={isSearchOpen ? "open" : "closed"}
-          // variants={inputVariants}
-          onClick={closeSearch}
-        >
-          <Close
-            fontSize="40"
-            className={classNames.closeBtn}
+      <AnimatePresence>
+        {isSearchOpen &&
+        <>
+          <SearchByMenu/>
+          <motion.input
+            ref={inputRef}
+            className={classNames.searchInput}
+            variants={inputVariants}
+            animate="open"
+            initial="closed"
+            exit="closed"
+            value={searchedAddress}
+            onChange={handleSearch}
           />
-        </motion.div>
-      </div>
-      <PredictionsDropdown/>
+          <motion.div
+            variants={closeBtnVariants}
+            animate="open"
+            initial="closed"
+            exit="closed"
+            onClick={closeSearch}
+          >
+            <Close
+              fontSize="40"
+              className={classNames.closeBtn}
+            />
+          </motion.div>
+          <PredictionsDropdown/>
+        </>
+        }
+      </AnimatePresence>
     </motion.div>
   );
 };
