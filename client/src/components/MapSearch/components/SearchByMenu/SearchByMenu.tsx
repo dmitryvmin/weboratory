@@ -1,7 +1,7 @@
 // Libs
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
-  AnimatePresence,
+  AnimatePresence, AnimationControls,
   motion, PanInfo,
   useAnimation, useDragControls, useMotionValue,
   useSpring,
@@ -78,9 +78,9 @@ export const SearchByMenu = () => {
 
   const [dragStatus, setDragStatus] = useState(DRAG_STATUS.INACTIVE);
 
-  // Init
-  const [selectedItem, setSelectedItem] = useState<EventSearchCriteriaValue>(searchBy);
+  const [isAnimActive, setIsAnimActive] = useState<boolean>(false);
 
+  const [selectedItem, setSelectedItem] = useState<EventSearchCriteriaValue>(searchBy);
 
   const trackRef = useRef<HTMLDivElement>(null);
 
@@ -141,44 +141,37 @@ export const SearchByMenu = () => {
   /**
    * ========== Effects
    */
-  // // Scroll menu to the searchBy item
+  // Scroll menu to the searchBy item
   // useEffect(() => {
   //
-  //   if (dragStatus === DRAG_STATUS.ACTIVE) {
-  //     console.log("@@@@@@ DRAG YES");
+  //   if (dragStatus === DRAG_STATUS.ACTIVE || isAnimActive) {
   //     return;
   //   }
   //   else if (dragStatus === DRAG_STATUS.INACTIVE) {
-  //     console.log("@@@@@@ DRAG NO");
-  //     if (menuAnimation)
-  //     const snapTo = snapPoints[selectedItem] ?? 0;
-  //     menuAnimation.start({
-  //       y: snapTo,
-  //       transition: {
-  //         // type: TRANS_MAP.EASE_IN,
-  //         // stiffness: 400,
-  //         // damping: 200,
-  //         // mass: 1,
-  //       },
-  //     });
-  //     return;
+  //     snapMenuTo(selectedItem, menuAnimation);
   //   }
   //
   // }, [
-  //   // dragStatus,
+  //   dragStatus,
   //   selectedItem,
+  //   menuAnimation,
   // ]);
 
-  function snapTo(item, controller) {
-    const snapTo = snapPoints[selectedItem] ?? 0;
-    menuAnimation.start({
+  function snapMenuTo(
+    item: EventSearchCriteriaValue,
+    controller: AnimationControls,
+    ) {
+
+    const snapTo = snapPoints[item] ?? 0;
+
+    controller.start({
       y: snapTo,
-      transition: {
-        type: TRANS_MAP.EASE_IN,
-        stiffness: 400,
-        damping: 200,
-        mass: 1,
-      },
+      // transition: {
+      //   type: TRANS_MAP.EASE_IN,
+      //   stiffness: 400,
+      //   damping: 200,
+      //   mass: 1,
+      // },
     });
   }
 
@@ -242,9 +235,7 @@ export const SearchByMenu = () => {
 
     invariant(selectedItem, "A selected item not set.");
 
-    const snapTo = snapPoints[selectedItem] ?? 0;
-
-    snapTo(snapTo, menuAnimation);
+    snapMenuTo(selectedItem, menuAnimation);
 
 
     setDragStatus(DRAG_STATUS.INACTIVE);
@@ -254,14 +245,6 @@ export const SearchByMenu = () => {
     selectedItem,
   ]);
 
-
-  // function handleSnapTo() {
-  //
-  // }
-
-  useEffect(() => menuDragY.onChange(latest => {
-    console.log("####### menuDragY ######", latest);
-  }), []);
 
   /**
    * ========== JSX
@@ -312,7 +295,8 @@ export const SearchByMenu = () => {
         // exit={{ y: windowHeight }}
 
         // dragConstraints={trackRef}
-
+        onAnimationStart={() => setIsAnimActive(true)}
+        onAnimationComplete={() => setIsAnimActive(false)}
 
         className={classNames.Menu}
         ref={menuRef}
