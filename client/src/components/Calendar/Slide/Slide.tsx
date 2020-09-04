@@ -65,10 +65,6 @@ const Slide: FC<SlideProps> = ({
 
   const { slideWidth } = useSliderStore();
 
-  if (!inViewEventsData) {
-    return null;
-  }
-
   const controls = useAnimation();
 
   /**
@@ -107,6 +103,10 @@ const Slide: FC<SlideProps> = ({
   //   calendarTimePeriod,
   //   slideTimePeriod,
   // ]);
+
+  if (!inViewEventsData) {
+    return null;
+  }
 
   /**
    * Handlers
