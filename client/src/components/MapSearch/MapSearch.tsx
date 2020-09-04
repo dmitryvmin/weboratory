@@ -89,6 +89,20 @@ const MapSearch: FC<MapSearchProps> = ({ menuNode }) => {
   const closeBtnAnimation = useAnimation();
 
   /**
+   * Effects
+   */
+  useEffect(() => {
+    if (isSearchOpen) {
+      containerAnimation.start(containerVariants.openOnCenter);
+    }
+    else {
+      containerAnimation.start(containerVariants.closedOnOrigin);
+    }
+  }, [
+    isSearchOpen,
+  ]);
+
+  /**
    * Vars
    */
   const menuBBox = getPositionFromTarget(menuNode);
@@ -175,20 +189,6 @@ const MapSearch: FC<MapSearchProps> = ({ menuNode }) => {
       transition: transitionCloseBtn,
     },
   };
-
-  /**
-   * Effects
-   */
-  useEffect(() => {
-    if (isSearchOpen) {
-      containerAnimation.start(containerVariants.openOnCenter);
-    }
-    else {
-      containerAnimation.start(containerVariants.closedOnOrigin);
-    }
-  }, [
-    isSearchOpen,
-  ]);
 
   /**
    * Utils
