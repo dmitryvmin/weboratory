@@ -15,7 +15,7 @@
   width: 100%;
   height: 100%;
   border: none;
-  padding: $size_2 $size_3;
+  padding: $size_2 $size_2;
   margin-left: $size_1;
 
   &:focus {
@@ -32,6 +32,6 @@
 .closeBtn {
   cursor: pointer;
   display: flex;
-  margin-left: 5px;
-  margin-right: 5px;
+  margin-left: $size_2;
+  margin-right: $size_2;
 }

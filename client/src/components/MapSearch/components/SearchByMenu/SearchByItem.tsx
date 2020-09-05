@@ -20,13 +20,15 @@ import classNames from "@components/MapSearch/components/SearchByMenu/styles.mod
 
 // Types
 import { EventSearchCriteriaValue, EventSearchCriterium } from "@stores/globalStore/stores/search/types";
+import { MenuStateType } from "@components/MapSearch/components/SearchByMenu/SearchByMenu";
 
 type SearchByItemProps = {
   item: EventSearchCriterium;
   dragStatus: string;
-  isMenuActive: boolean;
-  selectedItem: EventSearchCriteriaValue;
-  setSelectedItem(EventSearchCriteriaValue): void;
+  menuState: MenuStateType;
+  setMenuState: any;
+  setSelectedItem: any;
+  setInView: any;
   root: HTMLDivElement;
   idx: number;
 }
@@ -37,9 +39,10 @@ type SearchByItemProps = {
 export const SearchByItem: FC<SearchByItemProps> = ({
   item,
   dragStatus,
-  isMenuActive,
-  selectedItem,
+  menuState,
+  setMenuState,
   setSelectedItem,
+  setInView,
   root,
   idx,
 }) => {
@@ -90,31 +93,24 @@ export const SearchByItem: FC<SearchByItemProps> = ({
   /**
    * ========== Effects
    */
-  // When item is in view and menu is not ,
-  // set it on the searchBy prop
+  // When the menu is being dragged and the item comes into view,
+  // save it as the inView item
   useEffect(() => {
     if (
       !inView ||
       dragStatus === DRAG_STATUS.INACTIVE
-      // selectedItem?.value === item.value
     ) {
       return;
     }
-    // if (
-    //   selectedItem?.value === item.value
-    // ) {
-      console.log("===== ITEM IN VIEW:",  item.value);
-    //   return;
-    // }
-    // console.log("===== ITEM IN VIEW", item);
-    setSelectedItem(item.value);
+    setInView(item.value);
   }, [
+    dragStatus,
     inView,
   ]);
 
   // Animate the menu item
   useEffect(() => {
-    if (isMenuActive) {
+    if (menuState.isActive) {
       if (inView) {
         menuItemAnimation.start(menuItemVariants.selected);
         menuItemAnimation.start(menuItemInnerVariants.selected);
@@ -133,7 +129,7 @@ export const SearchByItem: FC<SearchByItemProps> = ({
       }
     }
   }, [
-    isMenuActive,
+    menuState.isActive,
     inView,
   ]);
 
@@ -154,7 +150,7 @@ export const SearchByItem: FC<SearchByItemProps> = ({
       animate={menuItemAnimation}
       custom={item.value}
       variants={menuItemVariants}
-      onClick={handleItemClick}
+      onTap={handleItemClick}
       // initial="closed"
       className={classNames.Item}
       style={{

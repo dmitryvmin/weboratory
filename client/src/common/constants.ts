@@ -11,7 +11,7 @@ export const DRAG_STATUS = {
   // ENDED: "drag ended",
 };
 
-export const TRANS_MAP = {
+export const EASING_MAP = {
   LINEAR: "linear",
   EASE_IN: "easeIn",
   EASE_OUT: "easeOut",

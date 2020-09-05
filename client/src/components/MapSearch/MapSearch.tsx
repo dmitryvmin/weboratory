@@ -21,7 +21,7 @@ import { PredictionsDropdown } from "./components/PredictionsDropdown";
 import { SearchByMenu } from "./components/SearchByMenu";
 
 // Constants
-import { SIZE_5, TRANS_MAP } from "@common/constants";
+import { SIZE_5, EASING_MAP } from "@common/constants";
 import {
   HEIGHT_SEARCH_CLOSED,
   WIDTH_SEARCH_CLOSED,
@@ -33,7 +33,7 @@ import {
 import { MapSearchProps } from "@components/MapSearch/types";
 
 const transitionSearchContainer = {
-  ease: TRANS_MAP.EASE_IN_OUT,
+  ease: EASING_MAP.EASE_IN_OUT,
   duration: 0.5,
 };
 

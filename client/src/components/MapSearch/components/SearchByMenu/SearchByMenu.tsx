@@ -1,10 +1,11 @@
 // Libs
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import {
-  AnimatePresence, AnimationControls,
-  motion, PanInfo,
-  useAnimation, useDragControls, useMotionValue,
-  useSpring,
+  AnimationControls,
+  PanInfo,
+  useAnimation,
+  useMotionValue,
+  motion,
 } from "framer-motion";
 import invariant from "invariant";
 
@@ -23,11 +24,14 @@ import useOnclickOutside from "@utils/hooks/useOnClickOutside";
 // Store
 import { EventSearchCriteria } from "@stores/globalStore/stores/search/searchDefaults";
 import { useSearchStore } from "@stores/globalStore/stores/search/useSearchStore";
-import { EventSearchCriteriaValue, EventSearchCriterium } from "@stores/globalStore/stores/search/types";
-import { getItemY } from "@components/MapSearch/components/SearchByMenu/utils";
-import { DRAG_STATUS, TRANS_MAP } from "@common/constants";
-import { ValueOf } from "@utils/ts";
-import { useWindowSize } from "@utils/hooks/useWindowSize";
+import { EventSearchCriteriaValue } from "@stores/globalStore/stores/search/types";
+import { DRAG_STATUS, EASING_MAP } from "@common/constants";
+
+export type MenuStateType = {
+  isAnimating: boolean;
+  isActive: boolean;
+  isInterruptible: boolean;
+}
 
 const menuVariants = {
   closed: {
@@ -53,6 +57,26 @@ const snapPoints = EventSearchCriteria.reduce((acc, cur, idx) => {
   });
 }, {});
 
+const menuReducer = (state, action) => {
+  switch (action.type) {
+
+    case "ACTIVE":
+      return ({
+        ...state,
+        isActive: action.isActive,
+      });
+
+    case "ANIMATING":
+      return ({
+        ...state,
+        isAnimating: action.isAnimating,
+      });
+
+    default:
+      return state;
+  }
+}
+
 /**
  * SearchBySelection
  */
@@ -74,13 +98,16 @@ export const SearchByMenu = () => {
   /**
    * ========== Component hooks
    */
-  const [isMenuActive, setIsMenuActive] = useState<boolean>(false);
-
   const [dragStatus, setDragStatus] = useState(DRAG_STATUS.INACTIVE);
 
-  const [isAnimActive, setIsAnimActive] = useState<boolean>(false);
+  const [menuState, setMenuState] = useReducer(menuReducer, {
+    isAnimating: false,
+    isActive: false,
+  });
 
   const [selectedItem, setSelectedItem] = useState<EventSearchCriteriaValue>(searchBy);
+
+  const [inView, setInView] = useState<EventSearchCriteriaValue>(searchBy);
 
   const trackRef = useRef<HTMLDivElement>(null);
 
@@ -91,122 +118,74 @@ export const SearchByMenu = () => {
    */
   const menuAnimation = useAnimation();
 
-  // const y = useMotionValue(0);
-
-  // const y = useSpring(0, {
-  //   // damping: 10,
-  // });
-
-  const springConfig = { stiffness: 300, damping: 30, mass: 0.2 };
-
-  // const snapPoints = EventSearchCriteria.map((child, idx) => {
-  //   // return index * -SEARCH_BY_ITEM_HEIGHT;
-  //   return (EventSearchCriteria.length - idx) * SEARCH_BY_ITEM_HEIGHT;
-  // });
-
-
-  const menuDragY = useMotionValue(0);
-
-  const menuSpringY = useSpring(menuDragY, springConfig);
-
   const containerRef = useOnclickOutside(() => {
     // setSelMenuTo(false);
   });
-
-  const dragControls = useDragControls();
-
-  const getClosest = (nums: number[], goal: number) => {
-    return nums.reduce((prev, curr) => {
-      return Math.abs(curr - goal) < Math.abs(prev - goal) ? curr : prev;
-    });
-  };
-
-  const y = menuDragY;
-  // const y = (dragStatus === DRAG_STATUS.ACTIVE) ? menuDragY : menuSpringY;
-
-
-  // useEffect(() => {
-  //   function updateOpacity() {
-  //     const curY = y.get();
-  //     console.log("===== Y SUB =====", curY);
-  //   }
-  //
-  //   const unsubscribeY = y.onChange(updateOpacity)
-  //
-  //   return () => {
-  //     unsubscribeY()
-  //   }
-  // }, [])
 
   /**
    * ========== Effects
    */
   // Scroll menu to the searchBy item
-  // useEffect(() => {
-  //
-  //   if (dragStatus === DRAG_STATUS.ACTIVE || isAnimActive) {
-  //     return;
-  //   }
-  //   else if (dragStatus === DRAG_STATUS.INACTIVE) {
-  //     snapMenuTo(selectedItem, menuAnimation);
-  //   }
-  //
-  // }, [
-  //   dragStatus,
-  //   selectedItem,
-  //   menuAnimation,
-  // ]);
+  useEffect(() => {
 
-  function snapMenuTo(
-    item: EventSearchCriteriaValue,
-    controller: AnimationControls,
-    ) {
+    if (dragStatus === DRAG_STATUS.ACTIVE) {
+      return;
+    }
+    snapMenuTo(selectedItem, menuAnimation);
 
-    const snapTo = snapPoints[item] ?? 0;
-
-    controller.start({
-      y: snapTo,
-      // transition: {
-      //   type: TRANS_MAP.EASE_IN,
-      //   stiffness: 400,
-      //   damping: 200,
-      //   mass: 1,
-      // },
-    });
-  }
+  }, [
+    selectedItem,
+    dragStatus
+  ]);
 
   // Animate when menu is active/inactive
   useEffect(() => {
-    if (isMenuActive) {
+    if (menuState.isActive) {
       menuAnimation.start(menuVariants.open);
     }
     else {
       menuAnimation.start(menuVariants.closed);
     }
   }, [
-    isMenuActive,
+    menuState.isActive,
   ]);
-
 
   /**
    * ========== Utils
    */
+  function snapMenuTo(
+    item: EventSearchCriteriaValue,
+    controller: AnimationControls,
+  ) {
+
+    const snapTo = snapPoints[item] ?? 0;
+
+    controller.start({
+      y: snapTo,
+      transition: {
+        type: "tween",
+        duration: 0.2,
+      },
+    });
+  }
+
   function handleMouseEnter() {
-    // if (dragStatus === DRAG_STATUS.ACTIVE && isMenuActive) {
-    //   return;
-    // }
-    setIsMenuActive(true);
+    if (dragStatus === DRAG_STATUS.ACTIVE) {
+      return;
+    }
+    setMenuState({ type: "ACTIVE", isActive: true });
   }
 
   function handleMouseLeave() {
-    // if (dragStatus === DRAG_STATUS.INACTIVE && !isMenuActive) {
-    //   return;
-    // }
-    setIsMenuActive(false);
+    if (dragStatus === DRAG_STATUS.ACTIVE) {
+      return;
+    }
+    setMenuState({ type: "ACTIVE", isActive: false });
   }
 
 
   const handleDrag = useCallback((_, { delta, offset }: PanInfo) => {
+    // const menuDragY = useMotionValue(0);
     // Update drag indicator rotation based on drag velocity
     // const velocity = menuDragY.getVelocity();
     // if (velocity > 0) indicatorRotation.set(10);
@@ -217,15 +196,14 @@ export const SearchByMenu = () => {
 
   const handleDragStart = useCallback(() => {
     setDragStatus(DRAG_STATUS.ACTIVE);
-  }, [
-    menuAnimation,
-    menuDragY,
-  ]);
+    // setMenuState({ type: "INTERRUPTIBLE", isInterruptible: true});
+  }, []);
 
+  // When dragging ends, set the current inView item as the selectedItem
   const handleDragEnd = useCallback((_, { velocity, point, offset }: PanInfo) => {
 
     // Another way to calculate snapTo position is to find which snapPoints
-    // the current menu y position is cloest to
+    // the menu's current y position is closest to
     // const offsetPosition = offset.y + velocity.y;
     // const closestOffset = snapPoints.reduce(function (prev, cur) {
     //   return Math.abs(cur - offsetPosition) < Math.abs(prev - offsetPosition)
@@ -233,16 +211,15 @@ export const SearchByMenu = () => {
     //     : prev;
     // });
 
-    invariant(selectedItem, "A selected item not set.");
+    invariant(inView, "Selected item not set.");
 
-    snapMenuTo(selectedItem, menuAnimation);
-
+    setSelectedItem(inView);
 
     setDragStatus(DRAG_STATUS.INACTIVE);
 
   }, [
-    menuAnimation,
     selectedItem,
+    inView,
   ]);
 
 
@@ -261,43 +238,23 @@ export const SearchByMenu = () => {
           height: SEARCH_BY_MENU_HEIGHT,
           width: SEARCH_BY_MENU_WIDTH,
         }}
-
         whileTap={{ cursor: "grabbing" }}
-
         animate={menuAnimation}
         variants={menuVariants}
-
         initial="closed"
         exit="closed"
-
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-
         onDrag={handleDrag}
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
-
-        // dragConstraints={{
-        //   // bottom: 0,
-        //   // top: SEARCH_BY_MENU_HEIGHT,
-        // }}
-
-        // dragTransition={{
-        //   power: 0.5,
-        //   timeConstant: 300,
-        //   modifyTarget: target => {
-        //     return 0;
-        //   },
-        // }}
-
-        // initial={{ y: windowHeight}}
-        // animate={{ y: snapPoints[0], transition: { type: 'tween' } }}
-        // exit={{ y: windowHeight }}
-
-        // dragConstraints={trackRef}
-        onAnimationStart={() => setIsAnimActive(true)}
-        onAnimationComplete={() => setIsAnimActive(false)}
-
+        dragConstraints={trackRef}
+        onAnimationStart={() => {
+          setMenuState({type: "ANIMATING", isAnimating: true});
+        }}
+        onAnimationComplete={() => {
+          setMenuState({type: "ANIMATING", isAnimating: false});
+        }}
         className={classNames.Menu}
         ref={menuRef}
       >
@@ -307,9 +264,10 @@ export const SearchByMenu = () => {
                 key={`menu-item-${idx}`}
                 item={item}
                 dragStatus={dragStatus}
-                isMenuActive={isMenuActive}
-                selectedItem={selectedItem}
+                menuState={menuState}
+                setMenuState={setMenuState}
                 setSelectedItem={setSelectedItem}
+                setInView={setInView}
                 root={trackRef.current}
                 idx={idx}
               />
