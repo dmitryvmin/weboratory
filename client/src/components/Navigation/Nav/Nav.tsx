@@ -39,7 +39,7 @@ const items: INavItem[] = [
   // { icon: null, to: "/about", label: "About" },
   // { icon: null, to: "/design", label: "Design" },
   // { icon: null, to: "/projects", label: "Projects" },
-  { icon: null, to: "/events", label: "Events" },
+  // { icon: null, to: "/events", label: "Events" },
   // {
   //   icon: <User />,
   //   to: "/profile",
@@ -76,22 +76,22 @@ const Nav = () => {
               </NavLink>
             );
           })}
-          {!isAuthenticated && (
-            <Button
-              className={classnames.logInBtn}
-              onClick={loginWithPopup}
-            >
-              Log in
-            </Button>
-          )}
-          {isAuthenticated &&
-          <Button
-            className={classnames.logInBtn}
-            onClick={() => logout({ returnTo: window.location.origin })}
-          >
-            Log out
-          </Button>
-          }
+          {/*{!isAuthenticated && (*/}
+          {/*  <Button*/}
+          {/*    className={classnames.logInBtn}*/}
+          {/*    onClick={loginWithPopup}*/}
+          {/*  >*/}
+          {/*    Log in*/}
+          {/*  </Button>*/}
+          {/*)}*/}
+          {/*{isAuthenticated &&*/}
+          {/*<Button*/}
+          {/*  className={classnames.logInBtn}*/}
+          {/*  onClick={() => logout({ returnTo: window.location.origin })}*/}
+          {/*>*/}
+          {/*  Log out*/}
+          {/*</Button>*/}
+          {/*}*/}
         </motion.div>
       </div>
     );

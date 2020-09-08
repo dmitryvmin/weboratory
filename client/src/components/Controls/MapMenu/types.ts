@@ -1,1 +1,0 @@
-export type MapMenuProps = any;

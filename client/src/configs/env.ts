@@ -24,7 +24,7 @@ const publicEnvs = {
   // },
 
   // Development
-  "http://localhost:3001": {
+  "http://localhost:3003": {
     APP: "development",
     API_SERVER: "https://weboratory.herokuapp.com",
     // API_SERVER: "http://localhost:3000",

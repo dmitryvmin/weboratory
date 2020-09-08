@@ -63,7 +63,7 @@
     "typescript": "^3.9.3"
   },
   "scripts": {
-    "dev": "PORT=3001 craco start",
+    "dev": "PORT=3003 craco start",
     "build": "craco build",
     "test": "craco test",
     "eject": "react-scripts eject",

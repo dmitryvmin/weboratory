@@ -1,1 +1,0 @@
-export const getEventsData = state => state.eventsDataReducer.eventsData;
