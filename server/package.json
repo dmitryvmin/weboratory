@@ -57,7 +57,7 @@
     "graphql-tools": "^6.0.15",
     "http-status": "^1.4.2",
     "jsonwebtoken": "^8.5.1",
-    "knex": "^0.21",
+    "knex": "^2.4",
     "koa": "^2.13.0",
     "koa-body": "^4.1.1",
     "koa-bodyparser": "^4.3.0",
